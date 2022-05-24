@@ -210,6 +210,24 @@ export class Rule {
     }
 
     /**
+     * Get the number of possible selections.
+     * @returns {number} number of selections
+     */
+    get numPossibleSelections() {
+        return this.possibleSelections.length;
+    }
+
+    /**
+     * Get a selection counts template object.
+     * @returns {object} map with selection keys and count values
+     */
+     getCountsTemplate() {
+        let template = {};
+        this.possibleSelections.forEach(selection => template[selection] = 0);
+        return template;
+    }
+
+    /**
      * Generate a random selection from all possible selections.
      * @returns {Selection} selection
      */
@@ -228,10 +246,21 @@ export class Rule {
  */
  export class Game {
 
+    // game statuses
+    static NOT_STARTED = 0;
+    static IN_PROGRESS = 1;
+    static FINISHED = 2;
+
+    // round evaluation results
+    static PLAY_AGAIN = 0;  // all active players, play again
+    static ELIMINATE = 1;   // eliminate player with specific selection(s)
+    static WINNER = 2;      // winner found
+
     variant;        // game variant
     numPlayers;     // number of players
     numRobots;      // number of robots
     players;        // array of game players
+    #status;        // game status
 
     /**
      * @constructor
@@ -249,6 +278,7 @@ export class Rule {
         this.variant = variant;
         this.numPlayers = numPlayers;
         this.numRobots = numRobots;
+        this.#status = Game.NOT_STARTED;
 
         this.init();
     }
@@ -264,6 +294,131 @@ export class Rule {
         for (let i = 0; i < this.numRobots; i++) {
             this.players.push(new Robot());
         }
+    }
+
+    /**
+     * Run the game
+     */
+    runGame() {
+        // start game
+        startGame();
+
+    }
+
+    /**
+     * Start the game
+     */
+    startGame() {
+        this.#status = Game.IN_PROGRESS;
+        this.applyToPlayers(player => player.inGame = true);
+    }
+
+    /**
+     * End the game
+     */
+    endGame() {
+        this.#status = Game.FINISHED;
+        this.applyToPlayers(player => player.inGame = false);
+    }
+
+    /**
+     * Play a round of the game.
+     */
+    playRound() {
+
+    }
+
+    /**
+     * Evaluate the result of a round.
+     * @returns {object} result of the form {
+     *      result: <one of PLAY_AGAIN/ELIMINATE/WINNER>,
+     *      players: <PLAY_AGAIN - n/a
+     *                ELIMINATE - array of selections to eliminate,
+     *                WINNER - winning selection
+     *                >
+     * }
+     */
+    evaluateRound() {
+        let evaluation = {
+            result: Game.PLAY_AGAIN,
+            players: []
+        };
+        let counts = this.roundSelections();
+
+        // check if all selections picked
+        let allPicked = (Object.values(counts).find(count => count === 0) === undefined);
+        if (allPicked) {
+            evaluation.result = Game.PLAY_AGAIN;
+        } else {
+
+        }
+
+        return evaluation;
+    }
+
+    /**
+     * Get the counts for each selection
+     * @returns {object} map with selection keys and count values
+     */
+    roundSelections() {
+        let counts = this.variant.getCountsTemplate();
+        this.players.forEach(player => {
+            if (player.inGame) {
+                counts[player.selection]++;
+            }
+        });
+        return counts;
+    }
+
+    /**
+     * Check if game has not started.
+     * @returns {boolean} true if not started
+     */
+    get notStarted() {
+        return this.#status === Game.NOT_STARTED;
+    }
+
+    /**
+     * Check if game is in progress.
+     * @returns {boolean} true if in progress
+     */
+    get inProgress() {
+        return this.#status === Game.IN_PROGRESS;
+    }
+
+    /**
+     * Check if game is in finished.
+     * @returns {boolean} true if finished
+     */
+    get isOver() {
+        return this.#status === Game.FINISHED;
+    }
+
+    /**
+     * Apply the applicator to all players
+     * @param {Function} applicator 
+     */
+    applyToPlayers(applicator) {
+        this.players.forEach(player => applicator(player));
+    }
+
+    /**
+     * Get the number of players; both active and inactive.
+     * @returns {number} player count
+     */
+     get playerCount() {
+        return this.players.length;
+    }
+
+    /**
+     * Get the number of active players
+     * @returns {number} player count
+     */
+    get activePlayerCount() {
+        return this.players.reduce(
+            (previousValue, player) => previousValue + (player.inGame ? 1 : 0),
+            0   // initial count
+        );
     }
 }
 

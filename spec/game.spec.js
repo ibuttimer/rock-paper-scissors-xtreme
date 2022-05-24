@@ -1,7 +1,7 @@
 /*
   Test suite for game.js
  */
-import { Rule, Selection, GameVariant } from '../assets/js/game.js'
+import { Rule, Selection, GameVariant, Game } from '../assets/js/game.js'
 
 /* 
   Check Rule class
@@ -71,6 +71,7 @@ function rulesCheck(gameVariant, loserMap, expectedPossibilities) {
 
   expect(rules.length).toBe(expectedPossibilities.length);
   expect(possibleSelections).toEqual(expectedPossibilities);
+  expect(gameVariant.numPossibleSelections).toEqual(expectedPossibilities.length);
 
   for (const rule of rules) {
     if (!loserMap.hasOwnProperty(rule.selection)) {
@@ -153,3 +154,71 @@ describe("check GameVariant", function() {
     rulesCheck(GameVariant.Xtreme, losers, expectedPossibilities);
   });
 });
+
+/**
+ * Check game
+ * @param {Game} game - game to check
+ * @param {number} numPlayers - number of players
+ * @param {number} numRobots - number of robots
+ * @param {number} activeCount - number of active players
+ * @param {boolean} notStarted - not started state
+ * @param {boolean} inProgress - in progress state
+ * @param {boolean} isOver - is over state
+ */
+function checkGame(game, numPlayers, numRobots, activeCount, notStarted, inProgress, isOver) {
+  expect(game.playerCount).toBe(numPlayers + numRobots);
+  expect(game.activePlayerCount).toBe(activeCount);
+  expect(game.notStarted).toBe(notStarted);
+  expect(game.inProgress).toBe(inProgress);
+  expect(game.isOver).toBe(isOver);
+}
+
+/* 
+  Check Game class
+ */
+describe("check Game class", function() {
+  it("checks Game()", function() {
+    // Checking exception for a function with parameter is not supported in jasmine, so wrap in anonymous function
+    expect(function() {
+      new Game();
+    })
+    .toThrowError(`Missing 'variant': null or undefined`);
+  });
+  
+  it("checks Game()", function() {
+    const variant = GameVariant.Basic;
+    const NUM_PLAYERS = variant.numPossibleSelections;
+    const NUM_ROBOTS = 0;
+    
+    let game = new Game(variant, NUM_PLAYERS, NUM_ROBOTS);
+
+    checkGame(game, NUM_PLAYERS, NUM_ROBOTS, 0, true, false, false);
+
+    // start
+    game.startGame();
+    checkGame(game, NUM_PLAYERS, NUM_ROBOTS, NUM_PLAYERS + NUM_ROBOTS, false, true, false);
+
+    // different selection each player
+    let plays = variant.getCountsTemplate();
+    for (let index = 0; index < game.players.length; index++) {
+      const player = game.players[index];
+      let selection = variant.possibleSelections[index % NUM_PLAYERS];
+      player.selection = selection;
+      plays[selection]++;
+    }
+    // confirm game counts match played selections
+    let counts = game.roundSelections();
+    for (let selection in plays) {
+      expect(counts[selection]).toBe(plays[selection]);
+    }
+    // confirm play again result for round
+    let evaluation = game.evaluateRound();
+    expect(evaluation.result).toBe(Game.PLAY_AGAIN);
+
+    // end
+    game.endGame();
+    checkGame(game, NUM_PLAYERS, NUM_ROBOTS, 0, false, false, true);
+  });
+  
+});
+  
