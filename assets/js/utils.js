@@ -1,3 +1,7 @@
+/**
+    Suite of utility functions.
+    @author Ian Buttimer
+*/
 
 /**
  * Check if a variable is null or undefined.
@@ -9,7 +13,7 @@
 export function variableCheck(variable, name, log = false) {
     let isSet = (variable !== null && variable !== undefined);
     if (!isSet && log) {
-        console.error(`Missing ${name}: null or undefined`);
+        console.error(`Missing '${name}': null or undefined`);
     }
     return isSet;
 }
@@ -24,7 +28,10 @@ export function variableCheck(variable, name, log = false) {
  export function requiredVariable(variable, name, throwError = true) {
     let isSet = variableCheck(variable, name, true);
     if (!isSet && throwError) {
-        throw 'Parameter is not a number!';
+        throw new Error(`Missing '${name}': null or undefined`);
     }
     return isSet;
 }
+
+/* Jasmine requires a default export */
+export default 'utils.js'

@@ -19,6 +19,24 @@ The site is aimed at game enthusiasts and procrastinators.
 ## Design 
 The design specification is available in [design.md](design/design.md).
 
+## Development
+### Environment 
+The development environment requires:
+* [Node.js](https://nodejs.org/)
+* [npm](https://www.npmjs.com/)
+* [git](https://git-scm.com/)
+
+> __Note:__ At time of development the LTS version of Node.js was v16.15.0.
+> Please check [Using Jasmine with Node](https://jasmine.github.io/setup/nodejs.html#using-jasmine-with-node) to ensure version compatibility.  
+
+### Setup
+In an appropriate folder, run the following commands:
+```shell
+> git clone https://github.com/ibuttimer/rock-paper-scissors-xtreme.git
+> cd rock-paper-scissors-xtreme
+> npm install
+```
+
 ## Testing 
 Details of the testing undertaken are outlined in [test.md](test/test.md), along with the results.
 

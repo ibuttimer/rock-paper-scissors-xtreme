@@ -2,6 +2,17 @@
 
 The site was tested using the following methods:
 
+## JavaScript Unit Testing 
+Unit testing of JS scripts was undertaken using [Jasmine](https://jasmine.github.io/).
+The test scripts are located in the [spec](../spec/) folder.
+
+The scripts may be run using [npm](https://www.npmjs.com) from the project root folder:
+```shell
+> npm test
+```
+Or if using Visual Studio Code, the [Jasmine Test Explorer
+](https://marketplace.visualstudio.com/items?itemName=hbenl.vscode-jasmine-test-adapter), allows tests to be run from the sidebar of Visual Studio Code.
+
 ## Manual 
 The site was manually tested in the following browsers:
 

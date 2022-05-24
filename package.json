@@ -1,0 +1,26 @@
+{
+  "name": "rock-paper-scissors-xtreme",
+  "version": "0.0.1",
+  "description": "Extreme version of Rock, Paper, Scissors game.",
+  "main": "assets/js/game.js",
+  "type": "module",
+  "scripts": {
+    "test": "jasmine"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ibuttimer/rock-paper-scissors-xtreme.git"
+  },
+  "keywords": [
+    "game"
+  ],
+  "author": "Ian Buttimer",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ibuttimer/rock-paper-scissors-xtreme/issues"
+  },
+  "homepage": "https://github.com/ibuttimer/rock-paper-scissors-xtreme#readme",
+  "devDependencies": {
+    "jasmine": "^4.1.0"
+  }
+}

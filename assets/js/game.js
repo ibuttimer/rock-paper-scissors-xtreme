@@ -56,12 +56,40 @@ import { variableCheck, requiredVariable } from './utils.js';
     }
 }
 
+// Enum classes based on examples from https://masteringjs.io/tutorials/fundamentals/enum
+
+/**
+ * Enum representing all possible game selections.
+ */
+ export class Selection {
+    // freeze selections so can't be modified
+    static Rock = Object.freeze(new Selection('Rock'));
+    static Paper = Object.freeze(new Selection('Paper'));
+    static Scissors = Object.freeze(new Selection('Scissors'));
+    static Lizard = Object.freeze(new Selection('Lizard'));
+    static Spock = Object.freeze(new Selection('Spock'));
+    static Spiderman = Object.freeze(new Selection('Spiderman'));
+    static Batman = Object.freeze(new Selection('Batman'));
+    static Wizard = Object.freeze(new Selection('Wizard'));
+    static Glock = Object.freeze(new Selection('Glock'));
+  
+    /**
+     * @constructor
+     * @param {string} name - selection name.
+     */
+    constructor(name) {
+        this.name = name;
+    }
+
+    toString() {
+        return `Selection.${this.name}`;
+    }
+}
 
 /**
  * Enum representing all possible game variants.
  */
  export class GameVariant {
-    // base on examples from https://masteringjs.io/tutorials/fundamentals/enum
     // freeze variants so can't be modified
     static Basic = Object.freeze(new GameVariant('BigBang'));
     static BigBang = Object.freeze(new GameVariant('BigBang'));
@@ -123,3 +151,6 @@ import { variableCheck, requiredVariable } from './utils.js';
         }
     }
 }
+
+/* Jasmine requires a default export */
+export default 'game.js'
