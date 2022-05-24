@@ -1,65 +1,10 @@
 /**
-    Game functions.
+    Game functions and classes.
     @author Ian Buttimer
 */
 
 import { variableCheck, requiredVariable } from './utils.js';
-
-/**
- * Class representing a player.
- */
- export class Player {
-
-    name;               // player name
-    isRobot = false;    // is a robot flag
-
-    static #playerCount = 0;   // private counter for number of Player objects created
-
-    /**
-     * @constructor
-     * @param {string} name - Player name.
-     */
-    constructor(name) {
-        // sanity checks
-        if (!variableCheck(name, 'name')) {
-            name = `Player ${Player.#playerCount + 1}`;
-        }
-
-        this.name = name;
-        this.isRobot = false;
-
-        ++Player.#playerCount;
-    }
-
-}
-
-/**
- * Class representing a robot.
- */
- export class Robot extends Player {
-
-    static #robotCount = 0;   // private counter for number of Robot objects created
-
-    /**
-     * @constructor
-     * @param {number} id - robot id number
-     */
-    constructor(id) {
-        // sanity checks
-        if (!variableCheck(id, 'id')) {
-            id = Robot.#robotCount + 1;
-        }
-
-        super(`Robot ${id}`);
-        this.isRobot = true;
-
-        ++Robot.#robotCount;
-    }
-
-    get name() {
-        return super.name;
-    }
-}
+import { Player, Robot } from './player.js';
 
 // Enum classes based on examples from https://masteringjs.io/tutorials/fundamentals/enum
 
@@ -68,6 +13,7 @@ import { variableCheck, requiredVariable } from './utils.js';
  */
  export class Selection {
     // freeze selections so can't be modified
+    static None = Object.freeze(new Selection('None'));     // no selection
     static Rock = Object.freeze(new Selection('Rock'));
     static Paper = Object.freeze(new Selection('Paper'));
     static Scissors = Object.freeze(new Selection('Scissors'));
