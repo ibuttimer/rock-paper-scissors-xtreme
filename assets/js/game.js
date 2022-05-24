@@ -6,6 +6,11 @@
 import { variableCheck, requiredVariable } from './utils.js';
 import { Player, Robot } from './player.js';
 
+const BASIC_GAME_NAME = 'Basic';
+const BIG_BANG_GAME_NAME = 'BigBang';
+const XTREME_GAME_NAME = 'Xtreme';
+
+
 // Enum classes based on examples from https://masteringjs.io/tutorials/fundamentals/enum
 
 /**
@@ -160,20 +165,32 @@ export class Rule {
   
     static {
         // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes/Class_static_initialization_blocks
-        let variant = new GameVariant('Basic');
-        variant.rules = basicRules();
-        this.Basic = Object.freeze(variant);
+        let variants = {};
+        variants[BASIC_GAME_NAME] = basicRules;
+        variants[BIG_BANG_GAME_NAME] = bigBangRules;
+        variants[XTREME_GAME_NAME] = xtremeRules;
 
-        variant = new GameVariant('BigBang');
-        variant.rules = bigBangRules();
-        this.BigBang = Object.freeze(variant);
+        for (let name in variants) {
+            let variant = new GameVariant(name);
+            variant.rules = variants[name]();
+            variant.#setSelections();
 
-        variant = new GameVariant('Xtreme');
-        variant.rules = xtremeRules();
-        this.Xtreme = Object.freeze(variant);
+            switch (name) {
+                case BASIC_GAME_NAME:
+                    this.Basic = Object.freeze(variant);
+                    break;
+                case BIG_BANG_GAME_NAME:
+                    this.BigBang = Object.freeze(variant);
+                    break;
+                case XTREME_GAME_NAME:
+                    this.Xtreme = Object.freeze(variant);
+                    break;
+            }
+        }
     }
 
-    rules = [];    // array of game rules
+    rules = [];              // array of game rules
+    possibleSelections = []; // array of possible selections
 
     /**
      * @constructor
@@ -181,6 +198,24 @@ export class Rule {
      */
     constructor(name) {
         this.name = name;
+    }
+
+    /** Set the list of possible selections from the rules. */
+    #setSelections() {
+        let possibilities = [];
+        for (let rule of this.rules) {
+            possibilities.push(rule.selection);
+        }
+        this.possibleSelections = possibilities;
+    }
+
+    /**
+     * Generate a random selection from all possible selections.
+     * @returns {Selection} selection
+     */
+    randomSelection() {
+        let index = Math.floor(Math.random() * this.possibleSelections.length);
+        return this.possibleSelections[index];
     }
 
     toString() {

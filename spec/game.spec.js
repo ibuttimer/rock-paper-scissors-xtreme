@@ -60,18 +60,25 @@ describe("check Rule", function() {
 });
 
 /**
- * Perform rules check
- * @param {Array} rules - rules to check
+ * Perform variant check
+ * @param {GameVariant} gameVariant - GameVariant to check
  * @param {object} loserMap - map with Selection as key and list of losers as value
+ * @param {Array} expectedPossibilities - list of possible selections
  */
-function rulesCheck(rules, loserMap) {
+function rulesCheck(gameVariant, loserMap, expectedPossibilities) {
+  let rules = gameVariant.rules;
+  let possibleSelections = gameVariant.possibleSelections;
+
+  expect(rules.length).toBe(expectedPossibilities.length);
+  expect(possibleSelections).toEqual(expectedPossibilities);
+
   for (const rule of rules) {
     if (!loserMap.hasOwnProperty(rule.selection)) {
         throw new Error(`Unexpected selection: ${rule.selection}`);
     }
     let losers = loserMap[rule.selection];
 
-    // check all selections
+    // check all possible selection values
     for (let selection of Object.keys(Selection)) {
       let loses;
       if (selection === rule.selection.name) {
@@ -93,21 +100,25 @@ function rulesCheck(rules, loserMap) {
 describe("check GameVariant", function() {
   it("checks GameVariant.Basic", function() {
       // see https://github.com/ibuttimer/rock-paper-scissors-xtreme/blob/main/design/design.md#basic-rules
-      let rules = GameVariant.Basic.rules;
-      expect(rules.length).toBe(3);
+
+      // note: expectedPossibilities order needs to match rules order
+      let expectedPossibilities = [Selection.Rock, Selection.Paper, Selection.Scissors];
 
       let losers = {};
       losers[Selection.Rock] = [Selection.Scissors];
       losers[Selection.Paper] = [Selection.Rock];
       losers[Selection.Scissors] = [Selection.Paper];
 
-      rulesCheck(rules, losers);
+      rulesCheck(GameVariant.Basic, losers, expectedPossibilities);
   });
 
   it("checks GameVariant.BigBang", function() {
     // see https://github.com/ibuttimer/rock-paper-scissors-xtreme/blob/main/design/design.md#big-bang-rules
-    let rules = GameVariant.BigBang.rules;
-    expect(rules.length).toBe(5);
+
+    // note: expectedPossibilities order needs to match rules order
+    let expectedPossibilities = [
+      Selection.Rock, Selection.Paper, Selection.Scissors, Selection.Lizard, Selection.Spock
+    ];
 
     let losers = {};
     losers[Selection.Rock] = [Selection.Scissors, Selection.Lizard];
@@ -116,13 +127,17 @@ describe("check GameVariant", function() {
     losers[Selection.Lizard] = [Selection.Paper, Selection.Spock];
     losers[Selection.Spock] = [Selection.Rock, Selection.Scissors];
 
-    rulesCheck(rules, losers);
+    rulesCheck(GameVariant.BigBang, losers, expectedPossibilities);
   });
 
   it("checks GameVariant.Xtreme", function() {
     // see https://github.com/ibuttimer/rock-paper-scissors-xtreme/blob/main/design/design.md#xtreme-rules
-    let rules = GameVariant.Xtreme.rules;
-    expect(rules.length).toBe(9);
+
+    // note: expectedPossibilities order needs to match rules order
+    let expectedPossibilities = [
+      Selection.Rock, Selection.Paper, Selection.Scissors, Selection.Lizard, Selection.Spock, 
+      Selection.Spiderman, Selection.Batman, Selection.Wizard, Selection.Glock
+    ];
 
     let losers = {};
     losers[Selection.Rock] = [Selection.Scissors, Selection.Lizard, Selection.Spiderman, Selection.Wizard];
@@ -135,6 +150,6 @@ describe("check GameVariant", function() {
     losers[Selection.Wizard] = [Selection.Paper, Selection.Lizard, Selection.Batman, Selection.Glock];
     losers[Selection.Glock] = [Selection.Rock, Selection.Scissors, Selection.Spock, Selection.Batman];
 
-    rulesCheck(rules, losers);
+    rulesCheck(GameVariant.Xtreme, losers, expectedPossibilities);
   });
 });
