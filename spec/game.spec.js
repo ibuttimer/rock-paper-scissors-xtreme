@@ -340,7 +340,7 @@ describe("check Game class", function() {
     // confirm eliminate player result for round
     evaluation = game.evaluateRound();
     expect(evaluation.result).toBe(Game.ELIMINATE);
-    expect(evaluation.data).toBe(useRule.defeats);
+    expect(evaluation.data).toEqual(useRule.defeats);
     checkGame(game, NUM_PLAYERS, NUM_ROBOTS, expectedActive, false, true, false);
     // confirm eliminated one player
     --expectedActive;
@@ -350,7 +350,6 @@ describe("check Game class", function() {
     checkGame(game, NUM_PLAYERS, NUM_ROBOTS, expectedActive, false, true, false);
 
     // Check one player makes winning selection
-    /*
     useRule = variant.rules[variant.rules.length - 1];
     playerIdx = game.players.length - 1;
     selectedPlayer = game.players[playerIdx];
@@ -365,10 +364,8 @@ describe("check Game class", function() {
     confirmCounts(game.roundSelections(), plays);
     // confirm eliminate player result for round
     evaluation = game.evaluateRound();
-    expect(evaluation.result).toBe(Game.PLAY_AGAIN);
-    expect(evaluation.data).toEqual(
-      game.players.filter(player => player.inGame && player.selection !== useRule.selection)
-    );
+    expect(evaluation.result).toBe(Game.ELIMINATE);
+    expect(evaluation.data).toEqual(useRule.defeats);
     checkGame(game, NUM_PLAYERS, NUM_ROBOTS, expectedActive, false, true, false);
     // confirm eliminated all player bar winner
     expectedActive = 1;
@@ -376,7 +373,6 @@ describe("check Game class", function() {
     expect(processed.result).toBe(Game.WINNER);
     expect(processed.data).toBe(selectedPlayer);
     checkGame(game, NUM_PLAYERS, NUM_ROBOTS, expectedActive, false, true, false);
-    */
 
     // end
     game.endGame();

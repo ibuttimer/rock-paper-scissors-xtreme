@@ -392,10 +392,14 @@ export class Rule {
             // find selection(s) with biggest count
             let countEntries = [];
             for (const [key, value] of Object.entries(counts)) {
-                // key 
+                if (value === 0) {
+                    continue;   // ignore unselected
+                }
                 countEntries.push({
-                    selection: key,
-                    count: value
+                    selection: key,     // selection
+                    count: value,       // num of players who picked it
+                    rule: this.variant.getRule(key), // selection's rule
+                    nullified: false    // nullified if loses to another picked selection
                 });
             }
             countEntries.sort((a, b) => b.count - a.count); // sort descending order of count
@@ -403,18 +407,35 @@ export class Rule {
             
             // check if all same selection
             if (top.count < Object.keys(counts).length) {
-                // check if top selections have same count
-                let topSelections = countEntries.filter(x => x.count == top.count);
-                switch (topSelections.length) {
-                    case 1:
-                        // eliminate losers to selection with highest count
-                        evaluation.result = Game.ELIMINATE;
-                        evaluation.data = this.variant.getRule(top.selection).defeats;
-                        break;
-                    case 2:
-                        // if one eliminates the other do that, otherwise play again
-                        break;
+
+                // only if a selection does not appear in the defeats of another selection 
+                // can it be activated, otherwise its ignored
+                for (const pick of countEntries) {
+                    for (const otherPick of countEntries) {
+                        if (pick !== otherPick) {
+                            // does pick lose to otherPick?
+                            if (otherPick.rule.beats(pick.selection)) {
+                                pick.nullified = true;
+                            }
+                        }
+                    }
                 }
+
+                let eliminated = [];    // selections which lose
+                let activated = 0;      // num of winning selections
+                for (const pick of countEntries) {
+                    if (!pick.nullified) {
+                        ++activated;
+                        eliminated = eliminated.concat(pick.rule.defeats);
+                    }
+                }
+
+                if (activated > 0) {
+                    // eliminate losers
+                    evaluation.result = Game.ELIMINATE;
+                    evaluation.data = eliminated;
+                }
+                // else play again
             }
             // else all same selection, so play again
         }
