@@ -40,6 +40,16 @@ describe("check requiredVariable()", function() {
     expect(function() {
         requiredVariable(undefined, name, true);
       })
-      .toThrowError(`Missing '${name}': null or undefined`);
+      .toThrowError(getRequiredVariableMessage(name));
   });
 });
+
+
+/**
+ * Make the expected error message from the 'requiredVariable' function.
+ * @param {*} name - name of variable
+ * @returns {string}  error message
+ */
+export function getRequiredVariableMessage(name) {
+  return `Missing '${name}': null or undefined`;
+}

@@ -34,11 +34,41 @@ const XTREME_GAME_NAME = 'Xtreme';
      * @param {string} name - selection name.
      */
     constructor(name) {
+        // sanity checks
+        requiredVariable(name, 'name');
         this.name = name;
     }
 
+    /**
+     * String representation of object.
+     * @returns {string} string of form '<Class name>.<object name>'
+     */
     toString() {
-        return `Selection.${this.name}`;
+        return `${Selection.name}.${this.name}`;
+    }
+
+    /**
+     * Get a finder function suitable for use in Array.find() to match a selection.
+     * @param {Selection|object|string} selection - selection to find
+     * @param {function} accessor - accessor function to get Selection objects from array; 
+     *                              default pass through
+     * @returns {function}  finder function
+     */
+    static getFinder(selection, accessor = x => x) {
+        let predicate;
+        if (typeof selection === 'string') {
+            if (selection.startsWith(`${Selection.name}.`)) {
+                // if toString() is passed check toString()'s matches
+                predicate = element => accessor(element).toString() === selection;
+            } else {
+                // check the name matches
+                predicate = element => accessor(element).name === selection;
+            }
+        } else {
+            // otherwise strict equivalence
+            predicate = element => accessor(element) === selection;
+        }
+        return predicate;
     }
 }
 
@@ -83,15 +113,7 @@ export class Rule {
      * @param {Selection|string} selection - selection to check
      */
     beats(selection) {
-        let result = false;
-        if (typeof selection === 'string') {
-            // if a string is passed check the name matches
-            result = this.defeats.find(element => element.name === selection) !== undefined;
-        } else if (selection instanceof Selection) {
-            // otherwise strict equivalence
-            result = this.defeats.find(element => element === selection) !== undefined;
-        }
-        return result;
+        return this.defeats.find(Selection.getFinder(selection)) !== undefined;
     }
 
     /**
@@ -173,7 +195,7 @@ export class Rule {
         for (let name in variants) {
             let variant = new GameVariant(name);
             variant.rules = variants[name]();
-            variant.#setSelections();
+            variant.finalise();
 
             switch (name) {
                 case BASIC_GAME_NAME:
@@ -197,13 +219,19 @@ export class Rule {
      * @param {string} name - variant name.
      */
     constructor(name) {
+        // sanity checks
+        requiredVariable(name, 'name');
         this.name = name;
     }
 
-    /** Set the list of possible selections from the rules. */
-    #setSelections() {
+    /** Finalise object to prepare for freezing. */
+    finalise() {
+        // Set the list of possible selections from the rules
         let possibilities = [];
         for (let rule of this.rules) {
+            if (possibilities.find(possibility => possibility === rule.selection)) {
+                throw new Error(`Rule already exists for ${rule.selection}`);
+            }
             possibilities.push(rule.selection);
         }
         this.possibleSelections = possibilities;
@@ -221,10 +249,19 @@ export class Rule {
      * Get a selection counts template object.
      * @returns {object} map with selection keys and count values
      */
-     getCountsTemplate() {
+    getCountsTemplate() {
         let template = {};
         this.possibleSelections.forEach(selection => template[selection] = 0);
         return template;
+    }
+
+    /**
+     * Get the rule for the specified selection.
+     * @param {Selection|string} selection - selection to get rule for
+     * @returns {Rule} rule or undefined
+     */
+    getRule(selection) {
+        return this.rules.find(Selection.getFinder(selection, rule => rule.selection));
     }
 
     /**
@@ -236,8 +273,12 @@ export class Rule {
         return this.possibleSelections[index];
     }
 
+    /**
+     * String representation of object.
+     * @returns {string} string of form '<Class name>.<object name>'
+     */
     toString() {
-        return `GameVariant.${this.name}`;
+        return `${GameVariant.name}.${this.name}`;
     }
 }
 
@@ -331,29 +372,92 @@ export class Rule {
     /**
      * Evaluate the result of a round.
      * @returns {object} result of the form {
-     *      result: <one of PLAY_AGAIN/ELIMINATE/WINNER>,
-     *      players: <PLAY_AGAIN - n/a
-     *                ELIMINATE - array of selections to eliminate,
-     *                WINNER - winning selection
-     *                >
-     * }
+     *      result: one of PLAY_AGAIN/ELIMINATE/WINNER,
+     *      data: PLAY_AGAIN - n/a
+     *            ELIMINATE - array of selections to eliminate,
+     *            WINNER - winning selection ??
+     *    }
      */
     evaluateRound() {
+        // default result; play again
         let evaluation = {
             result: Game.PLAY_AGAIN,
-            players: []
+            data: null
         };
         let counts = this.roundSelections();
 
         // check if all selections picked
         let allPicked = (Object.values(counts).find(count => count === 0) === undefined);
-        if (allPicked) {
-            evaluation.result = Game.PLAY_AGAIN;
-        } else {
-
+        if (!allPicked) {
+            // find selection(s) with biggest count
+            let countEntries = [];
+            for (const [key, value] of Object.entries(counts)) {
+                // key 
+                countEntries.push({
+                    selection: key,
+                    count: value
+                });
+            }
+            countEntries.sort((a, b) => b.count - a.count); // sort descending order of count
+            const top = countEntries[0];
+            
+            // check if all same selection
+            if (top.count < Object.keys(counts).length) {
+                // check if top selections have same count
+                let topSelections = countEntries.filter(x => x.count == top.count);
+                switch (topSelections.length) {
+                    case 1:
+                        // eliminate losers to selection with highest count
+                        evaluation.result = Game.ELIMINATE;
+                        evaluation.data = this.variant.getRule(top.selection).defeats;
+                        break;
+                    case 2:
+                        // if one eliminates the other do that, otherwise play again
+                        break;
+                }
+            }
+            // else all same selection, so play again
         }
 
         return evaluation;
+    }
+
+    /**
+     * Process evaluation of a round.
+     * @param {object} evaluation - result from evaluateRound()
+     * @returns {object} result of the form {
+     *      result: one of PLAY_AGAIN/WINNER,
+     *      data: PLAY_AGAIN - n/a
+     *            WINNER - winning player
+     *    }
+     */
+    processEvaluation(evaluation) {
+        let processed = {
+            result: Game.PLAY_AGAIN,
+            data: null
+        };
+        switch (evaluation.result) {
+            case Game.ELIMINATE:
+                let eliminated = [];
+                for (const selection of evaluation.data) {
+                    this.players.forEach(player => {
+                        if (player.inGame && player.selection === selection) {
+                            player.inGame = false;  // player eliminated
+                            eliminated.push(player);
+                        }
+                    });
+                }
+                if (this.activePlayerCount == 1) {
+                    // only one player remaining return winner
+                    processed.result = Game.WINNER;
+                    processed.data = this.players.find(player => player.inGame);
+                } else {
+                    // return eliminated players
+                    processed.data = eliminated;
+                }
+                break;
+        }
+        return processed;
     }
 
     /**
