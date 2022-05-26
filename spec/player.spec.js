@@ -18,43 +18,43 @@ import { Player, Robot } from '../assets/js/player.js';
  */
 function checkPlayer(player, name, isRobot, inGame, selection, 
                       nToBe = true, rToBe = true, gToBe = true, sToBe = true) {
-  if (nToBe) {
-    expect(player.name).toBe(name);
-  } else  {
-    expect(player.name).not.toBe(name);
-  }
-  if (rToBe) {
-    expect(player.isRobot).toBe(isRobot);
-  } else {
-    expect(player.isRobot).not.toBe(isRobot);
-  }
-  if (gToBe) {
-    expect(player.inGame).toBe(inGame);
-  } else {
-    expect(player.inGame).not.toBe(inGame);
-  }
-  if (sToBe) {
-    expect(player.selection).toBe(selection);
-  } else {
-    expect(player.selection).not.toBe(selection);
-  }
+    if (nToBe) {
+        expect(player.name).toBe(name);
+    } else  {
+        expect(player.name).not.toBe(name);
+    }
+    if (rToBe) {
+        expect(player.isRobot).toBe(isRobot);
+    } else {
+        expect(player.isRobot).not.toBe(isRobot);
+    }
+    if (gToBe) {
+        expect(player.inGame).toBe(inGame);
+    } else {
+        expect(player.inGame).not.toBe(inGame);
+    }
+    if (sToBe) {
+        expect(player.selection).toBe(selection);
+    } else {
+        expect(player.selection).not.toBe(selection);
+    }
 }
 
 /* 
   Check Player class
  */
 describe("check Player", function() {
-  it("checks Player()", function() {
-      let player = new Player();
-      checkPlayer(player, null, false, false, Selection.None, false);
-      checkPlayer(player, undefined, false, false, Selection.None, false);
-  });
+    it("checks Player()", function() {
+        let player = new Player();
+        checkPlayer(player, null, false, false, Selection.None, false);
+        checkPlayer(player, undefined, false, false, Selection.None, false);
+    });
 
-  it("checks Player(name)", function() {
-    const name = 'RockMonster';
-    let player = new Player(name);
-    checkPlayer(player, name, false, false, Selection.None);
-  });
+    it("checks Player(name)", function() {
+        const name = 'RockMonster';
+        let player = new Player(name);
+        checkPlayer(player, name, false, false, Selection.None);
+    });
 });
 
 /* 
@@ -74,4 +74,3 @@ describe("check Robot", function() {
       expect(player.name).toContain(id.toString());
     });
 });
-  
