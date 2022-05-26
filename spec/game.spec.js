@@ -232,7 +232,7 @@ describe("check GameVariant", function() {
 /* 
   Check Game class
  */
-describe("check Game class", function() {
+fdescribe("check Game class", function() {
 
     /**
      * Check game
@@ -283,40 +283,36 @@ describe("check Game class", function() {
         }
     }
 
-    it("checks Game()", function() {
-        // Checking exception for a function with parameter is not supported in jasmine, so wrap in anonymous function
-        expect(function() {
-            new Game();
-        })
-        .toThrowError(getRequiredVariableMessage('variant'));
-    });
+    /**
+     * Perform basics checks on a game
+     * @param {GameVariant} variant - variant to use for game
+     * @param {number} numPayers - number of players
+     * @param {number} numRobots - number of robots
+     * @param {Game} game object
+     */
+    function checkVariant(variant, numPayers, numRobots) {
+        const ALL_PLAYERS = numPayers + numRobots;
 
-    it("checks Game()", function() {
-        const variant = GameVariant.Basic;
-        const NUM_PLAYERS = variant.numPossibleSelections;
-        const NUM_ROBOTS = 0;
-        const ALL_PLAYERS = NUM_PLAYERS + NUM_ROBOTS;
+        const game = new Game(variant, numPayers, numRobots);
 
-        let game = new Game(variant, NUM_PLAYERS, NUM_ROBOTS);
-
-        checkGame(game, NUM_PLAYERS, NUM_ROBOTS, 0, true, false, false);
+        checkGame(game, numPayers, numRobots, 0, true, false, false);
 
         // start
         game.startGame();
 
         let expectedActive = ALL_PLAYERS;
-        checkGame(game, NUM_PLAYERS, NUM_ROBOTS, expectedActive, false, true, false);
+        checkGame(game, numPayers, numRobots, expectedActive, false, true, false);
 
         // Check different selection each player
         let plays = makePlays(variant, game.players, function(index) {
-            return variant.possibleSelections[index % NUM_PLAYERS];
+            return variant.possibleSelections[index % numPayers];
         });
         // confirm game counts match played selections
         confirmCounts(game.roundSelections(), plays);
         // confirm play again result for round
         let evaluation = game.evaluateRound();
         expect(evaluation.result).toBe(Game.PLAY_AGAIN);
-        checkGame(game, NUM_PLAYERS, NUM_ROBOTS, expectedActive, false, true, false);
+        checkGame(game, numPayers, numRobots, expectedActive, false, true, false);
 
         // Check same selection each player
         plays = makePlays(variant, game.players, function(index) {
@@ -327,7 +323,7 @@ describe("check Game class", function() {
         // confirm play again result for round
         evaluation = game.evaluateRound();
         expect(evaluation.result).toBe(Game.PLAY_AGAIN);
-        checkGame(game, NUM_PLAYERS, NUM_ROBOTS, expectedActive, false, true, false);
+        checkGame(game, numPayers, numRobots, expectedActive, false, true, false);
 
         // Check all players bar one make same selection
         let useRule = variant.rules[0];
@@ -343,13 +339,13 @@ describe("check Game class", function() {
         evaluation = game.evaluateRound();
         expect(evaluation.result).toBe(Game.ELIMINATE);
         expect(evaluation.data).toEqual(useRule.defeats);
-        checkGame(game, NUM_PLAYERS, NUM_ROBOTS, expectedActive, false, true, false);
+        checkGame(game, numPayers, numRobots, expectedActive, false, true, false);
         // confirm eliminated one player
         --expectedActive;
         let processed = game.processEvaluation(evaluation);
         expect(processed.result).toBe(Game.PLAY_AGAIN);
         expect(processed.data).toEqual([selectedPlayer]);
-        checkGame(game, NUM_PLAYERS, NUM_ROBOTS, expectedActive, false, true, false);
+        checkGame(game, numPayers, numRobots, expectedActive, false, true, false);
 
         // Check one player makes winning selection
         useRule = variant.rules[variant.rules.length - 1];
@@ -359,7 +355,7 @@ describe("check Game class", function() {
             // last player selects winning option
             return (!game.players[index].inGame ? 
                         Selection.None : (index === playerIdx ? 
-                        useRule.selection : useRule.defeats[0])
+                        useRule.selection : useRule.defeats[index % useRule.defeats.length])
                     );
         });
         // confirm game counts match played selections
@@ -368,17 +364,57 @@ describe("check Game class", function() {
         evaluation = game.evaluateRound();
         expect(evaluation.result).toBe(Game.ELIMINATE);
         expect(evaluation.data).toEqual(useRule.defeats);
-        checkGame(game, NUM_PLAYERS, NUM_ROBOTS, expectedActive, false, true, false);
+        checkGame(game, numPayers, numRobots, expectedActive, false, true, false);
         // confirm eliminated all player bar winner
         expectedActive = 1;
         processed = game.processEvaluation(evaluation);
         expect(processed.result).toBe(Game.WINNER);
         expect(processed.data).toBe(selectedPlayer);
-        checkGame(game, NUM_PLAYERS, NUM_ROBOTS, expectedActive, false, true, false);
+        checkGame(game, numPayers, numRobots, expectedActive, false, true, false);
 
         // end
         game.endGame();
-        checkGame(game, NUM_PLAYERS, NUM_ROBOTS, 0, false, false, true);
+        checkGame(game, numPayers, numRobots, 0, false, false, true);
+
+        return game;
+    }
+
+    it("checks Game()", function() {
+        // Checking exception for a function with parameter is not supported in jasmine, so wrap in anonymous function
+        expect(function() {
+            new Game();
+        })
+        .toThrowError(getRequiredVariableMessage('variant'));
+    });
+
+    it("checks Game(Basic)", function() {
+        const variant = GameVariant.Basic;
+        const NUM_PLAYERS = variant.numPossibleSelections;
+        const NUM_ROBOTS = 0;
+        const ALL_PLAYERS = NUM_PLAYERS + NUM_ROBOTS;
+
+        const game = checkVariant(variant, NUM_PLAYERS, NUM_ROBOTS);
+
+    });
+
+    it("checks Game(BigBang)", function() {
+        const variant = GameVariant.BigBang;
+        const NUM_PLAYERS = variant.numPossibleSelections;
+        const NUM_ROBOTS = 0;
+        const ALL_PLAYERS = NUM_PLAYERS + NUM_ROBOTS;
+
+        const game = checkVariant(variant, NUM_PLAYERS, NUM_ROBOTS);
+
+    });
+
+    it("checks Game(Xtreme)", function() {
+        const variant = GameVariant.Xtreme;
+        const NUM_PLAYERS = variant.numPossibleSelections;
+        const NUM_ROBOTS = 0;
+        const ALL_PLAYERS = NUM_PLAYERS + NUM_ROBOTS;
+
+        const game = checkVariant(variant, NUM_PLAYERS, NUM_ROBOTS);
+
     });
 });
   
