@@ -2,8 +2,8 @@
     Player functions and classes.
     @author Ian Buttimer
 */
-import { Selection } from './game.js'
-import { variableCheck } from './utils.js';
+import { Selection, GameMode } from './game.js'
+import { variableCheck, requiredVariable } from './utils.js';
 
 /**
  * Class representing a player.
@@ -28,11 +28,32 @@ import { variableCheck } from './utils.js';
         }
 
         this.name = name;
+        this.initState();
+
+        ++Player.#playerCount;
+    }
+
+    /**
+     * Initialise the player state.
+     */
+    initState() {
         this.isRobot = false;
         this.inGame = false;
         this.selection = Selection.None;
+    }
 
-        ++Player.#playerCount;
+    /**
+     * Set the player's selection
+     * @param {Selection} selection - selected selection
+     * @param {GameMode} mode - game mode of game
+     * @param {GameVariant} variant - game variant
+     */
+    setSelection(selection, mode = GameMode.Live, variant = null) {
+        // sanity checks
+        requiredVariable(selection, 'selection');
+        requiredVariable(mode, 'mode');
+        // player's selection will always be set irrespective of game mode
+        this.selection = selection;
     }
 }
 
@@ -54,9 +75,17 @@ import { variableCheck } from './utils.js';
         }
 
         super(`Robot ${id}`);
-        this.isRobot = true;
+        this.initState();
 
         ++Robot.#robotCount;
+    }
+
+    /**
+     * Initialise the player state.
+     */
+    initState() {
+        super.initState();
+        this.isRobot = true;
     }
 
     /** Get name */
@@ -85,6 +114,24 @@ import { variableCheck } from './utils.js';
      */
     set inGame(playing) {
         super.inGame = playing;
+    }
+
+    /**
+     * Set the robot's selection
+     * @param {GameVariant} variant - game variant to make selection from
+     * @param {GameMode} mode - game mode of game
+     * @param {Selection} selection - selected selection
+     */
+     setSelection(selection = Selection.None, mode = GameMode.Live, variant) {
+        // sanity checks
+        requiredVariable(variant, 'variant');
+        requiredVariable(mode, 'mode');
+        // robot's selection will be set in test & demo mode's and random in live
+        if (mode === GameMode.Live) {
+            this.selection = variant.randomSelection();
+        } else {
+            this.selection = selection;
+        }
     }
 
     /**

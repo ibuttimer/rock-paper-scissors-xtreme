@@ -1,7 +1,7 @@
 /*
   Test suite for game.js
  */
-import { Rule, Selection, GameVariant, Game } from '../assets/js/game.js'
+import { Rule, Selection, GameVariant, Game, GameMode, RoundResult } from '../assets/js/game.js'
 import { getRequiredVariableMessage } from './utils.spec.js';
 
 /* 
@@ -232,7 +232,7 @@ describe("check GameVariant", function() {
 /* 
   Check Game class
  */
-fdescribe("check Game class", function() {
+describe("check Game class", function() {
 
     /**
      * Check game
@@ -265,7 +265,7 @@ fdescribe("check Game class", function() {
             const player = players[index];
             const selection = picker(index);
             if (selection !== Selection.None) {
-                player.selection = selection;
+                player.setSelection(selection, GameMode.Test, variant);
                 plays[selection]++;
             }
         }
@@ -294,6 +294,7 @@ fdescribe("check Game class", function() {
         const ALL_PLAYERS = numPayers + numRobots;
 
         const game = new Game(variant, numPayers, numRobots);
+        game.gameMode = GameMode.Test;
 
         checkGame(game, numPayers, numRobots, 0, true, false, false);
 
@@ -305,13 +306,13 @@ fdescribe("check Game class", function() {
 
         // Check different selection each player
         let plays = makePlays(variant, game.players, function(index) {
-            return variant.possibleSelections[index % numPayers];
+            return variant.possibleSelections[index % expectedActive];
         });
         // confirm game counts match played selections
         confirmCounts(game.roundSelections(), plays);
         // confirm play again result for round
         let evaluation = game.evaluateRound();
-        expect(evaluation.result).toBe(Game.PLAY_AGAIN);
+        expect(evaluation.result).toBe(RoundResult.PlayAgain);
         checkGame(game, numPayers, numRobots, expectedActive, false, true, false);
 
         // Check same selection each player
@@ -322,7 +323,7 @@ fdescribe("check Game class", function() {
         confirmCounts(game.roundSelections(), plays);
         // confirm play again result for round
         evaluation = game.evaluateRound();
-        expect(evaluation.result).toBe(Game.PLAY_AGAIN);
+        expect(evaluation.result).toBe(RoundResult.PlayAgain);
         checkGame(game, numPayers, numRobots, expectedActive, false, true, false);
 
         // Check all players bar one make same selection
@@ -337,13 +338,13 @@ fdescribe("check Game class", function() {
         confirmCounts(game.roundSelections(), plays);
         // confirm eliminate player result for round
         evaluation = game.evaluateRound();
-        expect(evaluation.result).toBe(Game.ELIMINATE);
+        expect(evaluation.result).toBe(RoundResult.Eliminate);
         expect(evaluation.data).toEqual(useRule.defeats);
         checkGame(game, numPayers, numRobots, expectedActive, false, true, false);
         // confirm eliminated one player
         --expectedActive;
         let processed = game.processEvaluation(evaluation);
-        expect(processed.result).toBe(Game.PLAY_AGAIN);
+        expect(processed.result).toBe(RoundResult.PlayAgain);
         expect(processed.data).toEqual([selectedPlayer]);
         checkGame(game, numPayers, numRobots, expectedActive, false, true, false);
 
@@ -362,13 +363,13 @@ fdescribe("check Game class", function() {
         confirmCounts(game.roundSelections(), plays);
         // confirm eliminate player result for round
         evaluation = game.evaluateRound();
-        expect(evaluation.result).toBe(Game.ELIMINATE);
+        expect(evaluation.result).toBe(RoundResult.Eliminate);
         expect(evaluation.data).toEqual(useRule.defeats);
         checkGame(game, numPayers, numRobots, expectedActive, false, true, false);
         // confirm eliminated all player bar winner
         expectedActive = 1;
         processed = game.processEvaluation(evaluation);
-        expect(processed.result).toBe(Game.WINNER);
+        expect(processed.result).toBe(RoundResult.Winner);
         expect(processed.data).toBe(selectedPlayer);
         checkGame(game, numPayers, numRobots, expectedActive, false, true, false);
 
@@ -389,12 +390,11 @@ fdescribe("check Game class", function() {
 
     it("checks Game(Basic)", function() {
         const variant = GameVariant.Basic;
-        const NUM_PLAYERS = variant.numPossibleSelections;
-        const NUM_ROBOTS = 0;
+        const NUM_ROBOTS = 1;
+        const NUM_PLAYERS = variant.numPossibleSelections - NUM_ROBOTS;
         const ALL_PLAYERS = NUM_PLAYERS + NUM_ROBOTS;
 
         const game = checkVariant(variant, NUM_PLAYERS, NUM_ROBOTS);
-
     });
 
     it("checks Game(BigBang)", function() {
@@ -404,7 +404,6 @@ fdescribe("check Game class", function() {
         const ALL_PLAYERS = NUM_PLAYERS + NUM_ROBOTS;
 
         const game = checkVariant(variant, NUM_PLAYERS, NUM_ROBOTS);
-
     });
 
     it("checks Game(Xtreme)", function() {
@@ -414,7 +413,6 @@ fdescribe("check Game class", function() {
         const ALL_PLAYERS = NUM_PLAYERS + NUM_ROBOTS;
 
         const game = checkVariant(variant, NUM_PLAYERS, NUM_ROBOTS);
-
     });
 });
   

@@ -12,11 +12,59 @@ const XTREME_GAME_NAME = 'Xtreme';
 
 
 // Enum classes based on examples from https://masteringjs.io/tutorials/fundamentals/enum
+/**
+ * Enum representing all possible game selections.
+ */
+export class Enum {
+    /**
+     * @constructor
+     * @param {string} name - enum name.
+     */
+    constructor(name) {
+        // sanity checks
+        requiredVariable(name, 'name');
+        this.name = name;
+    }
+
+    /**
+     * String representation of object.
+     * @param {object} classDeclaration - class declaration
+     * @returns {string} string of form '<Class name>.<object name>'
+     */
+    toString(classDeclaration) {
+        return `${classDeclaration.name}.${this.name}`;
+    }
+
+    /**
+     * Get a finder function suitable for use in Array.find() to match a selection.
+     * @param {object|string} seeking - enum to find
+     * @param {object} classDeclaration - class declaration
+     * @param {function} accessor - accessor function to get Enum objects from array elements; 
+     *                              default pass through
+     * @returns {function}  finder function
+     */
+     static getFinder(seeking, classDeclaration, accessor = x => x) {
+        let predicate;
+        if (typeof seeking === 'string') {
+            if (seeking.startsWith(`${classDeclaration.name}.`)) {
+                // if toString() is passed check toString()'s matches
+                predicate = element => accessor(element).toString() === seeking;
+            } else {
+                // check the name matches
+                predicate = element => accessor(element).name === seeking;
+            }
+        } else {
+            // otherwise strict equivalence
+            predicate = element => accessor(element) === seeking;
+        }
+        return predicate;
+    }
+}
 
 /**
  * Enum representing all possible game selections.
  */
- export class Selection {
+ export class Selection extends Enum {
     // freeze selections so can't be modified
     static None = Object.freeze(new Selection('None'));     // no selection
     static Rock = Object.freeze(new Selection('Rock'));
@@ -34,9 +82,7 @@ const XTREME_GAME_NAME = 'Xtreme';
      * @param {string} name - selection name.
      */
     constructor(name) {
-        // sanity checks
-        requiredVariable(name, 'name');
-        this.name = name;
+        super(name);
     }
 
     /**
@@ -44,31 +90,18 @@ const XTREME_GAME_NAME = 'Xtreme';
      * @returns {string} string of form '<Class name>.<object name>'
      */
     toString() {
-        return `${Selection.name}.${this.name}`;
+        return super.toString(Selection);
     }
 
     /**
      * Get a finder function suitable for use in Array.find() to match a selection.
-     * @param {Selection|object|string} selection - selection to find
-     * @param {function} accessor - accessor function to get Selection objects from array; 
+     * @param {object|string} element - element to find
+     * @param {function} accessor - accessor function to get Selection objects from array elements; 
      *                              default pass through
      * @returns {function}  finder function
      */
-    static getFinder(selection, accessor = x => x) {
-        let predicate;
-        if (typeof selection === 'string') {
-            if (selection.startsWith(`${Selection.name}.`)) {
-                // if toString() is passed check toString()'s matches
-                predicate = element => accessor(element).toString() === selection;
-            } else {
-                // check the name matches
-                predicate = element => accessor(element).name === selection;
-            }
-        } else {
-            // otherwise strict equivalence
-            predicate = element => accessor(element) === selection;
-        }
-        return predicate;
+     static getFinder(element, accessor = x => x) {
+        return Enum.getFinder(element, Selection, accessor);
     }
 }
 
@@ -179,7 +212,7 @@ export class Rule {
 /**
  * Enum representing all possible game variants.
  */
- export class GameVariant {
+ export class GameVariant extends Enum {
     // freeze variants so can't be modified
     static Basic;
     static BigBang;
@@ -219,9 +252,7 @@ export class Rule {
      * @param {string} name - variant name.
      */
     constructor(name) {
-        // sanity checks
-        requiredVariable(name, 'name');
-        this.name = name;
+        super(name);
     }
 
     /** Finalise object to prepare for freezing. */
@@ -278,7 +309,88 @@ export class Rule {
      * @returns {string} string of form '<Class name>.<object name>'
      */
     toString() {
-        return `${GameVariant.name}.${this.name}`;
+        return super.toString(GameVariant);
+    }
+}
+
+/**
+ * Enum representing game modes.
+ */
+ export class GameMode extends Enum {
+    // freeze game modes so can't be modified
+    static Live = Object.freeze(new Selection('Live'));
+    static Test = Object.freeze(new Selection('Test'));
+    static Demo = Object.freeze(new Selection('Demo'));
+  
+    /**
+     * @constructor
+     * @param {string} name - game mode name.
+     */
+    constructor(name) {
+        super(name, 'name');
+    }
+
+    /**
+     * String representation of object.
+     * @returns {string} string of form '<Class name>.<object name>'
+     */
+    toString() {
+        return super.toString(GameMode);
+    }
+}
+
+/**
+ * Enum representing game statuses.
+ */
+ export class GameStatus extends Enum {
+    // freeze game statuses so can't be modified
+    static NotStarted = Object.freeze(new GameStatus('NotStarted'));
+    static InProgress = Object.freeze(new GameStatus('InProgress'));
+    static Finished = Object.freeze(new GameStatus('Finished'));
+  
+    /**
+     * @constructor
+     * @param {string} name - game mode name.
+     */
+    constructor(name) {
+        super(name, 'name');
+    }
+
+    /**
+     * String representation of object.
+     * @returns {string} string of form '<Class name>.<object name>'
+     */
+    toString() {
+        return super.toString(GameStatus);
+    }
+}
+
+/**
+ * Enum representing round results.
+ */
+ export class RoundResult extends Enum {
+    // freeze game statuses so can't be modified
+    /** All active players, play again */
+    static PlayAgain = Object.freeze(new RoundResult('PlayAgain'));
+    /** Eliminate players with specific selection(s) */
+    static Eliminate = Object.freeze(new RoundResult('Eliminate'));
+    /** Winner found */
+    static Winner = Object.freeze(new RoundResult('Winner'));
+  
+    /**
+     * @constructor
+     * @param {string} name - game mode name.
+     */
+    constructor(name) {
+        super(name, 'name');
+    }
+
+    /**
+     * String representation of object.
+     * @returns {string} string of form '<Class name>.<object name>'
+     */
+    toString() {
+        return super.toString(RoundResult);
     }
 }
 
@@ -287,17 +399,8 @@ export class Rule {
  */
  export class Game {
 
-    // game statuses
-    static NOT_STARTED = 0;
-    static IN_PROGRESS = 1;
-    static FINISHED = 2;
-
-    // round evaluation results
-    static PLAY_AGAIN = 0;  // all active players, play again
-    static ELIMINATE = 1;   // eliminate player with specific selection(s)
-    static WINNER = 2;      // winner found
-
     variant;        // game variant
+    gameMode;       // game mode
     numPlayers;     // number of players
     numRobots;      // number of robots
     players;        // array of game players
@@ -309,7 +412,7 @@ export class Rule {
      * @param {number} numPlayers - number of players; default 1
      * @param {number} numRobots - number of robots; default 1
      */
-    constructor(variant, numPlayers = 1, numRobots = 0) {
+    constructor(variant, numPlayers = 1, numRobots = 1) {
         // sanity checks
         requiredVariable(variant, 'variant');
         if (numPlayers + numRobots < 2) {
@@ -317,9 +420,10 @@ export class Rule {
         }
 
         this.variant = variant;
+        this.gameMode = GameMode.Live;
         this.numPlayers = numPlayers;
         this.numRobots = numRobots;
-        this.#status = Game.NOT_STARTED;
+        this.#status = GameStatus.NotStarted;
 
         this.init();
     }
@@ -350,15 +454,18 @@ export class Rule {
      * Start the game
      */
     startGame() {
-        this.#status = Game.IN_PROGRESS;
-        this.applyToPlayers(player => player.inGame = true);
+        this.#status = GameStatus.InProgress;
+        this.applyToPlayers(player => {
+            player.initState();
+            player.inGame = true
+        });
     }
 
     /**
      * End the game
      */
     endGame() {
-        this.#status = Game.FINISHED;
+        this.#status = GameStatus.Finished;
         this.applyToPlayers(player => player.inGame = false);
     }
 
@@ -372,16 +479,16 @@ export class Rule {
     /**
      * Evaluate the result of a round.
      * @returns {object} result of the form {
-     *      result: one of PLAY_AGAIN/ELIMINATE/WINNER,
-     *      data: PLAY_AGAIN - n/a
-     *            ELIMINATE - array of selections to eliminate,
-     *            WINNER - winning selection ??
+     *      result: one of RoundResult,
+     *      data: PlayAgain - n/a
+     *            Eliminate - array of selections to eliminate,
+     *            Winner - winning selection ??
      *    }
      */
     evaluateRound() {
         // default result; play again
         let evaluation = {
-            result: Game.PLAY_AGAIN,
+            result: RoundResult.PlayAgain,
             data: null
         };
         let counts = this.roundSelections();
@@ -432,7 +539,7 @@ export class Rule {
 
                 if (activated > 0) {
                     // eliminate losers
-                    evaluation.result = Game.ELIMINATE;
+                    evaluation.result = RoundResult.Eliminate;
                     evaluation.data = eliminated;
                 }
                 // else play again
@@ -447,18 +554,18 @@ export class Rule {
      * Process evaluation of a round.
      * @param {object} evaluation - result from evaluateRound()
      * @returns {object} result of the form {
-     *      result: one of PLAY_AGAIN/WINNER,
-     *      data: PLAY_AGAIN - n/a
-     *            WINNER - winning player
+     *      result: one of RoundResult,
+     *      data: PlayAgain - n/a
+     *            Winner - winning player
      *    }
      */
     processEvaluation(evaluation) {
         let processed = {
-            result: Game.PLAY_AGAIN,
+            result: RoundResult.PlayAgain,
             data: null
         };
         switch (evaluation.result) {
-            case Game.ELIMINATE:
+            case RoundResult.Eliminate:
                 let eliminated = [];
                 for (const selection of evaluation.data) {
                     this.players.forEach(player => {
@@ -470,7 +577,7 @@ export class Rule {
                 }
                 if (this.activePlayerCount == 1) {
                     // only one player remaining return winner
-                    processed.result = Game.WINNER;
+                    processed.result = RoundResult.Winner;
                     processed.data = this.players.find(player => player.inGame);
                 } else {
                     // return eliminated players
@@ -500,7 +607,7 @@ export class Rule {
      * @returns {boolean} true if not started
      */
     get notStarted() {
-        return this.#status === Game.NOT_STARTED;
+        return this.#status === GameStatus.NotStarted;
     }
 
     /**
@@ -508,7 +615,7 @@ export class Rule {
      * @returns {boolean} true if in progress
      */
     get inProgress() {
-        return this.#status === Game.IN_PROGRESS;
+        return this.#status === GameStatus.InProgress;
     }
 
     /**
@@ -516,7 +623,7 @@ export class Rule {
      * @returns {boolean} true if finished
      */
     get isOver() {
-        return this.#status === Game.FINISHED;
+        return this.#status === GameStatus.Finished;
     }
 
     /**
