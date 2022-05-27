@@ -1,7 +1,7 @@
 /*
   Test suite for game.js
  */
-import { Selection } from '../assets/js/game.js'
+import { Selection } from '../assets/js/enums.js'
 import { Player, Robot } from '../assets/js/player.js';
 
 /**

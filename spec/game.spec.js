@@ -1,7 +1,8 @@
 /*
   Test suite for game.js
  */
-import { Rule, Selection, GameVariant, Game, GameMode, RoundResult } from '../assets/js/game.js'
+import { Rule, GameVariant, Game } from '../assets/js/game.js'
+import { Selection, GameMode, RoundResult } from '../assets/js/enums.js'
 import { getRequiredVariableMessage } from './utils.spec.js';
 
 /* 
@@ -326,7 +327,7 @@ describe("check Game class", function() {
         expect(evaluation.result).toBe(RoundResult.PlayAgain);
         checkGame(game, numPayers, numRobots, expectedActive, false, true, false);
 
-        // Check all players bar one make same selection
+        // Check all players except one make same selection, and other player makes losing selection
         let useRule = variant.rules[0];
         let playerIdx = 0;
         let selectedPlayer = game.players[playerIdx];

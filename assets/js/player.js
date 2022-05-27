@@ -2,7 +2,7 @@
     Player functions and classes.
     @author Ian Buttimer
 */
-import { Selection, GameMode } from './game.js'
+import { Selection, GameMode } from './enums.js'
 import { variableCheck, requiredVariable } from './utils.js';
 
 /**

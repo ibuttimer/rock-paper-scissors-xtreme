@@ -1,4 +1,4 @@
-import { Player, GameVariant, Game } from './game.js';
+import { GameVariant, Game } from './game.js';
 
 
 /* Wait for the DOM to finish loading before running the game
