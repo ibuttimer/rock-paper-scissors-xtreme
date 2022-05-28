@@ -55,6 +55,14 @@ import { variableCheck, requiredVariable } from './utils.js';
         // player's selection will always be set irrespective of game mode
         this.selection = selection;
     }
+
+    /**
+     * String representation of object.
+     * @returns {string}
+     */
+     toString() {
+        return `{${this.name}, robot:${this.isRobot ? 'Y' : 'N'}, inGame:${this.inGame ? 'Y' : 'N'}, selection:${this.selection}}`;
+    }
 }
 
 /**

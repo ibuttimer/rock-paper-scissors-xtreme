@@ -1,7 +1,7 @@
 /*
   Test suite for game.js
  */
-import { Rule, GameVariant, Game } from '../assets/js/game.js'
+import { Contest, Rule, GameVariant, Game } from '../assets/js/game.js'
 import { Selection, GameMode, RoundResult } from '../assets/js/enums.js'
 import { getRequiredVariableMessage } from './utils.spec.js';
 
@@ -61,52 +61,55 @@ describe("check Selection", function() {
   Check Rule class
  */
 describe("check Rule", function() {
-    it("checks Rule::addDefeat(selection)", function() {
+    it("checks Rule::addContest(contest)", function() {
         // basic rock-scissors rule
         let rule = new Rule(Selection.Rock);
-        expect(rule.defeats.length).toBe(0);
+        expect(rule.contests.length).toBe(0);
 
-        rule.addDefeat(Selection.Scissors);
-        expect(rule.defeats.length).toBe(1);
+        rule.addContest(Selection.Scissors);
+        expect(rule.contests.length).toBe(1);
     });
 
-    it("checks Rule::addDefeat(selection array)", function() {
+    it("checks Rule::addContest(contest array)", function() {
         // rock-[scissors, paper] rule
         let rule = new Rule(Selection.Rock);
-        expect(rule.defeats.length).toBe(0);
+        expect(rule.contests.length).toBe(0);
 
-        rule.addDefeat([Selection.Scissors, Selection.Paper]);
-        expect(rule.defeats.length).toBe(2);
+        rule.addContest([Selection.Scissors, Selection.Paper]);
+        expect(rule.contests.length).toBe(2);
     });
 
-    it("checks Rule set defeats", function() {
+    it("checks Rule set contests", function() {
         // basic rock-scissors rule
         let rule = new Rule(Selection.Rock);
-        expect(rule.defeats.length).toBe(0);
+        expect(rule.contests.length).toBe(0);
 
-        rule.defeats = [Selection.Scissors];
-        expect(rule.defeats.length).toBe(1);
+        rule.contests = [Selection.Scissors];
+        expect(rule.contests.length).toBe(1);
     });
 
-    it("checks Rule.of(selection)", function() {
+    it("checks Rule.of(contest)", function() {
         // basic rock-scissors rule
-        let rule = Rule.of(Selection.Rock, Selection.Scissors);
-        expect(rule.defeats.length).toBe(1);
+        let rule = Rule.of(Selection.Rock, Contest.of(Selection.Rock, Selection.Scissors));
+        expect(rule.contests.length).toBe(1);
     });
 
-    it("checks Rule.of(selection array)", function() {
-        // rock-[scissors, paper] rule
-        let rule = Rule.of(Selection.Rock, [Selection.Scissors, Selection.Paper]);
-        expect(rule.defeats.length).toBe(2);
+    it("checks Rule.of(contest array)", function() {
+        // rock-[scissors, lizard] rule
+        let rule = Rule.of(Selection.Rock, [
+            Contest.of(Selection.Rock, Selection.Scissors, 'blunts'), 
+            Contest.of(Selection.Rock, Selection.Lizard, 'crushes')
+        ]);
+        expect(rule.contests.length).toBe(2);
     });
 
     it("checks Rule::beats()", function() {
         // basic rock-scissors rule
         let rule = new Rule(Selection.Rock);
-        expect(rule.defeats.length).toBe(0);
+        expect(rule.contests.length).toBe(0);
 
-        rule.addDefeat(Selection.Scissors);
-        expect(rule.defeats.length).toBe(1);
+        rule.addContest(Contest.of(Selection.Rock, Selection.Scissors, 'blunts'));
+        expect(rule.contests.length).toBe(1);
 
         expect(rule.beats(Selection.Scissors)).toBe(true);
         expect(rule.beats(Selection.Paper)).toBe(false);
@@ -165,8 +168,8 @@ describe("check GameVariant", function() {
         let variant = new GameVariant('duplicate');
         const selection = Selection.Rock;
         variant.rules = [
-            Rule.of(selection, [Selection.Scissors]),
-            Rule.of(selection, [Selection.Paper])
+            Rule.of(selection, [Contest.of(selection, Selection.Scissors)]),
+            Rule.of(selection, [Contest.of(selection, Selection.Paper)])
         ];
         expect(function() {
             variant.finalise();
@@ -270,6 +273,7 @@ describe("check Game class", function() {
                 plays[selection]++;
             }
         }
+        debugLog(plays, 'plays', false);
         return plays;
     }
 
@@ -282,6 +286,51 @@ describe("check Game class", function() {
         for (let selection in plays) {
             expect(counts[selection]).toBe(plays[selection]);
         }
+    }
+
+    /**
+     * Generate an elimination explanation regex.
+     * @param {Selection} winningSelection - winning selection
+     * @param {Selection} losingSelection  - losing selection
+     * @returns {string} regex
+     */
+    function explanationRegex(winningSelection, losingSelection) {
+        return `^${winningSelection.name}\\s+\\w+\\s+${losingSelection.name}.*`
+    }
+
+    /**
+     * Log an object for debug purposes.
+     * @param {object} object - object to log
+     * @param {string} message - context message to log
+     * @param {boolean} hasToString - object has toString() method flag
+     */
+    function debugLog(object, message = '', hasToString = true) {
+        let str;
+        if (hasToString) {
+            str = object.toString();
+        } else {
+            str = '{';
+            if (object instanceof Set) {
+                for (let item of object) {
+                    str += `${item}, `
+                }
+            }
+                else {
+                for (const key in object) {
+                    if (Object.hasOwnProperty.call(object, key)) {
+                        str += `${key}: ${object[key]}, `
+                    }
+                }
+            }
+            if (str.length > 2) {
+                str = str.substring(0, str.length - 2);
+            }
+            str += '}';
+        }
+        if (message) {
+            str = `${message}> ${str}`;
+        }
+        jasmine.debugLog(str);
     }
 
     /**
@@ -331,16 +380,24 @@ describe("check Game class", function() {
         let useRule = variant.rules[0];
         let playerIdx = 0;
         let selectedPlayer = game.players[playerIdx];
+        let winningSelection = useRule.selection;
+        let losingSelection = useRule.contests[0].loser;
         plays = makePlays(variant, game.players, function(index) {
-            // first player selects losing option
-            return (index === playerIdx ? useRule.defeats[0] : useRule.selection);
+            // selected player losing option, others winning option
+            return (index === playerIdx ? losingSelection : winningSelection);
         });
         // confirm game counts match played selections
         confirmCounts(game.roundSelections(), plays);
         // confirm eliminate player result for round
         evaluation = game.evaluateRound();
         expect(evaluation.result).toBe(RoundResult.Eliminate);
-        expect(evaluation.data).toEqual(useRule.defeats);
+        expect(evaluation.data).toEqual(useRule.contests);
+        expect(evaluation.explanation.length).toBe(1);
+        expect(evaluation.explanation[0])
+            .toEqual(
+                jasmine.stringMatching(
+                    explanationRegex(winningSelection, losingSelection))
+            );
         checkGame(game, numPayers, numRobots, expectedActive, false, true, false);
         // confirm eliminated one player
         --expectedActive;
@@ -353,19 +410,52 @@ describe("check Game class", function() {
         useRule = variant.rules[variant.rules.length - 1];
         playerIdx = game.players.length - 1;
         selectedPlayer = game.players[playerIdx];
+        winningSelection = useRule.selection;
+        let selected = new Set();       // selections made in play
+        let explanations = new Set();   // individual win explanations
         plays = makePlays(variant, game.players, function(index) {
-            // last player selects winning option
-            return (!game.players[index].inGame ? 
-                        Selection.None : (index === playerIdx ? 
-                        useRule.selection : useRule.defeats[index % useRule.defeats.length])
-                    );
+            // none if player eliminated, else selected player winning option, others losing options
+            let selection = Selection.None;
+            if (game.players[index].inGame) {
+                selection = (index === playerIdx ? 
+                    winningSelection : useRule.contests[index % useRule.contests.length].loser);
+                selected.add(selection);
+            }
+            return selection;
         });
+        // find all win explanations
+        for (const selection of selected) {
+            const rule = variant.getRule(selection);
+            for (const contest of rule.contests) {
+                if (selected.has(contest.loser)) {
+                    explanations.add(explanationRegex(selection, contest.loser));
+                }
+            }
+        }
         // confirm game counts match played selections
         confirmCounts(game.roundSelections(), plays);
         // confirm eliminate player result for round
         evaluation = game.evaluateRound();
+
+        debugLog(explanations, 'expected explanations');
+        debugLog(evaluation, 'evaluation');
+
         expect(evaluation.result).toBe(RoundResult.Eliminate);
-        expect(evaluation.data).toEqual(useRule.defeats);
+        expect(evaluation.data).toEqual(useRule.contests);
+        expect(evaluation.explanation.length).toBe(explanations.size);
+        for (let index = 0; index < evaluation.explanation.length; index++) {
+            const reason = evaluation.explanation[index];
+            let matched = false;
+            for (const regex of explanations) {
+                if (reason.match(regex)) {
+                    matched = true;
+                    break;
+                }
+            }
+            expect(matched)
+                .withContext(`Match reason ${reason}`)
+                .toBeTrue();
+        }
         checkGame(game, numPayers, numRobots, expectedActive, false, true, false);
         // confirm eliminated all player bar winner
         expectedActive = 1;

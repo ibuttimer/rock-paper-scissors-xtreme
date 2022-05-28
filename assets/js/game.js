@@ -11,12 +11,68 @@ const BASIC_GAME_NAME = 'Basic';
 const BIG_BANG_GAME_NAME = 'BigBang';
 const XTREME_GAME_NAME = 'Xtreme';
 
-/**
+/** 
+ * Class representing a selection contest 
+ */
+export class Contest {
+
+    static WIN_NAME = '<W>';
+    static LOSE_NAME = '<l>';
+
+    winner;         // selection that wins
+    loser;          // selection that loses
+    explanation;    // explanation of loss
+
+    /**
+     * @constructor
+     * @param {Selection} winner - selection that wins.
+     * @param {Selection} loser - selection that loses.
+     * @param {string} action - action performed
+     */
+     constructor(winner, loser, action) {
+        // sanity checks
+        requiredVariable(winner, 'winner');
+        requiredVariable(loser, 'loser');
+        if (!variableCheck(action, 'action')) {
+            action = `beats`
+        }
+        if (action.indexOf(Contest.WIN_NAME) === -1) {
+            action = `${Contest.WIN_NAME} ${action} ${Contest.LOSE_NAME}`
+        }
+
+        this.winner = winner;
+        this.loser = loser;
+        this.explanation = action.replace(Contest.WIN_NAME, winner.name)
+                                .replace(Contest.LOSE_NAME, loser.name);
+    }
+
+    /**
+     * Factory method to construct a Contest.
+     * @param {Selection} winner - selection that wins.
+     * @param {Selection} loser - selection that loses.
+     * @param {string} action - action performed
+     * @returns {Contest} new object
+     */
+     static of(winner, loser, action) {
+        return new Contest(winner, loser, action);
+    }
+
+    /**
+     * String representation of object.
+     * @returns {string}
+     */
+     toString() {
+        return `{${this.winner}, ${this.loser}, ${this.explanation}}`;
+    }
+}
+
+/** 
  * Class representing a game rule for a selection option.
  */
 export class Rule {
 
-    defeats = [];   // array of Selections defeated by Selection for this rule
+    selection;      // selection this rule applies to
+    contests = [];  // array of Contests for this rule's Selection
 
     /**
      * @constructor
@@ -29,18 +85,18 @@ export class Rule {
     }
 
     /**
-     * Add a selection to the defeats list.
-     * @param {Selection} selection - selection to add
+     * Add a contest to the contests list.
+     * @param {Contest|Array} contest - Contest(s) to add
      * @returns {boolean} true if added, otherwise false
      */
-    addDefeat(selection) {
+    addContest(contest) {
         let modified = false;
         // sanity checks
-        if (variableCheck(selection, 'selection')) {
-            if (Array.isArray(selection)) {
-                this.defeats = this.defeats.concat(selection);
+        if (variableCheck(contest, 'loser')) {
+            if (Array.isArray(contest)) {
+                this.contests = this.contests.concat(contest);
             } else {
-                this.defeats.push(selection);
+                this.contests.push(contest);
             }
             modified = true;
         }
@@ -48,22 +104,42 @@ export class Rule {
     }
 
     /**
-     * Check if Selection for this rule, defeats the specified selection.
+     * Search this rule's contests for the specified losing selection.
      * @param {Selection|string} selection - selection to check
+     * @returns {Contest|undefined} loser or undefined
+     */
+    #findContest(selection) {
+        return this.contests.find(Selection.getFinder(selection, x => x.loser));
+    }
+
+    /**
+     * Check if the Selection for this rule, beats the specified selection.
+     * @param {Selection|string} selection - selection to check
+     * @returns {boolean} true if this rule contests the specified selection
      */
     beats(selection) {
-        return this.defeats.find(Selection.getFinder(selection)) !== undefined;
+        return this.#findContest(selection) !== undefined;
+    }
+
+    /**
+     * Explain why the Selection for this rule, beats the specified selection.
+     * @param {Selection|string} selection - selection to check
+     * @returns {string|undefined} explanation if this rule beats the specified selection, otherwise undefined
+     */
+    explanation(selection) {
+        const loser = this.#findContest(selection);
+        return loser ? loser.explanation : null;
     }
 
     /**
      * Factory method to construct a Rule.
      * @param {Selection} selection - selection.
-     * @param {Array} defeats - array of Selections defeated by selection
+     * @param {Contest|Array} contests - Contest(s) to add
      * @returns {Selection} new object
      */
-    static of(selection, defeats) {
+    static of(selection, contests) {
         let rule = new Rule(selection);
-        rule.addDefeat(defeats);
+        rule.addContest(contests);
         return rule;
     }
 }
@@ -75,9 +151,9 @@ export class Rule {
 function basicRules() {
     // see https://github.com/ibuttimer/rock-paper-scissors-xtreme/blob/main/design/design.md#basic-rules
     return [
-        Rule.of(Selection.Rock, Selection.Scissors),
-        Rule.of(Selection.Paper, Selection.Rock),
-        Rule.of(Selection.Scissors, Selection.Paper)
+        Rule.of(Selection.Rock, Contest.of(Selection.Rock, Selection.Scissors, 'blunts')),
+        Rule.of(Selection.Paper, Contest.of(Selection.Paper, Selection.Rock, 'covers')),
+        Rule.of(Selection.Scissors, Contest.of(Selection.Scissors, Selection.Paper, 'cuts'))
     ];
 }
 
@@ -88,11 +164,26 @@ function basicRules() {
 function bigBangRules() {
     // see https://github.com/ibuttimer/rock-paper-scissors-xtreme/blob/main/design/design.md#big-bang-rules
     return [
-        Rule.of(Selection.Rock, [Selection.Scissors, Selection.Lizard]),
-        Rule.of(Selection.Paper, [Selection.Rock, Selection.Spock]),
-        Rule.of(Selection.Scissors, [Selection.Paper, Selection.Lizard]),
-        Rule.of(Selection.Lizard, [Selection.Paper, Selection.Spock]),
-        Rule.of(Selection.Spock, [Selection.Rock, Selection.Scissors])
+        Rule.of(Selection.Rock, [
+            Contest.of(Selection.Rock, Selection.Scissors, 'blunts'), 
+            Contest.of(Selection.Rock, Selection.Lizard, 'crushes')
+        ]),
+        Rule.of(Selection.Paper, [
+            Contest.of(Selection.Paper, Selection.Rock, 'covers'), 
+            Contest.of(Selection.Paper, Selection.Spock, 'disproves')
+        ]),
+        Rule.of(Selection.Scissors, [
+            Contest.of(Selection.Scissors, Selection.Paper, 'cuts'), 
+            Contest.of(Selection.Scissors, Selection.Lizard, 'decapitates')
+        ]),
+        Rule.of(Selection.Lizard, [
+            Contest.of(Selection.Lizard, Selection.Paper, 'eats'), 
+            Contest.of(Selection.Lizard, Selection.Spock, 'poisons')
+        ]),
+        Rule.of(Selection.Spock, [
+            Contest.of(Selection.Spock, Selection.Rock, 'vaporises'), 
+            Contest.of(Selection.Spock, Selection.Scissors, 'smashes')
+        ])
     ];
 }
 
@@ -103,15 +194,60 @@ function bigBangRules() {
 function xtremeRules() {
     // see https://github.com/ibuttimer/rock-paper-scissors-xtreme/blob/main/design/design.md#xtreme-rules
     return [
-        Rule.of(Selection.Rock, [Selection.Scissors, Selection.Lizard, Selection.Spiderman, Selection.Wizard]),
-        Rule.of(Selection.Paper, [Selection.Rock, Selection.Spock, Selection.Batman, Selection.Glock]),
-        Rule.of(Selection.Scissors, [Selection.Paper, Selection.Lizard, Selection.Spiderman, Selection.Wizard]),
-        Rule.of(Selection.Lizard, [Selection.Paper, Selection.Spock, Selection.Batman, Selection.Glock]),
-        Rule.of(Selection.Spock, [Selection.Rock, Selection.Scissors, Selection.Spiderman, Selection.Wizard]),
-        Rule.of(Selection.Spiderman, [Selection.Paper, Selection.Lizard, Selection.Wizard, Selection.Glock]),
-        Rule.of(Selection.Batman, [Selection.Rock, Selection.Scissors, Selection.Spock, Selection.Spiderman]),
-        Rule.of(Selection.Wizard, [Selection.Paper, Selection.Lizard, Selection.Batman, Selection.Glock]),
-        Rule.of(Selection.Glock, [Selection.Rock, Selection.Scissors, Selection.Spock, Selection.Batman])
+        Rule.of(Selection.Rock, [
+            Contest.of(Selection.Rock, Selection.Scissors, 'blunts'), 
+            Contest.of(Selection.Rock, Selection.Lizard, 'crushes'), 
+            Contest.of(Selection.Rock, Selection.Spiderman, 'knocks out'), 
+            Contest.of(Selection.Rock, Selection.Wizard, 'interrupts')
+        ]),
+        Rule.of(Selection.Paper, [
+            Contest.of(Selection.Paper, Selection.Rock, 'covers'), 
+            Contest.of(Selection.Paper, Selection.Spock, 'disproves'), 
+            Contest.of(Selection.Paper, Selection.Batman, 'delays'), 
+            Contest.of(Selection.Paper, Selection.Glock, 'jams')
+        ]),
+        Rule.of(Selection.Scissors, [
+            Contest.of(Selection.Scissors, Selection.Paper, 'cuts'), 
+            Contest.of(Selection.Scissors, Selection.Lizard, 'decapitates'), 
+            Contest.of(Selection.Scissors, Selection.Spiderman, 'cuts'), 
+            Contest.of(Selection.Scissors, Selection.Wizard, 'cuts')
+        ]),
+        Rule.of(Selection.Lizard, [
+            Contest.of(Selection.Lizard, Selection.Paper, 'eats'), 
+            Contest.of(Selection.Lizard, Selection.Spock, 'poisons'), 
+            Contest.of(Selection.Lizard, Selection.Batman, 'confuses'), 
+            Contest.of(Selection.Lizard, Selection.Glock, 'is too small for')
+        ]),
+        Rule.of(Selection.Spock, [
+            Contest.of(Selection.Spock, Selection.Rock, 'vaporises'), 
+            Contest.of(Selection.Spock, Selection.Scissors, 'smashes'), 
+            Contest.of(Selection.Spock, Selection.Spiderman, 'befuddles'), 
+            Contest.of(Selection.Spock, Selection.Wizard, 'zaps')
+        ]),
+        Rule.of(Selection.Spiderman, [
+            Contest.of(Selection.Spiderman, Selection.Paper, 'rips'), 
+            Contest.of(Selection.Spiderman, Selection.Lizard, 'contests'), 
+            Contest.of(Selection.Spiderman, Selection.Wizard, 'annoys'), 
+            Contest.of(Selection.Spiderman, Selection.Glock, 'disarms')
+        ]),
+        Rule.of(Selection.Batman, [
+            Contest.of(Selection.Batman, Selection.Rock, 'explodes'), 
+            Contest.of(Selection.Batman, Selection.Scissors, 'dismantles'), 
+            Contest.of(Selection.Batman, Selection.Spock, 'hangs'), 
+            Contest.of(Selection.Batman, Selection.Spiderman, 'scares')
+        ]),
+        Rule.of(Selection.Wizard, [
+            Contest.of(Selection.Wizard, Selection.Paper, 'burns'), 
+            Contest.of(Selection.Wizard, Selection.Lizard, 'transforms'), 
+            Contest.of(Selection.Wizard, Selection.Batman, 'stuns'), 
+            Contest.of(Selection.Wizard, Selection.Glock, 'melts')
+        ]),
+        Rule.of(Selection.Glock, [
+            Contest.of(Selection.Glock, Selection.Rock, 'breaks'), 
+            Contest.of(Selection.Glock, Selection.Scissors, 'dents'), 
+            Contest.of(Selection.Glock, Selection.Spock, 'shoots'), 
+            Contest.of(Selection.Glock, Selection.Batman, `${Contest.WIN_NAME} kills ${Contest.LOSE_NAME}’s mum`)
+        ])
     ];
 }
 
@@ -219,6 +355,36 @@ function xtremeRules() {
     }
 }
 
+/** 
+ * Class representing a game result 
+ */
+export class GameResult {
+    
+    result;         // round result
+    data;           // data dependant on round result
+    explanation;    // explanation dependant on round result
+
+    /**
+     * @constructor
+     * @param {RoundResult} result - round result
+     * @param {Array} data - data dependant on round result
+     * @param {Array} explanation - explanation dependant on round result
+     */
+     constructor(result, data = [], explanation = []) {
+         this.result = result;
+         this.data = data;
+         this.explanation = explanation;
+     }
+
+    /**
+     * String representation of object.
+     * @returns {string}
+     */
+     toString() {
+         return `result: ${this.result}\n  data: ${this.data}\n  explanation: ${this.explanation}` 
+     }
+}
+
 /**
  * Class representing a game.
  */
@@ -303,19 +469,18 @@ function xtremeRules() {
 
     /**
      * Evaluate the result of a round.
-     * @returns {object} result of the form {
+     * @returns {GameResult} with:
      *      result: one of RoundResult,
      *      data: PlayAgain - n/a
      *            Eliminate - array of selections to eliminate,
      *            Winner - winning selection ??
-     *    }
+     *      explanation: PlayAgain - n/a
+     *                   Eliminate - array of explanations of eliminations,
+     *                   Winner - winning selection ??
      */
     evaluateRound() {
         // default result; play again
-        let evaluation = {
-            result: RoundResult.PlayAgain,
-            data: null
-        };
+        let evaluation = new GameResult(RoundResult.PlayAgain);
         let counts = this.roundSelections();
 
         // check if all selections picked
@@ -340,7 +505,11 @@ function xtremeRules() {
             // check if all same selection
             if (top.count < Object.keys(counts).length) {
 
-                // only if a selection does not appear in the defeats of another selection 
+                let eliminated = [];    // selections which lose
+                let explanations = [];  // explanation of losses
+                let activated = 0;      // num of winning selections
+
+                // only if a selection does not appear in the contests of another selection 
                 // can it be activated, otherwise its ignored
                 for (const pick of countEntries) {
                     for (const otherPick of countEntries) {
@@ -349,16 +518,19 @@ function xtremeRules() {
                             if (otherPick.rule.beats(pick.selection)) {
                                 pick.nullified = true;
                             }
+                            else {
+                                // add explanation
+                                explanations.push(
+                                    pick.rule.explanation(otherPick.selection));
+                            }
                         }
                     }
                 }
 
-                let eliminated = [];    // selections which lose
-                let activated = 0;      // num of winning selections
                 for (const pick of countEntries) {
                     if (!pick.nullified) {
                         ++activated;
-                        eliminated = eliminated.concat(pick.rule.defeats);
+                        eliminated = eliminated.concat(pick.rule.contests);
                     }
                 }
 
@@ -366,6 +538,7 @@ function xtremeRules() {
                     // eliminate losers
                     evaluation.result = RoundResult.Eliminate;
                     evaluation.data = eliminated;
+                    evaluation.explanation = explanations;
                 }
                 // else play again
             }
@@ -378,23 +551,20 @@ function xtremeRules() {
     /**
      * Process evaluation of a round.
      * @param {object} evaluation - result from evaluateRound()
-     * @returns {object} result of the form {
+     * @returns {GameResult} with:
      *      result: one of RoundResult,
      *      data: PlayAgain - n/a
+     *            Eliminate - array eliminated players,
      *            Winner - winning player
-     *    }
      */
     processEvaluation(evaluation) {
-        let processed = {
-            result: RoundResult.PlayAgain,
-            data: null
-        };
+        let processed = new GameResult(RoundResult.PlayAgain);
         switch (evaluation.result) {
             case RoundResult.Eliminate:
                 let eliminated = [];
-                for (const selection of evaluation.data) {
+                for (const eliminate of evaluation.data) {
                     this.players.forEach(player => {
-                        if (player.inGame && player.selection === selection) {
+                        if (player.inGame && player.selection === eliminate.loser) {
                             player.inGame = false;  // player eliminated
                             eliminated.push(player);
                         }
