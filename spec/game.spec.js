@@ -247,29 +247,31 @@ describe("check Game class", function() {
      * @param {boolean} notStarted - not started state
      * @param {boolean} inProgress - in progress state
      * @param {boolean} isOver - is over state
+     * @param {string} context - optional context; default undefined
      */
-    function checkGame(game, numPlayers, numRobots, activeCount, notStarted, inProgress, isOver) {
-        expect(game.playerCount).toBe(numPlayers + numRobots);
-        expect(game.activePlayerCount).toBe(activeCount);
-        expect(game.notStarted).toBe(notStarted);
-        expect(game.inProgress).toBe(inProgress);
-        expect(game.isOver).toBe(isOver);
+    function checkGame(game, numPlayers, numRobots, activeCount, notStarted, inProgress, isOver, context = undefined) {
+        expect(game.playerCount).withContext(context).toBe(numPlayers + numRobots);
+        expect(game.activePlayerCount).withContext(context).toBe(activeCount);
+        expect(game.notStarted).withContext(context).toBe(notStarted);
+        expect(game.inProgress).withContext(context).toBe(inProgress);
+        expect(game.isOver).withContext(context).toBe(isOver);
     }
 
     /**
      * Makes a play for each player.
      * @param {GameVariant} variant - game variant
      * @param {Array} players - array of players
-     * @param {function} picker - function taking index argument and returning a Selection
+     * @param {function} picker - function taking index argument and returning a Selection 
+     *                            or key associated with a Selection
      * @returns {object} player selection counts map with selection keys and count values
      */
     function makePlays(variant, players, picker) {
         let plays = variant.getCountsTemplate();
         for (let index = 0; index < players.length; index++) {
             const player = players[index];
-            const selection = picker(index);
+            let selection = picker(index);
             if (selection !== Selection.None) {
-                player.setSelection(selection, GameMode.Test, variant);
+                selection = player.setSelection(selection, GameMode.Test, variant);
                 plays[selection]++;
             }
         }
@@ -281,10 +283,11 @@ describe("check Game class", function() {
      * Confirm game counts match played selections.
      * @param {object} counts - round counts map with selection keys and count values
      * @param {object} plays - player plays map with selection keys and count values
+     * @param {string} context - optional context; default undefined
      */
-    function confirmCounts(counts, plays) {
+    function confirmCounts(counts, plays, context = undefined) {
         for (let selection in plays) {
-            expect(counts[selection]).toBe(plays[selection]);
+            expect(counts[selection]).withContext(context).toBe(plays[selection]);
         }
     }
 
@@ -354,12 +357,12 @@ describe("check Game class", function() {
         let expectedActive = ALL_PLAYERS;
         checkGame(game, numPayers, numRobots, expectedActive, false, true, false);
 
-        // Check different selection each player
+        // Check different selection each player, using keys
         let plays = makePlays(variant, game.players, function(index) {
-            return variant.possibleSelections[index % expectedActive];
+            return variant.possibleSelections[index % expectedActive].key;
         });
         // confirm game counts match played selections
-        confirmCounts(game.roundSelections(), plays);
+        confirmCounts(game.roundSelections(), plays, 'Using keys');
         // confirm play again result for round
         let evaluation = game.evaluateRound();
         expect(evaluation.result).toBe(RoundResult.PlayAgain);

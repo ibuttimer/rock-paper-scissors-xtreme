@@ -338,6 +338,26 @@ function xtremeRules() {
     }
 
     /**
+     * Get selection for specified key.
+     * @param {string} key - key associated with selection
+     * @returns {Selection}  selection or Selection.None if invalid key
+     */
+    getSelection(key) {
+        key = key.toLowerCase();
+        let selection = this.possibleSelections.find(x => x.key.toLowerCase() === key);
+        return selection ? selection : Selection.None;
+    }
+
+    /**
+     * Check if selection is valid.
+     * @param {Selection|string} selection - selection to check
+     * @returns {boolean} true if selection is valid otherwise false
+     */
+    isValidSelection(selection) {
+        return this.possibleSelections.find(Selection.getFinder(selection)) !== undefined;
+    }
+
+    /**
      * Generate a random selection from all possible selections.
      * @returns {Selection} selection
      */
@@ -433,15 +453,6 @@ export class GameResult {
     }
 
     /**
-     * Run the game
-     */
-    runGame() {
-        // start game
-        startGame();
-
-    }
-
-    /**
      * Start the game
      */
     startGame() {
@@ -458,13 +469,6 @@ export class GameResult {
     endGame() {
         this.#status = GameStatus.Finished;
         this.applyToPlayers(player => player.initState());
-    }
-
-    /**
-     * Play a round of the game.
-     */
-    playRound() {
-
     }
 
     /**
@@ -587,7 +591,7 @@ export class GameResult {
      * Get the counts for each selection
      * @returns {object} map with selection keys and count values
      */
-    roundSelections() {
+     roundSelections() {
         let counts = this.variant.getCountsTemplate();
         this.players.forEach(player => {
             if (player.inGame) {

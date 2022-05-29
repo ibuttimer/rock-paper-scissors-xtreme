@@ -60,22 +60,26 @@ import { requiredVariable } from './utils.js';
  export class Selection extends Enum {
     // freeze selections so can't be modified
     static None = Object.freeze(new Selection('None'));     // no selection
-    static Rock = Object.freeze(new Selection('Rock'));
-    static Paper = Object.freeze(new Selection('Paper'));
-    static Scissors = Object.freeze(new Selection('Scissors'));
-    static Lizard = Object.freeze(new Selection('Lizard'));
-    static Spock = Object.freeze(new Selection('Spock'));
-    static Spiderman = Object.freeze(new Selection('Spiderman'));
-    static Batman = Object.freeze(new Selection('Batman'));
-    static Wizard = Object.freeze(new Selection('Wizard'));
-    static Glock = Object.freeze(new Selection('Glock'));
-  
+    static Rock = Object.freeze(new Selection('Rock', 'r'));
+    static Paper = Object.freeze(new Selection('Paper', 'p'));
+    static Scissors = Object.freeze(new Selection('Scissors', 's'));
+    static Lizard = Object.freeze(new Selection('Lizard', 'l'));
+    static Spock = Object.freeze(new Selection('Spock', 'v'));
+    static Spiderman = Object.freeze(new Selection('Spiderman', 'i'));
+    static Batman = Object.freeze(new Selection('Batman', 'b'));
+    static Wizard = Object.freeze(new Selection('Wizard', 'w'));
+    static Glock = Object.freeze(new Selection('Glock', 'g'));
+
+    key;    // key associated with selection 
+
     /**
      * @constructor
      * @param {string} name - selection name.
+     * @param {string} key - selection key.
      */
-    constructor(name) {
+    constructor(name, key) {
         super(name);
+        this.key = key;
     }
 
     /**
@@ -93,7 +97,7 @@ import { requiredVariable } from './utils.js';
      *                              default pass through
      * @returns {function}  finder function
      */
-     static getFinder(element, accessor = x => x) {
+    static getFinder(element, accessor = x => x) {
         return Enum.getFinder(element, Selection, accessor);
     }
 }

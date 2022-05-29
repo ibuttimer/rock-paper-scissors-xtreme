@@ -95,41 +95,64 @@ The guidelines outlined in the following will be followed:
 ## Basic rules
 __Number of selections:__ 3
 
-__Selections:__ Rock, Paper, Scissors
+__Selections:__
+|            | Key |
+|------------|:---:|
+| `Rock`     |  R  |
+| `Paper`    |  P  |
+| `Scissors` |  S  |
 
-__Win matrix__:
+__Win matrix__[^win_matrix]:
 
-|          | `Rock`    | `Paper`   | `Scissors` | Description |
-|----------|:-------:|:-------:|:--------:|-------------|
-| `Rock`     |   -     | &cross; | &check;  | `Rock` blunts `Scissors` |
-| `Paper`    | &check; |   -     | &cross;  | `Paper` covers `Rock` |
-| `Scissors` | &cross; | &check; |    -     | `Scissors` cuts `Paper` |
+|            | `Rock`  | `Paper` | `Scissors` | Description |
+|------------|:-------:|:-------:|:----------:|-------------|
+| `Rock`     |   -     | &cross; | &check;    | `Rock` blunts `Scissors` |
+| `Paper`    | &check; |   -     | &cross;    | `Paper` covers `Rock` |
+| `Scissors` | &cross; | &check; |    -       | `Scissors` cuts `Paper` |
 
 See [The Official Rules of Rock Paper Scissors](https://wrpsa.com/the-official-rules-of-rock-paper-scissors/).
 
 ## Big Bang rules
 __Number of selections:__ 5
 
-__Selections:__ Rock, Paper, Scissors, Lizard, Spock
+__Selections:__
+|            | Key |
+|------------|:---:|
+| `Rock`     |  R  |
+| `Paper`    |  P  |
+| `Scissors` |  S  |
+| `Lizard`   |  L  |
+| `Spock`    |  V  |
 
-__Win matrix__:
+__Win matrix__[^win_matrix]:
 
-|          | `Rock`    | `Paper`   | `Scissors` | `Lizard`  | `Spock`   | Description |
-|----------|:-------:|:-------:|:--------:|:-------:|:-------:|-------------|
-| `Rock`     |   -     | &cross; | &check;  | &check; | &cross; | `Rock` blunts `Scissors`<br>`Rock` crushes `Lizard` |
-| `Paper`    | &check; |   -     | &cross;  | &cross; | &check; | `Paper` covers `Rock`<br>`Paper` disproves `Spock` |
-| `Scissors` | &cross; | &check; |    -     | &check; | &cross; | `Scissors` cuts `Paper`<br>`Scissors` decapitates `Lizard` |
-| `Lizard`   | &cross; | &check; | &cross; |    -     | &check; | `Lizard` eats `Paper`<br>`Lizard` poisons `Spock` |
-| `Spock`    | &check; | &cross; | &check; | &cross; |    -     | `Spock` vaporizes `Rock`<br>`Spock` smashes `Scissors` |
+|            | `Rock`  | `Paper` | `Scissors` | `Lizard`  | `Spock` | Description |
+|------------|:-------:|:-------:|:----------:|:---------:|:-------:|-------------|
+| `Rock`     |   -     | &cross; | &check;    | &check;   | &cross; | `Rock` blunts `Scissors`<br>`Rock` crushes `Lizard` |
+| `Paper`    | &check; |   -     | &cross;    | &cross;   | &check; | `Paper` covers `Rock`<br>`Paper` disproves `Spock` |
+| `Scissors` | &cross; | &check; |    -       | &check;   | &cross; | `Scissors` cuts `Paper`<br>`Scissors` decapitates `Lizard` |
+| `Lizard`   | &cross; | &check; | &cross;    |    -      | &check; | `Lizard` eats `Paper`<br>`Lizard` poisons `Spock` |
+| `Spock`    | &check; | &cross; | &check;    | &cross;   |    -    | `Spock` vaporises `Rock`<br>`Spock` smashes `Scissors` |
 
 See [Rock, Paper, Scissors, Lizard, Spock](https://bigbangtheory.fandom.com/wiki/Rock,_Paper,_Scissors,_Lizard,_Spock).
 
 ## Xtreme rules
 __Number of selections:__ 9
 
-__Selections:__ Rock, Paper, Scissors, Lizard, Spock, `Spiderman`, `Batman`, `Wizard`, `Glock`
+__Selections:__
+|            | Key |
+|------------|:---:|
+| `Rock`     |  R  |
+| `Paper`    |  P  |
+| `Scissors` |  S  |
+| `Lizard`   |  L  |
+| `Spock`    |  V  |
+| `Spiderman`|  I  |
+| `Batman`   |  B  |
+| `Wizard`   |  W  |
+| `Glock`    |  G  |
 
-__Win matrix__:
+__Win matrix__[^win_matrix]:
 
 |          | `Rock`  | `Paper`   | `Scissors` | `Lizard`  | `Spock`   | `Spiderman` | `Batman`  | `Wizard`  | `Glock`   | Description |
 |----------|:-------:|:-------:|:--------:|:-------:|:-------:|:---------:|:-------:|:-------:|:-------:|-------------|
@@ -137,8 +160,8 @@ __Win matrix__:
 | `Paper`    | &check; |   -     | &cross;  | &cross; | &check; | &cross;   | &check; | &cross; | &check; | `Paper` covers `Rock`<br>`Paper` disproves `Spock`<br>`Paper` delays `Batman`<br>`Paper` jams `Glock` |
 | `Scissors` | &cross; | &check; |    -     | &check; | &cross; | &check;   | &cross; | &check; | &cross; | `Scissors` cuts `Paper`<br>`Scissors` decapitates `Lizard`<br>`Scissors` cuts `Spiderman`<br>`Scissors` cuts `Wizard` |
 | `Lizard`   | &cross; | &check; | &cross;  |    -    | &check; | &cross;   | &check; | &cross; | &check; | `Lizard` eats `Paper`<br>`Lizard` poisons `Spock`<br>`Lizard` confuses `Batman`<br>`Lizard` is too small for `Glock` |
-| `Spock`    | &check; | &cross; | &check;  | &cross; |    -    | &check;   | &cross; | &check; | &cross; | `Spock` vaporizes `Rock`<br>`Spock` smashes `Scissors`<br>`Spock` befuddles `Spiderman`<br>`Spock` zaps `Wizard` |
-| `Spiderman`| &cross; | &check; | &cross;  | &check; | &cross; |    -      | &cross; | &check; | &check; | `Spiderman` rips `Paper`<br>`Spiderman` defeats `Lizard`<br>`Spiderman` annoys `Wizard`<br>`Spiderman` disarms `Glock` |
+| `Spock`    | &check; | &cross; | &check;  | &cross; |    -    | &check;   | &cross; | &check; | &cross; | `Spock` vaporises `Rock`<br>`Spock` smashes `Scissors`<br>`Spock` befuddles `Spiderman`<br>`Spock` zaps `Wizard` |
+| `Spiderman`| &cross; | &check; | &cross;  | &check; | &cross; |    -      | &cross; | &check; | &check; | `Spiderman` rips `Paper`<br>`Spiderman` contests `Lizard`<br>`Spiderman` annoys `Wizard`<br>`Spiderman` disarms `Glock` |
 | `Batman`   | &check; | &cross; | &check;  | &cross; | &check; | &check;   |    -    | &cross; | &cross; | `Batman` explodes `Rock`<br>`Batman` dismantles `Scissors`<br>`Batman` hangs `Spock`<br>`Batman` scares `Spiderman` |
 | `Wizard`   | &cross; | &check; | &cross;  | &check; | &cross; | &cross;   | &check; |    -    | &check; | `Wizard` burns `Paper`<br>`Wizard` transforms `Lizard`<br>`Wizard` stuns `Batman`<br>`Wizard` melts `Glock` |
 | `Glock`    | &check; | &cross; | &check;  | &cross; | &check; | &cross;   | &check; | &cross; |   -     | `Glock` breaks `Rock`<br>`Glock` dents `Scissors`<br>`Glock` shoots `Spock`<br>`Glock` kills `Batman`’s mum |
@@ -159,3 +182,5 @@ See [Winning at Rock-Paper-Scissors… Lizard-Spock!](https://www.naturphilosoph
     If 2 or more gestures were shown equally, everyone plays again.
 
 Adapted from [How to Play Rock Paper Scissors with More than Two Players](https://wrpsa.com/how-to-play-rock-paper-scissors-with-more-than-two-players/)
+
+[^win_matrix]: To find the result of two selections, find the first selection in the leftmost column and the second element in the top row, where the row and column intersect is the result.

@@ -44,16 +44,27 @@ import { variableCheck, requiredVariable } from './utils.js';
 
     /**
      * Set the player's selection
-     * @param {Selection} selection - selected selection
+     * @param {Selection|string} selection - selected selection or associated key
      * @param {GameMode} mode - game mode of game
      * @param {GameVariant} variant - game variant
+     * @returns {Selection} if selection was set the Selection, otherwise Selection.None
      */
-    setSelection(selection, mode = GameMode.Live, variant = null) {
+    setSelection(selection, mode = GameMode.Live, variant) {
         // sanity checks
         requiredVariable(selection, 'selection');
         requiredVariable(mode, 'mode');
+        requiredVariable(variant, 'variant');
         // player's selection will always be set irrespective of game mode
-        this.selection = selection;
+        if (typeof selection === 'string') {
+            selection = variant.getSelection(selection);
+        }
+
+        let selectionSet = Selection.None;
+        if (variant.isValidSelection(selection)) {
+            this.selection = selection;
+            selectionSet = selection;
+        }
+        return selectionSet;
     }
 
     /**
@@ -96,58 +107,26 @@ import { variableCheck, requiredVariable } from './utils.js';
         this.isRobot = true;
     }
 
-    /** Get name */
-    get name() {
-        return super.name;
-    }
-
-    /** Get isRobot */
-    get isRobot() {
-        return super.isRobot;
-    }
-
-    /** Get inGame */
-    get inGame() {
-        return super.inGame;
-    }
-
-    /** Get current selection */
-    get selection() {
-        return super.selection;
-    }
-
-    /**
-     * Set inGame
-     * @param {boolean} playing - currently playing flag
-     */
-    set inGame(playing) {
-        super.inGame = playing;
-    }
-
     /**
      * Set the robot's selection
      * @param {GameVariant} variant - game variant to make selection from
      * @param {GameMode} mode - game mode of game
      * @param {Selection} selection - selected selection
+     * @returns {Selection} if selection was set the Selection, otherwise Selection.None
      */
      setSelection(selection = Selection.None, mode = GameMode.Live, variant) {
         // sanity checks
         requiredVariable(variant, 'variant');
         requiredVariable(mode, 'mode');
         // robot's selection will be set in test & demo mode's and random in live
+        let selectionSet;
         if (mode === GameMode.Live) {
-            this.selection = variant.randomSelection();
+            selectionSet = variant.randomSelection();
+            this.selection = selectionSet;
         } else {
-            this.selection = selection;
+            selectionSet = super.setSelection(selection, mode, variant);
         }
-    }
-
-    /**
-     * Set current selection
-     * @param {Selection} selection - current selection
-     */
-     set selection(selection) {
-        super.selection = selection;
+        return selectionSet;
     }
 }
 
