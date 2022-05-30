@@ -2,7 +2,7 @@
     Player functions and classes.
     @author Ian Buttimer
 */
-import { Selection, GameMode } from './enums.js'
+import { GameKey, Selection, GameMode } from './enums.js'
 import { variableCheck, requiredVariable } from './utils.js';
 
 /**
@@ -44,7 +44,7 @@ import { variableCheck, requiredVariable } from './utils.js';
 
     /**
      * Set the player's selection
-     * @param {Selection|string} selection - selected selection or associated key
+     * @param {Selection|GameKey|string} selection - selected selection or associated key
      * @param {GameMode} mode - game mode of game
      * @param {GameVariant} variant - game variant
      * @returns {Selection} if selection was set the Selection, otherwise Selection.None
@@ -55,7 +55,7 @@ import { variableCheck, requiredVariable } from './utils.js';
         requiredVariable(mode, 'mode');
         requiredVariable(variant, 'variant');
         // player's selection will always be set irrespective of game mode
-        if (typeof selection === 'string') {
+        if (typeof selection === 'string' || selection instanceof GameKey) {
             selection = variant.getSelection(selection);
         }
 
@@ -114,7 +114,7 @@ import { variableCheck, requiredVariable } from './utils.js';
      * @param {Selection} selection - selected selection
      * @returns {Selection} if selection was set the Selection, otherwise Selection.None
      */
-     setSelection(selection = Selection.None, mode = GameMode.Live, variant) {
+    setSelection(selection = Selection.None, mode = GameMode.Live, variant) {
         // sanity checks
         requiredVariable(variant, 'variant');
         requiredVariable(mode, 'mode');

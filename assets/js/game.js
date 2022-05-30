@@ -5,7 +5,7 @@
 
 import { variableCheck, requiredVariable } from './utils.js';
 import { Player, Robot } from './player.js';
-import { Enum, Selection, GameMode, GameStatus, GameEvent, RoundResult } from './enums.js';
+import { Enum, GameKey, Selection, GameMode, GameStatus, GameEvent, RoundResult } from './enums.js';
 
 const BASIC_GAME_NAME = 'Basic';
 const BIG_BANG_GAME_NAME = 'BigBang';
@@ -339,13 +339,23 @@ function xtremeRules() {
 
     /**
      * Get selection for specified key.
-     * @param {string} key - key associated with selection
+     * @param {GameKey|string} key - key associated with selection
      * @returns {Selection}  selection or Selection.None if invalid key
      */
     getSelection(key) {
-        key = key.toLowerCase();
-        let selection = this.possibleSelections.find(x => x.key.toLowerCase() === key);
+        // match the GameKey object or the key string
+        let matcher = key instanceof GameKey ? sel => sel.key === key : sel => sel.key.matches(key);
+        let selection = this.possibleSelections.find(matcher);
         return selection ? selection : Selection.None;
+    }
+
+    /**
+     * Check if selection key is valid.
+     * @param {GameKey|string} key - key associated with selection
+     * @returns {boolean} true if key is valid otherwise false
+     */
+    isValidKey(key) {
+        return this.getSelection(key) !== Selection.None;
     }
 
     /**
@@ -444,6 +454,9 @@ export class GameResult {
         if (numPlayers + numRobots < 2) {
             throw 'Insufficient number of players';
         }
+        if (numPlayers < 1) {
+            throw 'Insufficient number of players';
+        }
 
         this.variant = variant;
         this.gameMode = GameMode.Live;
@@ -497,7 +510,8 @@ export class GameResult {
     }
 
     /**
-     * Play a round of the game.
+     * Play the game using a callback function. 
+     * All game input is obtained by calls to the callback function. 
      * @param {Function} callback - function to call for each player with prototype
      *                              function(player, playerIndex, roundNumber)
      *                              param {Game} game - game object
@@ -537,6 +551,77 @@ export class GameResult {
         }
         const evaluation = this.evaluateRound();
         return this.processEvaluation(evaluation);
+    }
+
+    /**
+     * Play the game using the events driven interface.
+     * All game input is obtained by external calls to the following functions:
+     * - playGameEvents()
+     * - makePlayEvent()
+     * @returns {object} event result, @see {@link Game#eventResult()}
+     */
+    playGameEvents() {
+        this.startGame();
+        this.startRound();
+        return this.#eventResult(null);
+    }
+
+    /**
+     * Make a play for the current player and set the next player.
+     * @param {Player} player - current player
+     * @param {GameKey|string} selection - key for selection
+     * @returns {Player} new current player
+     */
+    #makePlayNext(player, selection) {
+        this.makePlay(player, selection);
+        this.#currentIndex = this.nextPlayer();
+        return this.getPlayer(this.#currentIndex);
+    }
+
+    /**
+     * Make a play for the current player.
+     * @param {string} selection - key for selection
+     * @returns {object} event result, @see {@link Game#eventResult()}
+     */
+    makePlayEvent(selection) {
+        let player = this.#makePlayNext(
+            this.getPlayer(this.#currentIndex), selection);
+
+        // make plays for any robots
+        while (this.roundInProgress && player && player.isRobot) {
+            player = this.#makePlayNext(player, Selection.Random);
+        }
+
+        // if all player have played, evaluate & process round
+        let result = null;
+        if (!this.roundInProgress) {
+            const evaluation = this.evaluateRound();
+            result = this.processEvaluation(evaluation);
+
+            if (result.result == RoundResult.Winner) {
+                this.endGame();
+            } else if (result.result == RoundResult.PlayAgain){
+                this.startRound();
+            }
+        }
+
+        return this.#eventResult(result);
+    }
+
+    /**
+     * Generate an event result.
+     * @param {object} result - event result
+     * @returns {object} event result object
+     */
+    #eventResult(result) {
+        return {
+            game: this,
+            gameInProgress: this.inProgress,
+            roundInProgress: this.roundInProgress,
+            player: this.getPlayer(this.#currentIndex),
+            playerIndex: this.#currentIndex,
+            result: result
+        }
     }
 
     /** Start a round */
@@ -679,6 +764,7 @@ export class GameResult {
                     // return eliminated players
                     processed.data = eliminated;
                 }
+                processed.explanation = evaluation.explanation;
                 break;
         }
 
@@ -691,7 +777,7 @@ export class GameResult {
     /**
      * Make a selection for a player.
      * @param {Player|number} player - player or player index
-     * @param {Selection|string} selection - Selection or key associated with selection
+     * @param {Selection|GameKey|string} selection - Selection or key associated with selection
      * @returns {Selection} if selection was set the Selection, otherwise Selection.None
      */
     makePlay(player, selection) {
@@ -720,7 +806,7 @@ export class GameResult {
             }
         });
 
-        this.log(`roundSelections: ${counts}`);
+        this.log(`roundSelections: ${counts}`, false);
         this.#doStageCallback(GameEvent.RoundSelections, counts);
 
         return counts;

@@ -55,27 +55,104 @@ import { requiredVariable } from './utils.js';
 }
 
 /**
+ * Enum representing game keys.
+ */
+ export class GameKey extends Enum {
+    // freeze game keys so can't be modified
+    static Ignore = Object.freeze(new GameKey('Ignore'));
+    static NewGame = Object.freeze(new GameKey('NewGame', 'n'));
+    static Random = Object.freeze(new GameKey('Random', '#'));
+    static Rock = Object.freeze(new GameKey('Rock', 'r'));
+    static Paper = Object.freeze(new GameKey('Paper', 'p'));
+    static Scissors = Object.freeze(new GameKey('Scissors', 's'));
+    static Lizard = Object.freeze(new GameKey('Lizard', 'l'));
+    static Spock = Object.freeze(new GameKey('Spock', 'v'));
+    static Spiderman = Object.freeze(new GameKey('Spiderman', 'i'));
+    static Batman = Object.freeze(new GameKey('Batman', 'b'));
+    static Wizard = Object.freeze(new GameKey('Wizard', 'w'));
+    static Glock = Object.freeze(new GameKey('Glock', 'g'));
+
+    static SelectionKeys = [
+        GameKey.Random, GameKey.Rock, GameKey.Paper, GameKey.Scissors, GameKey.Lizard,
+        GameKey.Spock, GameKey.Spiderman, GameKey.Batman, GameKey.Wizard, GameKey.Glock
+    ];
+
+    /**
+     * @constructor
+     * @param {string} name - game event name.
+     * @param {string} key - selection key.
+     */
+    constructor(name, key) {
+        super(name, 'name');
+        this.key = key;
+    }
+
+    /**
+     * Check if the specified key matches this game key.
+     * @param {string} keyName - key
+     * @returns true if matches, otherwise false
+     */
+    matches(keyName) {
+        return keyName.toLowerCase() == this.key;
+    }
+
+    /**
+     * Process a keyboard event.
+     * @param {KeyboardEvent} event - @see {@link https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent}
+     * @returns {GameKey} game key
+     */
+    static keyEvent(event) {
+        const keyName = event.key.toLowerCase();
+        let gameKey = GameKey.Ignore;
+
+        if (event.altKey) {
+            switch (keyName) {
+                case GameKey.NewGame.key:   // new game
+                    gameKey = GameKey.NewGame;
+                    break;
+            }
+        } else {
+            let key = GameKey.SelectionKeys.find(k => k.key == keyName);
+            if (key) {
+                gameKey = key;
+            }
+        }
+            
+        return gameKey;
+    }
+
+    /**
+     * String representation of object.
+     * @returns {string} string of form '<Class name>.<object name>'
+     */
+    toString() {
+        return super.toString(GameKey);
+    }
+}
+
+/**
  * Enum representing all possible game selections.
  */
  export class Selection extends Enum {
     // freeze selections so can't be modified
     static None = Object.freeze(new Selection('None'));     // no selection
-    static Rock = Object.freeze(new Selection('Rock', 'r'));
-    static Paper = Object.freeze(new Selection('Paper', 'p'));
-    static Scissors = Object.freeze(new Selection('Scissors', 's'));
-    static Lizard = Object.freeze(new Selection('Lizard', 'l'));
-    static Spock = Object.freeze(new Selection('Spock', 'v'));
-    static Spiderman = Object.freeze(new Selection('Spiderman', 'i'));
-    static Batman = Object.freeze(new Selection('Batman', 'b'));
-    static Wizard = Object.freeze(new Selection('Wizard', 'w'));
-    static Glock = Object.freeze(new Selection('Glock', 'g'));
+    static Random = Object.freeze(new Selection('Random', GameKey.Random)); // random selection
+    static Rock = Object.freeze(new Selection('Rock', GameKey.Rock));
+    static Paper = Object.freeze(new Selection('Paper', GameKey.Paper));
+    static Scissors = Object.freeze(new Selection('Scissors', GameKey.Scissors));
+    static Lizard = Object.freeze(new Selection('Lizard', GameKey.Lizard));
+    static Spock = Object.freeze(new Selection('Spock', GameKey.Spock));
+    static Spiderman = Object.freeze(new Selection('Spiderman', GameKey.Spiderman));
+    static Batman = Object.freeze(new Selection('Batman', GameKey.Batman));
+    static Wizard = Object.freeze(new Selection('Wizard', GameKey.Wizard));
+    static Glock = Object.freeze(new Selection('Glock', GameKey.Glock));
 
     key;    // key associated with selection 
 
     /**
      * @constructor
      * @param {string} name - selection name.
-     * @param {string} key - selection key.
+     * @param {GameKey} key - selection game key.
      */
     constructor(name, key) {
         super(name);
@@ -91,7 +168,7 @@ import { requiredVariable } from './utils.js';
     }
 
     /**
-     * Get a finder function suitable for use in Array.find() to match a selection.
+     * Get a finder function suitable for use in Array.find() to match a Selection.
      * @param {object|string} element - element to find
      * @param {function} accessor - accessor function to get Selection objects from array elements; 
      *                              default pass through
