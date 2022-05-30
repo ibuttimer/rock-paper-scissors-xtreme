@@ -5,7 +5,7 @@
 
 import { variableCheck, requiredVariable } from './utils.js';
 import { Player, Robot } from './player.js';
-import { Enum, Selection, GameMode, GameStatus, RoundResult} from './enums.js';
+import { Enum, Selection, GameMode, GameStatus, GameEvent, RoundResult } from './enums.js';
 
 const BASIC_GAME_NAME = 'Basic';
 const BIG_BANG_GAME_NAME = 'BigBang';
@@ -410,20 +410,35 @@ export class GameResult {
  */
  export class Game {
 
+    static OPT_NONE = 0;           // no options
+    static OPT_CONSOLE = 0x01;     // log events to console
+
     variant;        // game variant
     gameMode;       // game mode
     numPlayers;     // number of players
     numRobots;      // number of robots
     players;        // array of game players
     #status;        // game status
+    #options;       // game options
+    #currentIndex;  // current player index
+    #currentRound;  // current round number
+
+    #stageCallback; // function to call at key stages for test purposes with prototype
+                    // * param {GameEvent} stage - one of GameEvent.xxx
+                    // * param {Game} game - game object
+                    // * param {number} roundNumber - current round number
+                    // * param {object} data - current round number
+
+    static NONE_ACTIVE = -1; // no active player index
 
     /**
      * @constructor
      * @param {GameVariant} variant - game variant
      * @param {number} numPlayers - number of players; default 1
      * @param {number} numRobots - number of robots; default 1
+     * @param {number} options - OR bitmask of OPTxxx; default OPT_NONE
      */
-    constructor(variant, numPlayers = 1, numRobots = 1) {
+    constructor(variant, numPlayers = 1, numRobots = 1, options = Game.OPT_NONE) {
         // sanity checks
         requiredVariable(variant, 'variant');
         if (numPlayers + numRobots < 2) {
@@ -435,6 +450,7 @@ export class GameResult {
         this.numPlayers = numPlayers;
         this.numRobots = numRobots;
         this.#status = GameStatus.NotStarted;
+        this.#options = options;
 
         this.init();
     }
@@ -450,6 +466,8 @@ export class GameResult {
         for (let i = 0; i < this.numRobots; i++) {
             this.players.push(new Robot());
         }
+        this.#currentIndex = Game.NONE_ACTIVE;
+        this.#currentRound = 0;
     }
 
     /**
@@ -457,10 +475,14 @@ export class GameResult {
      */
     startGame() {
         this.#status = GameStatus.InProgress;
+        this.#currentRound = 0;
         this.applyToPlayers(player => {
             player.initState();
             player.inGame = true
         });
+
+        this.log('startGame');
+        this.#doStageCallback(GameEvent.GameStart);
     }
 
     /**
@@ -469,6 +491,78 @@ export class GameResult {
     endGame() {
         this.#status = GameStatus.Finished;
         this.applyToPlayers(player => player.initState());
+
+        this.log('endGame');
+        this.#doStageCallback(GameEvent.GameEnd);
+    }
+
+    /**
+     * Play a round of the game.
+     * @param {Function} callback - function to call for each player with prototype
+     *                              function(player, playerIndex, roundNumber)
+     *                              param {Game} game - game object
+     *                              param {number} playerIndex - index of current player
+     *                              param {number} roundNumber - current round number
+     *                              returns {Selection|string} Selection or key associated with selection
+     */
+    playGame(callback) {
+        let result;
+        this.startGame();
+        while (this.inProgress) {
+            result = this.playRound(callback);
+            if (result.result == RoundResult.Winner) {
+                this.endGame();
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Play a round of the game.
+     * @param {Function} callback - function to call for each player with prototype
+     *                              function(player, playerIndex, roundNumber)
+     *                              param {Game} game - game object
+     *                              param {number} playerIndex - index of current player
+     *                              param {number} roundNumber - current round number
+     *                              returns {Selection|string} Selection or key associated with selection
+     * @returns {GameResult} @see {@link Game#processEvaluation()}
+     */
+    playRound(callback) {
+        this.startRound();
+        while (this.roundInProgress) {
+            const player = this.getPlayer(this.#currentIndex);
+            const selection = callback(this, this.#currentIndex, this.#currentRound);
+            this.makePlay(player, selection);
+            this.#currentIndex = this.nextPlayer();
+        }
+        const evaluation = this.evaluateRound();
+        return this.processEvaluation(evaluation);
+    }
+
+    /** Start a round */
+    startRound() {
+        this.#currentIndex = Game.NONE_ACTIVE;
+        this.#currentIndex = this.nextPlayer();
+        ++this.#currentRound;
+
+        this.log(`startRound ${this.#currentRound}`);
+        this.#doStageCallback(GameEvent.RoundStart);
+    }
+
+    /**
+     * Check if a round is in progress.
+     * @returns {boolean} true if in progress, otherwise false
+     */
+    get roundInProgress() {
+        return this.#currentIndex != Game.NONE_ACTIVE;
+    }
+
+    /**
+     * Gets the index of the next player.
+     * @returns {number} index of next player or NONE_ACTIVE if not found
+     */
+    nextPlayer() {
+        return this.players.findIndex((player, index) => index > this.#currentIndex && player.inGame);
     }
 
     /**
@@ -549,6 +643,9 @@ export class GameResult {
             // else all same selection, so play again
         }
 
+        this.log(`evaluateRound: ${evaluation}`);
+        this.#doStageCallback(GameEvent.RoundEvaluation, evaluation);
+
         return evaluation;
     }
 
@@ -584,7 +681,31 @@ export class GameResult {
                 }
                 break;
         }
+
+        this.log(`processEvaluation: ${processed}`);
+        this.#doStageCallback(GameEvent.RoundProcessed, processed);
+
         return processed;
+    }
+
+    /**
+     * Make a selection for a player.
+     * @param {Player|number} player - player or player index
+     * @param {Selection|string} selection - Selection or key associated with selection
+     * @returns {Selection} if selection was set the Selection, otherwise Selection.None
+     */
+    makePlay(player, selection) {
+        let selectionSet = Selection.None;
+        if (typeof player === 'number') {
+            player = this.getPlayer(player);
+        }
+        if (player && player.inGame) {
+            selectionSet = player.setSelection(selection, this.gameMode, this.variant);
+        }
+
+        this.log(`makePlay: ${player} ${selectionSet}`);
+
+        return selectionSet;
     }
 
     /**
@@ -598,6 +719,10 @@ export class GameResult {
                 counts[player.selection]++;
             }
         });
+
+        this.log(`roundSelections: ${counts}`);
+        this.#doStageCallback(GameEvent.RoundSelections, counts);
+
         return counts;
     }
 
@@ -650,6 +775,46 @@ export class GameResult {
             (previousValue, player) => previousValue + (player.inGame ? 1 : 0),
             0   // initial count
         );
+    }
+
+    /**
+     * Get the player with the specified index.
+     * @param {number} index - index of player
+     * @returns {Player|undefined} player is valid index, otherwise undefined
+     */
+    getPlayer(index) {
+        return index >= 0 && index < this.players.length ? this.players[index] : undefined;
+    }
+
+    /**
+     * Log a message.
+     * @param {string} message - message to log
+     */
+    log(message) {
+        if (this.#options & Game.OPT_CONSOLE) {
+            console.log(message);
+        }
+    }
+
+    /**
+     * Set game mode.
+     * @param {GameMode} gameMode - mode to set
+     * @param {function} callback - callback function; default undefined
+     */
+    setGameMode(gameMode, callback = undefined) {
+        this.gameMode = gameMode
+        this.#stageCallback = callback;
+    }
+
+    /**
+     * Call stage callback function when in test mode.
+     * @param {GameEvent} stage - one of GameEvent.xxx
+     * @param {object} payload - stage data
+     */
+    #doStageCallback(stage, payload = undefined) {
+        if (this.gameMode == GameMode.Test && typeof this.#stageCallback === 'function') {
+            this.#stageCallback(stage, this, this.#currentRound, payload);
+        }
     }
 }
 

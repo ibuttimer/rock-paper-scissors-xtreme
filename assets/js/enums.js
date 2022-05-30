@@ -155,6 +155,35 @@ import { requiredVariable } from './utils.js';
 }
 
 /**
+ * Enum representing game events.
+ */
+ export class GameEvent extends Enum {
+    // freeze game events so can't be modified
+    static GameStart = Object.freeze(new GameEvent('GameStart'));
+    static GameEnd = Object.freeze(new GameEvent('GameEnd'));
+    static RoundStart = Object.freeze(new GameEvent('RoundStart'));
+    static RoundSelections = Object.freeze(new GameEvent('RoundSelections'));
+    static RoundEvaluation = Object.freeze(new GameEvent('RoundEvaluation'));
+    static RoundProcessed = Object.freeze(new GameEvent('RoundProcessed'));
+  
+    /**
+     * @constructor
+     * @param {string} name - game event name.
+     */
+    constructor(name) {
+        super(name, 'name');
+    }
+
+    /**
+     * String representation of object.
+     * @returns {string} string of form '<Class name>.<object name>'
+     */
+    toString() {
+        return super.toString(GameEvent);
+    }
+}
+
+/**
  * Enum representing round results.
  */
  export class RoundResult extends Enum {

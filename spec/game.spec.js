@@ -1,9 +1,10 @@
 /*
   Test suite for game.js
  */
-import { Contest, Rule, GameVariant, Game } from '../assets/js/game.js'
-import { Selection, GameMode, RoundResult } from '../assets/js/enums.js'
+import { Contest, Rule, GameVariant, Game, GameResult } from '../assets/js/game.js'
+import { Selection, GameMode, GameEvent, RoundResult } from '../assets/js/enums.js'
 import { getRequiredVariableMessage } from './utils.spec.js';
+import { Player } from '../assets/js/player.js';
 
 /* 
   Check Selection class
@@ -259,24 +260,34 @@ describe("check Game class", function() {
 
     /**
      * Makes a play for each player.
-     * @param {GameVariant} variant - game variant
-     * @param {Array} players - array of players
-     * @param {function} picker - function taking index argument and returning a Selection 
-     *                            or key associated with a Selection
-     * @returns {object} player selection counts map with selection keys and count values
+     * @param {Game} game - game
+     * @param {function} picker - function taking index argument and returning a Selection, 
+     *                            key associated with a Selection or Selection.None if no valid
+     *                            selection
+     * @returns {object} object of the form: {
+     *                       plays: <player selection counts map with selection keys and count values>
+     *                       selected: <set of selected selections>
+     *                   }
      */
-    function makePlays(variant, players, picker) {
+    function makePlays(game, picker) {
+        const variant = game.variant;
         let plays = variant.getCountsTemplate();
-        for (let index = 0; index < players.length; index++) {
-            const player = players[index];
+        let selected = new Set();       // selections made in play
+        for (let index = 0; index < game.playerCount; index++) {
             let selection = picker(index);
-            if (selection !== Selection.None) {
-                selection = player.setSelection(selection, GameMode.Test, variant);
+            if (typeof selection === 'string') {
+                selection = variant.getSelection(selection);
+            }
+            if (selection instanceof Selection && selection !== Selection.None) {
                 plays[selection]++;
+                selected.add(selection);
             }
         }
         debugLog(plays, 'plays', false);
-        return plays;
+        return {
+            plays: plays,
+            selected: selected
+        }
     }
 
     /**
@@ -337,139 +348,241 @@ describe("check Game class", function() {
     }
 
     /**
-     * Perform basics checks on a game
+     * Callback function for game play
+     * @param {Game} game - game object
+     * @param {number} playerIndex - index of current player
+     * @param {number} roundNumber - current round number
+     * @returns {Selection|string} Selection or key associated with selection
+     */
+    function gamePlayCallback(game, playerIndex, roundNumber) {
+        let selection = Selection.None;  // selection to return
+        const player = game.getPlayer(playerIndex);     // current player
+        const params = getRoundParams(game, roundNumber); // round params
+        let winningSelection = params.rule.selection;   // winning selection
+        let losingSelection = params.losingContest(playerIndex);     // losing selection
+        const contests = params.rule.contests;
+        const activePlayers = game.activePlayerCount;
+
+        if (player.inGame){
+            switch (roundNumber) {
+                case 1:
+                    // Check different selection each player, using keys
+                    selection = game.variant.possibleSelections[playerIndex % activePlayers].key;
+                    break;
+                case 2:
+                    // Check same selection each player
+                    selection = game.variant.possibleSelections[0];
+                    break;
+                case 3:
+                    // Check first player makes losing selection, and other players make same winning selection
+                    selection = (playerIndex === params.selectedPlayer ? contests[losingSelection].loser : winningSelection);
+                    break;
+                case 4:
+                    // Check one player makes winning selection
+                    if (player.inGame) {
+                        selection = (playerIndex === params.selectedPlayer ? 
+                            winningSelection : contests[losingSelection].loser);
+                    }
+                    break;
+                default:
+                    throw new Error(`Unexpected round number: ${roundNumber}`);
+            }
+        }
+        return selection;
+    }
+
+    /**
+     * Get the round parameters to use for the specified round
+     * @param {Game} game - game
+     * @param {number} roundNumber - current round number
+     * @returns {object} object of the form: {
+     *                       rule: rule to use,
+     *                       losingContest: function to get index of losing contest,
+     *                       selectedPlayer: index of selected player for round
+     *                   }
+     */
+     function getRoundParams(game, roundNumber) {
+        let useRule;        // index of rule to use
+        let playerIndex;    // index of player to use
+        let losingContest;  // function to get index of losing contest
+
+        switch (roundNumber) {
+            case 1: // no params required
+            case 2: // no params required
+            case 3:
+                useRule = 0;
+                playerIndex = 0;
+                losingContest = playerIdx => 0;
+                break;
+            case 4:
+                useRule = game.variant.rules.length - 1;
+                playerIndex = game.players.length - 1;
+                losingContest = playerIdx => playerIdx % game.variant.rules[useRule].contests.length;
+                break;
+            default:
+                throw new Error(`Unexpected round number: ${roundNumber}`);
+        }
+        return {
+            rule: game.variant.rules[useRule],
+            // winning selection is Rule.selection
+            losingContest: losingContest,
+            selectedPlayer: playerIndex
+        }
+    }
+
+    /**
+     * Game play function to perform basics checks on a game
      * @param {GameVariant} variant - variant to use for game
      * @param {number} numPayers - number of players
      * @param {number} numRobots - number of robots
-     * @param {Game} game object
+     * @returns {Game} game object
      */
-    function checkVariant(variant, numPayers, numRobots) {
+     function checkGamePlay(variant, numPayers, numRobots) {
         const ALL_PLAYERS = numPayers + numRobots;
+        let expectedActive = ALL_PLAYERS;
+        let expectedRound = 0;
 
-        const game = new Game(variant, numPayers, numRobots);
-        game.gameMode = GameMode.Test;
+        const game = new Game(variant, numPayers, numRobots, Game.OPT_CONSOLE);
 
         checkGame(game, numPayers, numRobots, 0, true, false, false);
 
-        // start
-        game.startGame();
-
-        let expectedActive = ALL_PLAYERS;
-        checkGame(game, numPayers, numRobots, expectedActive, false, true, false);
-
-        // Check different selection each player, using keys
-        let plays = makePlays(variant, game.players, function(index) {
-            return variant.possibleSelections[index % expectedActive].key;
+        // function to get all selections for a round
+        const selectionPicker = roundNumber => makePlays(game, playerIndex => {
+            return gamePlayCallback(game, playerIndex, roundNumber);
         });
-        // confirm game counts match played selections
-        confirmCounts(game.roundSelections(), plays, 'Using keys');
-        // confirm play again result for round
-        let evaluation = game.evaluateRound();
-        expect(evaluation.result).toBe(RoundResult.PlayAgain);
-        checkGame(game, numPayers, numRobots, expectedActive, false, true, false);
 
-        // Check same selection each player
-        plays = makePlays(variant, game.players, function(index) {
-            return variant.possibleSelections[0];
-        });
-        // confirm game counts match played selections
-        confirmCounts(game.roundSelections(), plays);
-        // confirm play again result for round
-        evaluation = game.evaluateRound();
-        expect(evaluation.result).toBe(RoundResult.PlayAgain);
-        checkGame(game, numPayers, numRobots, expectedActive, false, true, false);
+        /**
+         * Callback function for testing
+         * @param {GameEvent} stage - one of GameEvent.xxx
+         * @param {Game} game - game object
+         * @param {number} roundNumber - current round number
+         * @param {object} payload - stage data
+         */
+        function testCallback(stage, game, roundNumber, payload) {
+            let roundSelections;
+            let context = null;
+            let explanations = new Set();   // individual win explanations
+            let params;                     // round params
 
-        // Check all players except one make same selection, and other player makes losing selection
-        let useRule = variant.rules[0];
-        let playerIdx = 0;
-        let selectedPlayer = game.players[playerIdx];
-        let winningSelection = useRule.selection;
-        let losingSelection = useRule.contests[0].loser;
-        plays = makePlays(variant, game.players, function(index) {
-            // selected player losing option, others winning option
-            return (index === playerIdx ? losingSelection : winningSelection);
-        });
-        // confirm game counts match played selections
-        confirmCounts(game.roundSelections(), plays);
-        // confirm eliminate player result for round
-        evaluation = game.evaluateRound();
-        expect(evaluation.result).toBe(RoundResult.Eliminate);
-        expect(evaluation.data).toEqual(useRule.contests);
-        expect(evaluation.explanation.length).toBe(1);
-        expect(evaluation.explanation[0])
-            .toEqual(
-                jasmine.stringMatching(
-                    explanationRegex(winningSelection, losingSelection))
-            );
-        checkGame(game, numPayers, numRobots, expectedActive, false, true, false);
-        // confirm eliminated one player
-        --expectedActive;
-        let processed = game.processEvaluation(evaluation);
-        expect(processed.result).toBe(RoundResult.PlayAgain);
-        expect(processed.data).toEqual([selectedPlayer]);
-        checkGame(game, numPayers, numRobots, expectedActive, false, true, false);
-
-        // Check one player makes winning selection
-        useRule = variant.rules[variant.rules.length - 1];
-        playerIdx = game.players.length - 1;
-        selectedPlayer = game.players[playerIdx];
-        winningSelection = useRule.selection;
-        let selected = new Set();       // selections made in play
-        let explanations = new Set();   // individual win explanations
-        plays = makePlays(variant, game.players, function(index) {
-            // none if player eliminated, else selected player winning option, others losing options
-            let selection = Selection.None;
-            if (game.players[index].inGame) {
-                selection = (index === playerIdx ? 
-                    winningSelection : useRule.contests[index % useRule.contests.length].loser);
-                selected.add(selection);
+            if (stage !== GameEvent.GameStart) {
+                params = getRoundParams(game, roundNumber);
             }
-            return selection;
-        });
-        // find all win explanations
-        for (const selection of selected) {
-            const rule = variant.getRule(selection);
-            for (const contest of rule.contests) {
-                if (selected.has(contest.loser)) {
-                    explanations.add(explanationRegex(selection, contest.loser));
-                }
-            }
-        }
-        // confirm game counts match played selections
-        confirmCounts(game.roundSelections(), plays);
-        // confirm eliminate player result for round
-        evaluation = game.evaluateRound();
 
-        debugLog(explanations, 'expected explanations');
-        debugLog(evaluation, 'evaluation');
-
-        expect(evaluation.result).toBe(RoundResult.Eliminate);
-        expect(evaluation.data).toEqual(useRule.contests);
-        expect(evaluation.explanation.length).toBe(explanations.size);
-        for (let index = 0; index < evaluation.explanation.length; index++) {
-            const reason = evaluation.explanation[index];
-            let matched = false;
-            for (const regex of explanations) {
-                if (reason.match(regex)) {
-                    matched = true;
+            switch (stage) {
+                case GameEvent.GameStart:
+                    checkGame(game, numPayers, numRobots, expectedActive, false, true, false);
                     break;
-                }
-            }
-            expect(matched)
-                .withContext(`Match reason ${reason}`)
-                .toBeTrue();
-        }
-        checkGame(game, numPayers, numRobots, expectedActive, false, true, false);
-        // confirm eliminated all player bar winner
-        expectedActive = 1;
-        processed = game.processEvaluation(evaluation);
-        expect(processed.result).toBe(RoundResult.Winner);
-        expect(processed.data).toBe(selectedPlayer);
-        checkGame(game, numPayers, numRobots, expectedActive, false, true, false);
 
-        // end
-        game.endGame();
-        checkGame(game, numPayers, numRobots, 0, false, false, true);
+                case GameEvent.RoundStart:
+                    expect(roundNumber).toBe(++expectedRound);
+                    break;
+
+                case GameEvent.RoundSelections:
+                    // confirm game counts match played selections
+                    roundSelections = selectionPicker(roundNumber);
+                    confirmCounts(payload, roundSelections.plays, context);
+                    break;
+
+                case GameEvent.RoundEvaluation:
+                    switch (roundNumber) {
+                        case 1:
+                        case 2:
+                            // confirm play again result for round
+                            expect(payload.result).toBe(RoundResult.PlayAgain);
+                            checkGame(game, numPayers, numRobots, expectedActive, false, true, false);
+                            break;
+                        case 3:
+                            // confirm eliminate 1 player result for round
+                            expect(payload.result).toBe(RoundResult.Eliminate);
+                            expect(payload.data).toEqual(params.rule.contests);
+                            expect(payload.explanation.length).toBe(1);
+                            expect(payload.explanation[0])
+                                .toEqual(
+                                    jasmine.stringMatching(
+                                        explanationRegex(params.rule.selection,     // winner
+                                            params.rule.contests[
+                                                params.losingContest(params.selectedPlayer)].loser)
+                                    )
+                                );
+                            checkGame(game, numPayers, numRobots, expectedActive, false, true, false);
+                            break;
+                        case 4:
+                            // confirm eliminate players result for round
+                            roundSelections = selectionPicker(roundNumber);
+
+                            // find all win explanations
+                            for (const selection of roundSelections.selected) {
+                                const rule = game.variant.getRule(selection);
+                                for (const contest of rule.contests) {
+                                    if (roundSelections.selected.has(contest.loser)) {
+                                        explanations.add(explanationRegex(selection, contest.loser));
+                                    }
+                                }
+                            }
+
+                            debugLog(explanations, 'expected explanations', false);
+                            debugLog(payload, 'evaluation');
+
+                            expect(payload.result).toBe(RoundResult.Eliminate);
+                            expect(payload.data).toEqual(params.rule.contests);
+                            expect(payload.explanation.length).toBe(explanations.size);
+                            for (let index = 0; index < payload.explanation.length; index++) {
+                                const reason = payload.explanation[index];
+                                let matched = false;
+                                for (const regex of explanations) {
+                                    if (reason.match(regex)) {
+                                        matched = true;
+                                        break;
+                                    }
+                                }
+                                expect(matched)
+                                    .withContext(`Match reason ${reason}`)
+                                    .toBeTrue();
+                            }
+                            checkGame(game, numPayers, numRobots, expectedActive, false, true, false);
+                            break;
+                        default:
+                            throw new Error(`Unexpected round number: ${roundNumber}`);
+                    }
+                    break;
+
+                case GameEvent.RoundProcessed:
+                    switch (roundNumber) {
+                        case 1:
+                        case 2:
+                            // confirm play again result for round
+                            expect(payload.result).toBe(RoundResult.PlayAgain);
+                            checkGame(game, numPayers, numRobots, expectedActive, false, true, false);
+                            break;
+                        case 3:
+                            // confirm eliminated one player
+                            --expectedActive;
+                            expect(payload.result).toBe(RoundResult.PlayAgain);
+                            expect(payload.data).toEqual([
+                                game.getPlayer(params.selectedPlayer)
+                            ]);
+                            checkGame(game, numPayers, numRobots, expectedActive, false, true, false);
+                            break;
+                        case 4:
+                            // confirm eliminated all player bar winner
+                            expectedActive = 1;
+                            expect(payload.result).toBe(RoundResult.Winner);
+                            expect(payload.data).toBe(game.getPlayer(params.selectedPlayer));
+                            checkGame(game, numPayers, numRobots, expectedActive, false, true, false);
+                            break;
+                        default:
+                            throw new Error(`Unexpected round number: ${roundNumber}`);
+                    }
+                    break;
+
+                case GameEvent.GameEnd:
+                    checkGame(game, numPayers, numRobots, 0, false, false, true);
+                    break;
+            }
+        }
+
+        game.setGameMode(GameMode.Test, testCallback);
+        game.playGame(gamePlayCallback);
 
         return game;
     }
@@ -488,7 +601,7 @@ describe("check Game class", function() {
         const NUM_PLAYERS = variant.numPossibleSelections - NUM_ROBOTS;
         const ALL_PLAYERS = NUM_PLAYERS + NUM_ROBOTS;
 
-        const game = checkVariant(variant, NUM_PLAYERS, NUM_ROBOTS);
+        const game = checkGamePlay(variant, NUM_PLAYERS, NUM_ROBOTS);
     });
 
     it("checks Game(BigBang)", function() {
@@ -497,7 +610,7 @@ describe("check Game class", function() {
         const NUM_ROBOTS = 0;
         const ALL_PLAYERS = NUM_PLAYERS + NUM_ROBOTS;
 
-        const game = checkVariant(variant, NUM_PLAYERS, NUM_ROBOTS);
+        const game = checkGamePlay(variant, NUM_PLAYERS, NUM_ROBOTS);
     });
 
     it("checks Game(Xtreme)", function() {
@@ -506,7 +619,7 @@ describe("check Game class", function() {
         const NUM_ROBOTS = 0;
         const ALL_PLAYERS = NUM_PLAYERS + NUM_ROBOTS;
 
-        const game = checkVariant(variant, NUM_PLAYERS, NUM_ROBOTS);
+        const game = checkGamePlay(variant, NUM_PLAYERS, NUM_ROBOTS);
     });
 });
   
