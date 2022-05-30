@@ -251,6 +251,28 @@ function xtremeRules() {
     ];
 }
 
+/** Template class for a counts object */
+class CountsTemplate {
+
+    constructor() {
+    }
+
+    toString() {
+        let str = '{';
+        for (const key in this) {
+            if (Object.hasOwnProperty.call(this, key)) {
+                str += `${key}: ${this[key]}, `;
+            }
+        }
+        if (str.length > 2) {
+            str = str.substring(0, str.length - 2);
+        }
+        str += '}';
+
+        return str;
+    }
+}
+
 /**
  * Enum representing all possible game variants.
  */
@@ -323,7 +345,7 @@ function xtremeRules() {
      * @returns {object} map with selection keys and count values
      */
     getCountsTemplate() {
-        let template = {};
+        let template = new CountsTemplate();
         this.possibleSelections.forEach(selection => template[selection] = 0);
         return template;
     }
@@ -580,7 +602,7 @@ export class GameResult {
 
     /**
      * Make a play for the current player.
-     * @param {string} selection - key for selection
+     * @param {GameKey|string} selection - key for selection
      * @returns {object} event result, @see {@link Game#eventResult()}
      */
     makePlayEvent(selection) {

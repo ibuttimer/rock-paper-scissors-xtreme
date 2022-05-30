@@ -2,7 +2,7 @@
   Test suite for game.js
  */
 import { Contest, Rule, GameVariant, Game, GameResult } from '../assets/js/game.js'
-import { Selection, GameMode, GameEvent, RoundResult } from '../assets/js/enums.js'
+import { GameKey, Selection, GameMode, GameEvent, RoundResult } from '../assets/js/enums.js'
 import { getRequiredVariableMessage } from './utils.spec.js';
 import { Player } from '../assets/js/player.js';
 
@@ -275,7 +275,7 @@ describe("check Game class", function() {
         let selected = new Set();       // selections made in play
         for (let index = 0; index < game.playerCount; index++) {
             let selection = picker(index);
-            if (typeof selection === 'string') {
+            if (typeof selection === 'string' || selection instanceof GameKey) {
                 selection = variant.getSelection(selection);
             }
             if (selection instanceof Selection && selection !== Selection.None) {
@@ -329,7 +329,7 @@ describe("check Game class", function() {
                     str += `${item}, `
                 }
             }
-                else {
+            else {
                 for (const key in object) {
                     if (Object.hasOwnProperty.call(object, key)) {
                         str += `${key}: ${object[key]}, `
@@ -346,6 +346,8 @@ describe("check Game class", function() {
         }
         jasmine.debugLog(str);
     }
+
+    const NUM_OF_ROUNDS = 4;    // number of game rounds in test
 
     /**
      * Callback function for game play
@@ -435,12 +437,17 @@ describe("check Game class", function() {
      * @param {GameVariant} variant - variant to use for game
      * @param {number} numPayers - number of players
      * @param {number} numRobots - number of robots
+     * @param {boolean} useKeys - use keys flag: if true use keys, otherwise Selections; default false
      * @returns {Game} game object
      */
-     function checkGamePlay(variant, numPayers, numRobots) {
+     function checkGamePlay(variant, numPayers, numRobots, useKeys = false) {
         const ALL_PLAYERS = numPayers + numRobots;
         let expectedActive = ALL_PLAYERS;
         let expectedRound = 0;
+
+        if (useKeys && numRobots > 0) {
+            throw new Error("Unsupported configuration: robots currently cannot be used in 'keys' mode tests");
+        }
 
         const game = new Game(variant, numPayers, numRobots, Game.OPT_CONSOLE);
 
@@ -582,7 +589,26 @@ describe("check Game class", function() {
         }
 
         game.setGameMode(GameMode.Test, testCallback);
-        game.playGame(gamePlayCallback);
+
+        if (!useKeys) {
+            // test game play using callback function
+            game.playGame(gamePlayCallback);
+        } else {
+            // test game play using events
+            game.playGameEvents();
+
+            for (let roundNum = 1; roundNum <= NUM_OF_ROUNDS; roundNum++) {
+                for (let index = 0; index < game.playerCount; index++) {
+                    let selection = gamePlayCallback(game, index, roundNum);
+                    if (typeof selection === 'string' || selection instanceof GameKey) {
+                        selection = variant.getSelection(selection);
+                    }
+                    if (selection instanceof Selection && selection !== Selection.None) {
+                        game.makePlayEvent(selection.key.key);  // use key
+                    }
+                }
+            }
+        }
 
         return game;
     }
@@ -620,6 +646,33 @@ describe("check Game class", function() {
         const ALL_PLAYERS = NUM_PLAYERS + NUM_ROBOTS;
 
         const game = checkGamePlay(variant, NUM_PLAYERS, NUM_ROBOTS);
+    });
+
+    it("checks Game(Basic) - keys", function() {
+        const variant = GameVariant.Basic;
+        const NUM_ROBOTS = 0;
+        const NUM_PLAYERS = variant.numPossibleSelections - NUM_ROBOTS;
+        const ALL_PLAYERS = NUM_PLAYERS + NUM_ROBOTS;
+
+        const game = checkGamePlay(variant, NUM_PLAYERS, NUM_ROBOTS, true);
+    });
+
+    it("checks Game(BigBang) - keys", function() {
+        const variant = GameVariant.BigBang;
+        const NUM_PLAYERS = variant.numPossibleSelections;
+        const NUM_ROBOTS = 0;
+        const ALL_PLAYERS = NUM_PLAYERS + NUM_ROBOTS;
+
+        const game = checkGamePlay(variant, NUM_PLAYERS, NUM_ROBOTS, true);
+    });
+
+    it("checks Game(Xtreme) - keys", function() {
+        const variant = GameVariant.Xtreme;
+        const NUM_PLAYERS = variant.numPossibleSelections;
+        const NUM_ROBOTS = 0;
+        const ALL_PLAYERS = NUM_PLAYERS + NUM_ROBOTS;
+
+        const game = checkGamePlay(variant, NUM_PLAYERS, NUM_ROBOTS, true);
     });
 });
   
