@@ -1,8 +1,8 @@
 /*
   Test suite for game.js
  */
-import { Selection } from '../assets/js/enums.js'
-import { Player, Robot } from '../assets/js/player.js';
+import { Selection } from '../public/assets/js/enums.js'
+import { Player, Robot } from '../public/assets/js/player.js';
 
 /**
  * Check player attributes

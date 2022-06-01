@@ -1,0 +1,110 @@
+@import url('https://fonts.googleapis.com/css2?family=Shojumaru&family=Sofadi+One&display=swap');
+
+
+/* custom properties */
+:root {
+    /* colour scheme https://coolors.co/2176ae-57b8ff-b66d0d-fbb13c-fe6847 */
+    --dark-blue: #2176AE;   /* star command blue */
+    --light-blue: #57B8FF;  /* blue jeans */
+    --brown: #B66D0D;  /* liver dogs */
+    --yellow: #FBB13C;  /* yellow orange */
+    --orange: #FE6847;  /* outrageous orange */
+    --dark-blue-text: #fff;
+    --light-blue-text: #000;
+    --brown-text: #fff;
+    --yellow-text: #000;
+    --orange-text: #fff;
+
+    --heading-font: 'Shojumaru', cursive;
+    --heading-font-weight: 400;
+    --paragraph-font: 'Sofadi One', cursive;
+    --paragraph-font-weight: 400;
+
+    --std-margin-horz: 7.5%;
+    --std-margin-vert: 5px;
+
+    --footer-height: 50px;
+}
+
+* {
+    /* Love Running Walkthrough Project*/
+    margin: 0;
+    padding: 0;
+    border: none;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--heading-font);
+  font-weight: var(--heading-font-weight);
+}
+
+body {
+  font-family: var(--paragraph-font);
+  font-weight: var(--paragraph-font-weight);
+}
+
+html, body, .app-wrapper {
+    /* sticky footer */
+    height: 100%;
+}
+
+body {
+    font-family: var(--paragraph-font);
+    font-weight: var(--paragraph-font-weight);
+
+    /* sticky footer */
+    display: flex;
+    flex-direction: column;
+}
+
+#root {
+    /* sticky footer */
+    flex: 1 0 auto;
+}
+
+.content {
+  height: calc(100% - var(--footer-height));
+
+  margin-left: var(--std-margin-horz);
+  margin-right: var(--std-margin-horz);
+
+}
+
+/* .App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+} */

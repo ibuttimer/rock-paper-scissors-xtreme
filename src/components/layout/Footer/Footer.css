@@ -1,0 +1,24 @@
+@import '../../../App.css';
+
+
+/* custom properties */
+:root {
+
+}
+
+
+/* sticky footer courtesy of
+https://css-tricks.com/couple-takes-sticky-footer/#aa-there-is-flexbox */
+footer {
+  flex-shrink: 0;
+
+  margin-left: var(--std-margin-horz);
+  margin-right: var(--std-margin-horz);
+  padding: var(--std-padding-vert) var(--std-padding-horz) var(--std-padding-vert) var(--std-padding-horz);
+  height: var(--footer-height);
+  line-height: var(--footer-height);
+}
+
+.copyright {
+  float: left;
+}

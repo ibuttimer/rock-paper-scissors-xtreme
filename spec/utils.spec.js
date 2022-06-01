@@ -1,7 +1,7 @@
 /*
   Test suite for utils.js
  */
-import { variableCheck, requiredVariable } from '../assets/js/utils.js'
+import { variableCheck, requiredVariable } from '../public/assets/js/utils.js'
 
 describe("check variableCheck()", function() {
     it("checks variableCheck(null) is false", function() {

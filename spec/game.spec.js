@@ -1,10 +1,18 @@
 /*
   Test suite for game.js
  */
-import { Contest, Rule, GameVariant, Game, GameResult } from '../assets/js/game.js'
-import { GameKey, Selection, GameMode, GameEvent, RoundResult } from '../assets/js/enums.js'
+import { Contest, Rule, GameVariant, Game } from '../public/assets/js/game.js'
+import { GameKey, Selection, GameMode, GameEvent, RoundResult } from '../public/assets/js/enums.js'
 import { getRequiredVariableMessage } from './utils.spec.js';
-import { Player } from '../assets/js/player.js';
+
+/* TODO migrate to jest for testing
+    https://github.com/jest-community/eslint-plugin-jest/blob/v25.7.0/docs/rules/no-jasmine-globals.md
+    React use jest which uses jasmine as a test runner.
+    "A side effect of this is that both a jasmine object, and some jasmine-specific globals, 
+    are exposed to the test environment. Most functionality offered by Jasmine has been ported to Jest, 
+    and the Jasmine globals will stop working in the future. Developers should therefore migrate to 
+    Jest's documented API instead of relying on the undocumented Jasmine API."
+    */
 
 /* 
   Check Selection class
@@ -344,6 +352,7 @@ describe("check Game class", function() {
         if (message) {
             str = `${message}> ${str}`;
         }
+        
         jasmine.debugLog(str);
     }
 
@@ -585,6 +594,8 @@ describe("check Game class", function() {
                 case GameEvent.GameEnd:
                     checkGame(game, numPayers, numRobots, 0, false, false, true);
                     break;
+
+                default:
             }
         }
 
