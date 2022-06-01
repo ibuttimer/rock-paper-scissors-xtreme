@@ -1,10 +1,8 @@
-@import url('https://fonts.googleapis.com/css2?family=Shojumaru&family=Sofadi+One&display=swap');
+@import 'styles-footer.css';
 
+/* custom properties */
 :root {
-    --heading-font: 'Shojumaru', cursive;
-    --heading-font-weight: 400;
-    --paragraph-font: 'Sofadi One', cursive;
-    --paragraph-font-weight: 400;
+
 }
 
 h1, h2, h3, h4, h5, h6 {

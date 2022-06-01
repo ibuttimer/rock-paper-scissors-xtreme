@@ -1,0 +1,51 @@
+@import url('https://fonts.googleapis.com/css2?family=Shojumaru&family=Sofadi+One&display=swap');
+
+
+/* custom properties */
+:root {
+    /* colour scheme https://coolors.co/2176ae-57b8ff-b66d0d-fbb13c-fe6847 */
+    --dark-blue: #2176AE;   /* star command blue */
+    --light-blue: #57B8FF;  /* blue jeans */
+    --brown: #B66D0D;  /* liver dogs */
+    --yellow: #FBB13C;  /* yellow orange */
+    --orange: #FE6847;  /* outrageous orange */
+    --dark-blue-text: #fff;
+    --light-blue-text: #000;
+    --brown-text: #fff;
+    --yellow-text: #000;
+    --orange-text: #fff;
+
+    --heading-font: 'Shojumaru', cursive;
+    --heading-font-weight: 400;
+    --paragraph-font: 'Sofadi One', cursive;
+    --paragraph-font-weight: 400;
+
+    --std-margin-horz: 7.5%;
+    --std-margin-vert: 5px;
+}
+
+* {
+    /* Love Running Walkthrough Project*/
+    margin: 0;
+    padding: 0;
+    border: none;
+}
+
+html, body {
+    /* sticky footer */
+    height: 100%;
+}
+
+body {
+    font-family: var(--paragraph-font);
+    font-weight: var(--paragraph-font-weight);
+
+    /* sticky footer */
+    display: flex;
+    flex-direction: column;
+}
+
+.content {
+    /* sticky footer */
+    flex: 1 0 auto;
+}
