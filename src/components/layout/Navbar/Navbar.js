@@ -27,11 +27,9 @@ export default class Navbar extends React.Component {
                                 <i className='lni lni-cog'></i>&nbsp;Settings
                             </a>
                         </li>
-                        
                     </ul>
                 </nav>
             </header>
-
         );
       }    
 }

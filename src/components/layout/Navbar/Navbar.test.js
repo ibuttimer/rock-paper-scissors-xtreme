@@ -1,11 +1,16 @@
 import { render, screen } from '@testing-library/react';
-import App from './../../../App';
+import { BrowserRouter } from 'react-router-dom';
+import Navbar from './Navbar';
 
 test('renders navbar', () => {
-  render(<App />);
-  const rulesElement = screen.getByText(/Rules/i);
-  expect(rulesElement).toBeInTheDocument();
+    render(
+        <BrowserRouter>
+            <Navbar />
+        </BrowserRouter>
+    );
+    const rulesElement = screen.getByText(/Rules/i);
+    expect(rulesElement).toBeInTheDocument();
 
-  const settingsElement = screen.getByText(/Settings/i);
-  expect(settingsElement).toBeInTheDocument();
+    const settingsElement = screen.getByText(/Settings/i);
+    expect(settingsElement).toBeInTheDocument();
 });
