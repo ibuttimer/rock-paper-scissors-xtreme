@@ -1,5 +1,6 @@
 import React from 'react';
 import './Footer.css';
+import { COPYRIGHT, YEAR } from '../../../Globals.js';
 
 export default class Footer extends React.Component {
 
@@ -7,12 +8,9 @@ export default class Footer extends React.Component {
         return (
             <footer className='footer__footer'>
                 <div className="div__copyright">
-                    <p>&copy; Ian Buttimer 2022</p>
+                    <p>&copy; {COPYRIGHT} {YEAR}</p>
                 </div>
             </footer>
         );
       }    
 }
-
-
-
