@@ -5,8 +5,8 @@ import './App.css';
 function App() {
   // JSX expressions must have one parent element
   return (
-    <div className="app-wrapper">
-      <div className="content">
+    <div className="div__app-wrapper">
+      <div className="div__content">
           <Navbar />
           <main>
               <h1>This is a H1 heading</h1>

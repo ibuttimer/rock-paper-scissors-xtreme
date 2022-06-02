@@ -85,6 +85,9 @@ Your app is ready to be deployed!
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
+### General
+- CSS classnames follow the [Block, Element, Modifier (BEM)](https://css-tricks.com/bem-101/) methodology.
+
 ## Testing 
 Details of the testing undertaken are outlined in [test.md](test/test.md), along with the results.
 
