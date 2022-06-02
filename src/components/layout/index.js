@@ -1,4 +1,2 @@
-import { Navbar } from './Navbar/Navbar'
-import { Footer } from './Footer/Footer'
-
-export { Navbar, Footer }
+export { default as Navbar } from './Navbar/Navbar.js';
+export { default as Footer } from './Footer/Footer.js';

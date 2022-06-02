@@ -5,4 +5,13 @@
 
 }
 
+.h1__main-title, .h2__sub-title {
+    text-align: center;
+}
 
+.section__select-game {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+}

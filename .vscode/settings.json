@@ -26,5 +26,8 @@
    "editor.defaultFormatter": "HookyQR.beautify",
    "[javascriptreact]": {
       "editor.defaultFormatter": "vscode.typescript-language-features"
-   }
+   },
+   "cSpell.words": [
+      "Coyier"
+   ]
 }
