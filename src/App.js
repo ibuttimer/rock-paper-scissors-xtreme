@@ -1,3 +1,4 @@
+import Navbar from './components/layout/Navbar/Navbar.js';
 import Footer from './components/layout/Footer/Footer.js';
 import './App.css';
 
@@ -6,8 +7,7 @@ function App() {
   return (
     <div className="app-wrapper">
       <div className="content">
-          <header>
-          </header>
+          <Navbar />
           <main>
               <h1>This is a H1 heading</h1>
               <h2>This is a H2 heading</h2>

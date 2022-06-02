@@ -22,6 +22,10 @@
 
     --std-margin-horz: 7.5%;
     --std-margin-vert: 5px;
+    --std-margin-between: 10px;
+
+    --std-padding-horz: 10px;
+    --std-padding-vert: 10px;
 
     --footer-height: 50px;
 }
