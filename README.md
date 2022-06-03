@@ -49,7 +49,10 @@ The application structure is based on [React Architecture: How to Structure and 
 ├─ spec                 - Jasmine test scripts
 ├─ src                  - application code
 │  ├─ components        - global shared/reusable components
+│  │     ├─ game        - game components
 │  │     └─ layout      - layout components
+│  ├─ services          - JavaScript modules
+│  ├─ utils             - utilities
 │  └─ views             - pages
 └─ test                 - test results
    └─ lighthouse        - Lighthouse test results

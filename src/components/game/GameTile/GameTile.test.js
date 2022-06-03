@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import GameTile from './GameTile';
 
-test('renders navbar', () => {
+test('renders game tile', () => {
 
     const tileName = 'Tile Name';
     const tileSrc = './somewhere/pic.png';

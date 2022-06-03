@@ -2,10 +2,9 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import App from './App.js';
-import Main from './views/Main/Main.jsx'
-import Rules from './views/Rules/Rules.jsx'
+import { Main, Params, Rules } from './views/index.js'
+import { BASIC_ROUTE, BIGBANG_ROUTE, XTREME_ROUTE, RULES_ROUTE } from './Globals.js'
 import reportWebVitals from './reportWebVitals.js';
-import Navbar from './components/layout/Navbar/Navbar.js';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -14,7 +13,10 @@ root.render(
             <Routes>
                 <Route path="/" element={ <App /> }>
                     <Route path="" element={ <Main /> } />
-                    <Route path="rules" element={ <Rules /> } />
+                    <Route path={BASIC_ROUTE} element={ <Params /> } />
+                    <Route path={BIGBANG_ROUTE} element={ <Params /> } />
+                    <Route path={XTREME_ROUTE} element={ <Params /> } />
+                    <Route path={RULES_ROUTE} element={ <Rules /> } />
                 </Route>
             </Routes>
         </BrowserRouter>

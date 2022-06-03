@@ -13,7 +13,7 @@ The scope of the project will be to allow the user to:
 
   - Big Bang
 
-      The expanded version of the game invented by [Sam Kass](https://bigbangtheory.fandom.com/wiki/Sam_Kass) and made popular by the TV sitcom [The Bug Bang Theory](https://www.imdb.com/title/tt0898266/) with 5 selection options; Rock, Paper, Scissors, Lizard and Spock.
+      The expanded version of the game invented by [Sam Kass](https://bigbangtheory.fandom.com/wiki/Sam_Kass) and made popular by the TV sitcom [The Big Bang Theory](https://www.imdb.com/title/tt0898266/) with 5 selection options; Rock, Paper, Scissors, Lizard and Spock.
       
       [Big Bang rules](#big-bang-rules)
 
