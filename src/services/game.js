@@ -838,6 +838,36 @@ export class GameResult {
     }
 
     /**
+     * Set the number of players
+     * @param {number} num - number of players
+     */
+    setNumPlayers(num) {
+        if (typeof num === 'string') {
+            num = parseInt(num);
+        }
+        if (this.notStarted && num) {
+            this.numPlayers = num;
+            // TODO change number of players after game init without re-init
+            this.init();
+        }
+    }
+
+    /**
+     * Set the number of robots
+     * @param {number} num - number of robots
+     */
+     setNumRobots(num) {
+        if (typeof num === 'string') {
+            num = parseInt(num);
+        }
+        if (this.notStarted && num >= 0) {
+            this.numRobots = num;
+            // TODO change number of robots after game init without re-init
+            this.init();
+        }
+    }
+
+    /**
      * Apply the applicator to all players
      * @param {Function} applicator 
      */

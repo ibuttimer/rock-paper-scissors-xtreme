@@ -1,4 +1,6 @@
-import { Link, useOutletContext } from "react-router-dom";
+import React from 'react';
+import { Link } from "react-router-dom";
+import { AppContext } from '../../App.js'
 import { 
     GAME_NAME, BASIC_VARIANT_NAME, BIGBANG_VARIANT_NAME, XTREME_VARIANT_NAME,
     BASIC_URL, BIGBANG_URL, XTREME_URL
@@ -6,7 +8,6 @@ import {
 import { GameTile } from '../../components/index.js';
 import { GameVariant } from "../../services/game";
 import './Main.css';
-import React from "react";
 
 
 /**
@@ -14,7 +15,7 @@ import React from "react";
  * @returns {React element} element to render
  */
 export default function Main() {
-    const game = useOutletContext();
+    const game = React.useContext(AppContext);
 
     /**
      * Set the game variant.

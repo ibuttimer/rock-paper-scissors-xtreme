@@ -6,7 +6,7 @@
 }
 
 
-.section__select-game {
+.div__num-of-game-participants {
     display: flex;
     flex-direction: row;
     align-items: center;

@@ -6,6 +6,12 @@ export const BIGBANG_VARIANT_NAME = 'Big Bang';
 export const XTREME_VARIANT_NAME = 'Xtreme';
 export const COPYRIGHT = 'Ian Buttimer';
 export const YEAR = '2022';
+export const MIN_PLAYERS = 1;
+export const MAX_PLAYERS = 9;
+export const DEFAULT_PLAYERS = 2;
+export const MIN_ROBOTS = 0;
+export const MAX_ROBOTS = 3;
+export const DEFAULT_ROBOTS = 0;
 
 /**
  * Make a url.
