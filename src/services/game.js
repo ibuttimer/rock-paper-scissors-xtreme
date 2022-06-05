@@ -275,47 +275,27 @@ class CountsTemplate {
  */
  export class GameVariant extends Enum {
     // freeze variants so can't be modified
-    static Basic;
-    static BigBang;
-    static Xtreme;
-  
-    static {
-        // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes/Class_static_initialization_blocks
-        let variants = {};
-        variants[BASIC_GAME_NAME] = basicRules;
-        variants[BIG_BANG_GAME_NAME] = bigBangRules;
-        variants[XTREME_GAME_NAME] = xtremeRules;
+    static Basic = GameVariant.getFrozen(BASIC_GAME_NAME, basicRules());
+    static BigBang = GameVariant.getFrozen(BIG_BANG_GAME_NAME, bigBangRules());
+    static Xtreme = GameVariant.getFrozen(XTREME_GAME_NAME, xtremeRules());
 
-        for (let name in variants) {
-            let variant = new GameVariant(name);
-            variant.rules = variants[name]();
-            variant.finalise();
+    static AllVariants = [GameVariant.Basic, GameVariant.BigBang, GameVariant.Xtreme];
 
-            switch (name) {
-                case BASIC_GAME_NAME:
-                    this.Basic = Object.freeze(variant);
-                    break;
-                case BIG_BANG_GAME_NAME:
-                    this.BigBang = Object.freeze(variant);
-                    break;
-                case XTREME_GAME_NAME:
-                    this.Xtreme = Object.freeze(variant);
-                    break;
-                default:
-            }
-        }
+    /**
+     * Make a frozen variant
+     * @param {string} name - name of variant
+     * @param {Array} rules - game rules
+     * @returns {GameVariant}
+     */
+    static getFrozen(name, rules) {
+        let variant = new GameVariant(name);
+        variant.rules = rules;
+        variant.finalise();
+        return variant;
     }
 
     rules = [];              // array of game rules
     possibleSelections = []; // array of possible selections
-
-    // /**
-    //  * @constructor
-    //  * @param {string} name - variant name.
-    //  */
-    // constructor(name) {
-    //     super(name);
-    // }
 
     /** Finalise object to prepare for freezing. */
     finalise() {
