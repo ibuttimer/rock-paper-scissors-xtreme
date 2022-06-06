@@ -1,5 +1,6 @@
 import { render, screen, queryByAttribute } from '@testing-library/react';
-import { default as NumPlayers, generateId } from './NumPlayers';
+import { default as NumPlayers } from './NumPlayers';
+import { generateId } from '../../../utils/index.js'
 
 test('renders number of players', () => {
 

@@ -1,3 +1,7 @@
-import { getVariantName } from './utils.js'
+import { getVariantName, generateId, optionsList } from './utils.js'
+import { default as GameState } from './gameState.js';
 
-export { getVariantName };
+export { 
+    getVariantName, generateId, optionsList,
+    GameState
+};

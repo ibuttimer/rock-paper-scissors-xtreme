@@ -1,0 +1,17 @@
+@import '../../../App.css';
+
+/* custom properties */
+:root {
+
+}
+
+.div__num-games-wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.div__num-games-option-wrapper {
+
+}

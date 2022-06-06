@@ -2,9 +2,8 @@ import React from 'react';
 import { render } from '@testing-library/react';
 import { Navbar, Footer } from './components/index.js';
 import { Outlet } from "react-router-dom";
-import { DEFAULT_PLAYERS, DEFAULT_ROBOTS } from './Globals.js'
 import './App.css';
-import { Game, GameVariant } from './services/game.js'
+import { GameState } from './utils/index.js'
 
 /**
  * Class Component for application
@@ -18,16 +17,14 @@ export default class App extends React.Component {
      */
     constructor(props) {
         super(props);
-        this.state = {
-            game: new Game(GameVariant.Basic, DEFAULT_PLAYERS, DEFAULT_ROBOTS),
-        };
+        this.state = new GameState();
     }
 
     render() {
         // JSX expressions must have one parent element
         // pass game object to subcomponents
         return (
-            <AppContext.Provider value={this.state.game}>
+            <AppContext.Provider value={this.state}>
                 <div className="div__app-wrapper">
                     <div className="div__content">
                         <Navbar />
@@ -42,7 +39,6 @@ export default class App extends React.Component {
 
 export const AppContext = React.createContext();
 
-
 /**
  * A custom render to setup providers. Extends regular
  * render options with `providerProps` to allow injecting
@@ -55,7 +51,7 @@ export const AppContext = React.createContext();
  */
  export const customAppContextRender = (ui, {providerProps, ...renderOptions}) => {
     return render(
-      <AppContext.Provider {...providerProps}>{ui}</AppContext.Provider>,
-      renderOptions,
+        <AppContext.Provider {...providerProps}>{ui}</AppContext.Provider>,
+        renderOptions,
     )
-  }
+}

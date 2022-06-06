@@ -2,13 +2,14 @@ import React from 'react';
 import { screen } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import { customAppContextRender } from  '../../App.js';
+import { GameState } from '../../utils/index.js'
 import { Game, GameVariant } from '../../services/game';
 import Main from './Main';
 
 test('renders main', () => {
 
     const providerProps = {
-        value: new Game(GameVariant.Basic)
+        value: new GameState(GameVariant.Basic)
     };
 
     customAppContextRender(

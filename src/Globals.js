@@ -12,6 +12,9 @@ export const DEFAULT_PLAYERS = 2;
 export const MIN_ROBOTS = 0;
 export const MAX_ROBOTS = 3;
 export const DEFAULT_ROBOTS = 0;
+export const MIN_GAMES = 1;
+export const MAX_GAMES = 15;
+export const DEFAULT_GAMES = 3;
 
 /**
  * Make a url.

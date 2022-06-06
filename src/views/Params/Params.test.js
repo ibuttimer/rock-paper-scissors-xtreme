@@ -4,19 +4,21 @@ import { GAME_NAME } from "../../Globals";
 import { Game, GameVariant } from '../../services/game';
 import { customAppContextRender } from  '../../App.js';
 import Params from  './Params';
-import { getVariantName } from "../../utils";
+import { getVariantName, GameState } from "../../utils";
 
 test('renders params', () => {
-
-    GameVariant.AllVariants.forEach(variant => {
+    [GameVariant.Basic]
+    // GameVariant.AllVariants
+    .forEach(variant => {
         const providerProps = {
-            value: new Game(variant)
-        };
+            value: new GameState(variant)
+        }
+        const game = providerProps.value.game;
     
         customAppContextRender(<Params />, {providerProps});
     
-        const titleElement = screen.getByText(new RegExp(`.*${getVariantName(providerProps.value)}.*`));
+        const titleElement = screen.getByText(new RegExp(`.*${getVariantName(game)}.*`));
         expect(titleElement).toBeInTheDocument();
-        expect(titleElement.textContent).toBe(`${GAME_NAME} ${getVariantName(providerProps.value)}`)
+        expect(titleElement.textContent).toBe(`${GAME_NAME} ${getVariantName(game)}`)
     });
 });

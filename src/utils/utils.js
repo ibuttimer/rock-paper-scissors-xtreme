@@ -30,3 +30,42 @@ export function getVariantName(game) {
     }
     return name;
 }
+
+/**
+ * Replace whitespace in a string 
+ * @param {string} source - source string
+ * @param {string} replacement - replacement string; default '-'
+ * @returns {string} id
+ */
+function replaceWhitespace(identifier, replacement = '-') {
+    return `${identifier.replaceAll(/\W+/g, replacement)}`;
+}
+
+/**
+ * Generate an element id
+ * @param {string} identifier - element identifier
+ * @param {string} modifier - element modifier
+ * @returns {string} id
+ */
+export function generateId(identifier, modifier) {
+    let id = `${replaceWhitespace(identifier)}`;
+    if (modifier) {
+        id = `${id}-${replaceWhitespace(modifier)}`;
+    }
+    return id;
+}
+
+/**
+ * Generate a list of HTML option elements
+ * @param {string} id - id of select element
+ * @param {Array} array - array of select option values
+ * @param {Function} valueModifier - function to modify values; default pass through
+ * @returns {Array} array of elements
+ */
+export function optionsList(id, array, valueModifier = y => y) {
+    return array.map(x => {
+            let value = valueModifier(x);
+            let optKey = `${id}-${value}`;
+            return <option value={value} key={optKey}>{value}</option>;
+        });
+}
