@@ -84,7 +84,6 @@ export default class NumGames extends React.Component {
                     );
                 }
             });
-
     }
 
     render() {

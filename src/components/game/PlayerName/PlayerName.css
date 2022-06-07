@@ -1,0 +1,19 @@
+@import '../../../App.css';
+
+/* custom properties */
+:root {
+
+}
+
+.div__player-name-wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.div__player-name-title {
+}
+
+.div__player-name-input {
+}

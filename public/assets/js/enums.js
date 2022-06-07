@@ -93,7 +93,7 @@ import { requiredVariable } from './utils.js';
      * @returns true if matches, otherwise false
      */
     matches(keyName) {
-        return keyName.toLowerCase() == this.key;
+        return keyName.toLowerCase() === this.key;
     }
 
     /**
@@ -110,9 +110,11 @@ import { requiredVariable } from './utils.js';
                 case GameKey.NewGame.key:   // new game
                     gameKey = GameKey.NewGame;
                     break;
+                default:
+                    break;
             }
         } else {
-            let key = GameKey.SelectionKeys.find(k => k.key == keyName);
+            let key = GameKey.SelectionKeys.find(k => k.key === keyName);
             if (key) {
                 gameKey = key;
             }

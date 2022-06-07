@@ -12,6 +12,7 @@ export const DEFAULT_PLAYERS = 2;
 export const MIN_ROBOTS = 0;
 export const MAX_ROBOTS = 3;
 export const DEFAULT_ROBOTS = 0;
+export const MIN_PARTICIPANTS = DEFAULT_PLAYERS + DEFAULT_ROBOTS;
 export const MIN_GAMES = 1;
 export const MAX_GAMES = 15;
 export const DEFAULT_GAMES = 3;
@@ -40,5 +41,7 @@ export const BIGBANG_ROUTE = 'bigbang';
 export const BIGBANG_URL = makePath(BIGBANG_ROUTE);
 export const XTREME_ROUTE = 'xtreme';
 export const XTREME_URL = makePath(XTREME_ROUTE);
+export const PLAY_ROUTE = 'play';
+export const PLAY_URL = makePath(PLAY_ROUTE);
 
 export default COPYRIGHT;

@@ -6,7 +6,7 @@ import {
     BASIC_URL, BIGBANG_URL, XTREME_URL
 } from "../../Globals";
 import { GameTile } from '../../components/index.js';
-import { GameVariant } from "../../services/game";
+import { GameVariant } from "../../services/index.js";
 import './Main.css';
 
 
@@ -15,14 +15,14 @@ import './Main.css';
  * @returns {React element} element to render
  */
 export default function Main() {
-    const game = React.useContext(AppContext);
+    const gameState = React.useContext(AppContext);
 
     /**
      * Set the game variant.
      * @param {GameVariant} variant 
      */
     function setVariant(variant) {
-        game.variant = variant;
+        gameState.game.variant = variant;
     }
 
     return (

@@ -4,9 +4,9 @@ import { BrowserRouter } from 'react-router-dom';
 import { customAppContextRender } from  '../../App.js';
 import { GameState } from '../../utils'
 import { Game, GameVariant } from '../../services';
-import Main from './Main';
+import Play from './Play';
 
-test('renders main', () => {
+test('renders play', () => {
 
     const providerProps = {
         value: new GameState(GameVariant.Basic)
@@ -14,10 +14,10 @@ test('renders main', () => {
 
     customAppContextRender(
         <BrowserRouter>
-            <Main />
+            <Play />
         </BrowserRouter>, {providerProps});
 
-    // TODO main test
+    // TODO main play
     // const rulesElement = screen.getByText(/Rules/i);
     // expect(rulesElement).toBeInTheDocument();
 

@@ -3,7 +3,7 @@
     @author Ian Buttimer
 */
 
-import { variableCheck, requiredVariable } from './utils.js';
+import { variableCheck, requiredVariable, gameParticipantsCheck } from './utils.js';
 import { Player, Robot } from './player.js';
 import { Enum, GameKey, Selection, GameMode, GameStatus, GameEvent, RoundResult } from './enums.js';
 
@@ -451,36 +451,71 @@ export class GameResult {
     constructor(variant, numPlayers = 1, numRobots = 1, options = Game.OPT_NONE) {
         // sanity checks
         requiredVariable(variant, 'variant');
-        if (numPlayers + numRobots < 2) {
-            throw new Error('Insufficient number of players');
-        }
-        if (numPlayers < 1) {
-            throw new Error('Insufficient number of players');
-        }
 
         this.variant = variant;
         this.gameMode = GameMode.Live;
-        this.numPlayers = numPlayers;
-        this.numRobots = numRobots;
         this.#status = GameStatus.NotStarted;
         this.#options = options;
 
-        this.init();
+        this.init(numPlayers, numRobots);
     }
 
     /**
      * Initialise the game
      */
-    init() {
-        this.players = [];
-        for (let i = 0; i < this.numPlayers; i++) {
-            this.players.push(new Player());
+    init(numPlayers, numRobots, playerList = null) {
+        const errors = gameParticipantsCheck(numPlayers, numRobots);
+        if (errors) {
+            let errorMsg = errors.reduce(
+                (previousValue, currentValue) => {
+                    let msg = previousValue.length ? previousValue + ', ' : previousValue;
+                    return msg + currentValue
+                }, ''
+              );
+            throw new Error(errorMsg);
         }
-        for (let i = 0; i < this.numRobots; i++) {
-            this.players.push(new Robot());
+
+        if (!playerList) {
+            // get array of existing player objects
+            playerList = this.players ? this.players.filter(player => !player.isRobot) : [];
         }
+        // get array of existing robot objects
+        let robots = this.players ? this.players.filter(player => player.isRobot) : [];
+        
+        if (numPlayers > playerList.length) {
+            // add new player objects
+            for (let index = playerList.length; index < numPlayers; index++) {
+                playerList.push(new Player(`Player ${index + 1}`))
+            }
+        } else if (numPlayers < playerList.length){
+            // remove excess player objects
+            playerList = playerList.slice(0, numPlayers);
+        }
+
+        if (numRobots > robots.length) {
+            // add new robot objects
+            for (let index = robots.length; index < numRobots; index++) {
+                robots.push(new Robot(index))
+            }
+        } else if (numRobots < robots.length) {
+            // remove excess robot objects
+            robots = robots.slice(0, numRobots);
+        }
+
+        this.players = playerList.concat(robots);
+        this.numPlayers = numPlayers;
+        this.numRobots = numRobots;
+
+        this.applyToPlayers(player => player.initState());
         this.#currentIndex = Game.NONE_ACTIVE;
         this.#currentRound = 0;
+    }
+
+    /**
+     * Reinitialise the game
+     */
+     reInit(playerList = null) {
+        this.init(this.numPlayers, this.numRobots, playerList);
     }
 
     /**
@@ -799,7 +834,7 @@ export class GameResult {
      * Get the counts for each selection
      * @returns {object} map with selection keys and count values
      */
-     roundSelections() {
+    roundSelections() {
         let counts = this.variant.getCountsTemplate();
         this.players.forEach(player => {
             if (player.inGame) {
@@ -845,26 +880,18 @@ export class GameResult {
         if (typeof num === 'string') {
             num = parseInt(num);
         }
-        if (this.notStarted && num) {
-            this.numPlayers = num;
-            // TODO change number of players after game init without re-init
-            this.init();
-        }
+        this.init(num, this.numRobots);
     }
 
     /**
      * Set the number of robots
      * @param {number} num - number of robots
      */
-     setNumRobots(num) {
+    setNumRobots(num) {
         if (typeof num === 'string') {
             num = parseInt(num);
         }
-        if (this.notStarted && num >= 0) {
-            this.numRobots = num;
-            // TODO change number of robots after game init without re-init
-            this.init();
-        }
+        this.init(this.numPlayers, num);
     }
 
     /**
@@ -879,7 +906,7 @@ export class GameResult {
      * Get the number of players; both active and inactive.
      * @returns {number} player count
      */
-     get playerCount() {
+    get playerCount() {
         return this.players.length;
     }
 
@@ -901,6 +928,22 @@ export class GameResult {
      */
     getPlayer(index) {
         return index >= 0 && index < this.players.length ? this.players[index] : undefined;
+    }
+
+    /**
+     * Get an array of players, excluding robots.
+     * @returns {Array} array of players
+     */
+    getPlayers() {
+        return this.players.filter(player => !player.isRobot);
+    }
+
+    /**
+     * Get an array of robots, excluding physical players.
+     * @returns {Array} array of robots
+     */
+     getRobots() {
+        return this.players.filter(player => player.isRobot);
     }
 
     /**

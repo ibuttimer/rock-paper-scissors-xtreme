@@ -1,5 +1,5 @@
 import { DEFAULT_PLAYERS, DEFAULT_ROBOTS, DEFAULT_GAMES } from '../Globals.js'
-import { Game, GameVariant } from '../services/game.js'
+import { Game, GameVariant } from '../services/index.js'
 
 /**
  * Class representing the game state

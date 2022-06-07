@@ -1,7 +1,7 @@
 import { 
     BASIC_VARIANT_NAME, BIGBANG_VARIANT_NAME, XTREME_VARIANT_NAME
 } from "../Globals.js";
-import { Game, GameVariant } from "../services/game.js";
+import { Game, GameVariant } from "../services/index.js";
 
 
 /**
