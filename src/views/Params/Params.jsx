@@ -6,7 +6,7 @@ import {
     MIN_GAMES, MAX_GAMES, DEFAULT_GAMES, PLAY_URL
 } from './../../Globals.js'
 import { getVariantName, generateId } from "../../utils";
-import { NumPlayers, NumGames, numGamesOption, PlayerName } from "../../components/index.js";
+import { Title, NumPlayers, NumGames, numGamesOption, PlayerName } from "../../components/index.js";
 import { Player } from "../../services/index.js";
 import './Params.css';
 
@@ -159,7 +159,7 @@ import './Params.css';
         <AppContext.Consumer>
             { value => 
                 <main>
-                    <h1 className="h1__main-title">{GAME_NAME} {getVariantName(value.game)}</h1>
+                    <Title />
                     <div className="div__num-of-game-participants">
                         <NumPlayers 
                             title='Number of players' 

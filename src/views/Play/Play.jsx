@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { AppContext } from '../../App.js'
 import { GAME_NAME } from "../../Globals";
 import { getVariantName, Subscription } from "../../utils/index.js";
-import { SelectionTile } from '../../components/index.js';
+import { Title, RoundNumber, CurrentPlayerName, SelectionTile } from '../../components/index.js';
 import { GameVariant, RoundResult, GameKey } from "../../services/index.js";
 import './Play.css';
 
@@ -95,8 +95,7 @@ export default function Play() {
     /* render something based on the value */
     return (
         <main>
-            <h1 className="h1__main-title">{GAME_NAME} {getVariantName(gameState.game)}</h1>
-            
+            <Title />
             <RoundNumber round={gameState.currentGame} 
                 subscription={roundSubscription} />
             <CurrentPlayerName playerName={gameState.currentPlayerName}
@@ -109,52 +108,3 @@ export default function Play() {
     );
 }
 
-/**
- * Custom hook to render round number
- * @param {object} props - properties
- * @returns 
- * @see https://reactjs.org/docs/hooks-custom.html
- * @see https://reactjs.org/docs/hooks-effect.html
- */
-function RoundNumber(props) {
-    const [roundNumber, setRoundNumber] = useState(props.round);    
-
-    useEffect(() => {
-        function handleRoundChange(round) {
-            setRoundNumber(round);
-        }
-        props.subscription.registerListener(handleRoundChange);
-        return () => {
-            // clean up run when this component unmounts.
-            props.subscription.unregisterListener(handleRoundChange);
-        };
-    });
-    return (
-        <h2 className="h2__sub-title">Round {roundNumber}</h2>
-    );
-}
-
-/**
- * Custom hook to render player name
- * @param {object} props - properties
- * @returns 
- * @see https://reactjs.org/docs/hooks-custom.html
- * @see https://reactjs.org/docs/hooks-effect.html
- */
- function CurrentPlayerName(props) {
-    const [playerName, setPlayerName] = useState(props.playerName);    
-
-    useEffect(() => {
-        function handlePlayerChange(playerName) {
-            setPlayerName(playerName);
-        }
-        props.subscription.registerListener(handlePlayerChange);
-        return () => {
-            // clean up run when this component unmounts.
-            props.subscription.unregisterListener(handlePlayerChange);
-        };
-    });
-    return (
-        <h3 className="h3__sub-title">{playerName}</h3>
-    );
-}
