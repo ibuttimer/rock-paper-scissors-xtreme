@@ -1,0 +1,19 @@
+@import '../../App.css';
+
+/* custom properties */
+:root {
+    --selection-grid-auto-flow: column;
+}
+
+.section__round-result {
+    display: grid;
+	grid-auto-columns: max-content;
+	grid-auto-rows: max-content;
+	grid-auto-flow: var(--selection-grid-auto-flow);
+	grid-template-rows: auto auto;
+	grid-template-columns: auto auto;
+}
+
+.div__player-selection-wrapper {
+	
+}

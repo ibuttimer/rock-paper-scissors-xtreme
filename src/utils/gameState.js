@@ -6,9 +6,9 @@ import { Game, GameVariant, Selection } from '../services/index.js'
  * Generate selection info object
  * @param {string} src - image source
  * @param {string} alt - alt text for image
- * @returns 
+ * @returns {object}
  */
-function selectionInfo(src, alt, gameKey) {
+function selectionInfo(src, alt) {
     return { src: src, alt: alt };
 }
 
@@ -37,6 +37,7 @@ export default class GameState {
     bestOf;         // max number of games to play
     currentGame;    // current game number
     scores;         // map of scores
+    roundResult;    // current round result
 
     /**
      * @constructor
@@ -51,6 +52,7 @@ export default class GameState {
         this.bestOf = bestOf;
         this.currentGame = 0;
         this.scores = new Map();
+        this.roundResult = null;
     }
 
     /** Start the game */
@@ -69,11 +71,17 @@ export default class GameState {
     }
 
     /**
-     * Get all possible selections for game variant
-     * @returns {Array} array of Selection
+     * All possible selections for game variant
+     * @returns {Array} array of {
+     *      selection: {selection},
+     *      src: {image source},
+     *      alt: {alt text for image}
+     * }
      */
     get selections() {
-        return this.game.variant.possibleSelections.map(x => [x, SELECTIONS.get(x)]);
+        return this.game.variant.possibleSelections.map(x => Object.assign({
+            selection: x
+        }, SELECTIONS.get(x)))
     }
 
     /**

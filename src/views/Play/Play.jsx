@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from "react-router-dom";
 import { AppContext } from '../../App.js'
-import { GAME_NAME } from "../../Globals";
-import { getVariantName, Subscription } from "../../utils/index.js";
+import { ROUND_RESULT_URL } from '../../Globals.js'
+import { Subscription } from "../../utils/index.js";
 import { Title, RoundNumber, CurrentPlayerName, SelectionTile } from '../../components/index.js';
 import { GameVariant, RoundResult, GameKey } from "../../services/index.js";
 import './Play.css';
@@ -14,11 +15,12 @@ export default function Play() {
 
     const gameState = React.useContext(AppContext);
 
+    const navigate = useNavigate();
+
     const roundSubscription = new Subscription();
     const playerSubscription = new Subscription();
 
     const beep = new Audio('assets/audio/beep-10.mp3');
-
 
     useEffect(() => {
         // https://www.pluralsight.com/guides/event-listeners-in-react-components
@@ -55,14 +57,11 @@ export default function Play() {
      */
     function getSelectable(selections) {
         return selections.map(x => {
-            let selection = x[0];
-            let src = x[1].src;
-            let alt = x[1].alt;
-            let optionKey = `num-games-option-${selection.name}`;
+            let optionKey = `num-games-option-${x.selection.name}`;
 
             return (
                 <div className='div__selection-option-wrapper' key={optionKey}>
-                    <SelectionTile src={src} alt={alt} selection={selection} onclick={handleSelection}/>
+                    <SelectionTile src={x.src} alt={x.alt} selection={x.selection} onclick={handleSelection}/>
                 </div>
             );            
         });
@@ -79,16 +78,21 @@ export default function Play() {
             playerSubscription.notifyListeners(gameState.currentPlayerName);
         } else  {
             // round finished
-            const roundResult = eventResult.result;
-            switch (roundResult.result) {
-                case RoundResult.Winner:
-                    let player = roundResult.data;
-                    let score = gameState.scores.get(player);
-                    gameState.scores.set(player, score + 1);
-                    break;
-                default:
-                    break;
-            }
+            gameState.roundResult = eventResult.result;
+
+            navigate(ROUND_RESULT_URL);
+
+            // const roundResult = eventResult.result;
+            // switch (roundResult.result) {
+            //     case RoundResult.Winner:
+            //         let player = roundResult.data;
+            //         let score = gameState.scores.get(player);
+            //         gameState.scores.set(player, score + 1);
+            //         break;
+            //     default:
+            //         break;
+            // }
+
         }
     }
 

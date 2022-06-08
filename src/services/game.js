@@ -320,7 +320,7 @@ class CountsTemplate {
 
     /**
      * Get a selection counts template object.
-     * @returns {object} map with selection keys and count values
+     * @returns {object} object with selection keys and count values
      */
     getCountsTemplate() {
         let template = new CountsTemplate();
@@ -390,28 +390,43 @@ class CountsTemplate {
  */
 export class GameResult {
     
-    result;         // round result
-    data;           // data dependant on round result
-    explanation;    // explanation dependant on round result
+    result;             // round result
+    playerSelections;   // map with players who participated in round as keys and their selection as value
+    data;               // data dependant on round result
+    explanation;        // explanation dependant on round result
 
     /**
      * @constructor
      * @param {RoundResult} result - round result
+     * @param {Map} playerSelections - players who participated in round as keys and their selection as value
      * @param {Array} data - data dependant on round result
      * @param {Array} explanation - explanation dependant on round result
      */
-     constructor(result, data = [], explanation = []) {
+    constructor(result, playerSelections = new Map(), data = [], explanation = []) {
          this.result = result;
+         this.playerSelections = playerSelections;
          this.data = data;
          this.explanation = explanation;
-     }
+    }
+
+    /**
+     * All players who participated in round
+     * @return {Array} array of players
+     */
+    get players() {
+        const players = [];
+        for (let player of this.playerSelections.keys()) {
+            players.push(player);
+        }
+        return players;
+    }
 
     /**
      * String representation of object.
      * @returns {string}
      */
      toString() {
-         return `result: ${this.result}\n  data: ${this.data}\n  explanation: ${this.explanation}` 
+         return `result: ${this.result}\n  playerSelections: ${this.playerSelections}\n  data: ${this.data}\n  explanation: ${this.explanation}` 
      }
 }
 
@@ -645,7 +660,7 @@ export class GameResult {
 
     /**
      * Generate an event result.
-     * @param {object} result - event result
+     * @param {GameResult} result - event result
      * @returns {object} event result object
      */
     #eventResult(result) {
@@ -689,17 +704,18 @@ export class GameResult {
      * Evaluate the result of a round.
      * @returns {GameResult} with:
      *      result: one of RoundResult,
+     *      playerSelections: map with players who participated in round as keys and their selection as value
      *      data: PlayAgain - n/a
-     *            Eliminate - array of selections to eliminate,
-     *            Winner - winning selection ??
+     *            Eliminate - array of selections to eliminate
      *      explanation: PlayAgain - n/a
-     *                   Eliminate - array of explanations of eliminations,
-     *                   Winner - winning selection ??
+     *                   Eliminate - array of explanations of eliminations
      */
     evaluateRound() {
         // default result; play again
-        let evaluation = new GameResult(RoundResult.PlayAgain);
-        let counts = this.roundSelections();
+        const roundSelections = this.roundSelections();
+        const counts = roundSelections.counts;
+        const evaluation = new GameResult(
+            RoundResult.PlayAgain, roundSelections.playerSelections);
 
         // check if all selections picked
         let allPicked = (Object.values(counts).find(count => count === 0) === undefined);
@@ -774,12 +790,13 @@ export class GameResult {
      * @param {object} evaluation - result from evaluateRound()
      * @returns {GameResult} with:
      *      result: one of RoundResult,
+     *      playerSelections: map with players who participated in round as keys and their selection as value
      *      data: PlayAgain - n/a
      *            Eliminate - array eliminated players,
      *            Winner - winning player
      */
     processEvaluation(evaluation) {
-        let processed = new GameResult(RoundResult.PlayAgain);
+        let processed = new GameResult(RoundResult.PlayAgain, evaluation.playerSelections);
         switch (evaluation.result) {
             case RoundResult.Eliminate:
                 let eliminated = [];
@@ -802,6 +819,7 @@ export class GameResult {
                 processed.explanation = evaluation.explanation;
                 break;
             default:
+                break;
         }
 
         this.log(`processEvaluation: ${processed}`);
@@ -831,21 +849,26 @@ export class GameResult {
     }
 
     /**
-     * Get the counts for each selection
-     * @returns {object} map with selection keys and count values
+     * Get the counts for each selection and map of player selections.
+     * @returns {object} {
+     *          counts: {object with selection keys and count values},
+     *          playerSelections: {map with players as key and selection as value}
+     *      }
      */
     roundSelections() {
-        let counts = this.variant.getCountsTemplate();
+        const counts = this.variant.getCountsTemplate();    // selection counts
+        const playerSelections = new Map();      // player selections
         this.players.forEach(player => {
             if (player.inGame) {
                 counts[player.selection]++;
+                playerSelections.set(player, player.selection);
             }
         });
 
         this.log(`roundSelections: ${counts}`, false);
         this.#doStageCallback(GameEvent.RoundSelections, counts);
 
-        return counts;
+        return { counts: counts, playerSelections: playerSelections };
     }
 
     /**

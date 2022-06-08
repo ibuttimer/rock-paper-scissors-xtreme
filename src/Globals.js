@@ -43,5 +43,7 @@ export const XTREME_ROUTE = 'xtreme';
 export const XTREME_URL = makePath(XTREME_ROUTE);
 export const PLAY_ROUTE = 'play';
 export const PLAY_URL = makePath(PLAY_ROUTE);
+export const ROUND_RESULT_ROUTE = 'roundresult';
+export const ROUND_RESULT_URL = makePath(ROUND_RESULT_ROUTE);
 
 export default COPYRIGHT;
