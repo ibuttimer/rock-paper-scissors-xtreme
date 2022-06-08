@@ -1,0 +1,32 @@
+@import '../../../App.css';
+
+/* custom properties */
+:root {
+
+    --var-game-tile-margin: calc(2 * var(--std-margin-between));
+    --var-game-tile-size: 80px;
+}
+
+.div__selection-tile-wrapper {
+    margin: var(--var-game-tile-margin);
+    border: calc(var(--std-margin-between) / 2) solid var(--dark-blue);
+    border-radius: calc(var(--var-game-tile-size) * 0.2);
+    padding: var(--std-margin-between);
+}
+
+.div__selection-tile-wrapper:hover {
+    margin: var(--var-game-tile-margin);
+    border: calc(var(--std-margin-between) / 2) solid var(--dark-blue);
+    border-radius: calc(var(--var-game-tile-size) * 0.2);
+    padding: var(--std-margin-between);
+}
+
+.img__selection-tile-img {
+    height: var(--var-game-tile-size);
+    width: var(--var-game-tile-size);
+}
+
+.h4__selection-tile-name {
+    text-align: center;
+}
+

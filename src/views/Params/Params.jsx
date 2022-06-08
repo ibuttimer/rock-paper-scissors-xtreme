@@ -93,6 +93,7 @@ import './Params.css';
         })
 
         gameState.game.init(players.numPlayers, robots, players.array);
+        gameState.startGame();
 
         navigate(PLAY_URL);
     }

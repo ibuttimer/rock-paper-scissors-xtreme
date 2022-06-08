@@ -79,7 +79,7 @@ import { requiredVariable } from './utils.js';
 
     /**
      * @constructor
-     * @param {string} name - game event name.
+     * @param {string} name - game key name.
      * @param {string} key - selection key.
      */
     constructor(name, key) {
@@ -88,8 +88,8 @@ import { requiredVariable } from './utils.js';
     }
 
     /**
-     * Check if the specified key matches this game key.
-     * @param {string} keyName - key
+     * Check if the specified key matches this object's key.
+     * @param {string} keyName - key to check
      * @returns true if matches, otherwise false
      */
     matches(keyName) {

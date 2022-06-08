@@ -4,10 +4,9 @@ import './PlayerName.css';
 
 /**
  * Number of games component.
- * Properties:
- *  index - index of player
- *  id - id to use for input element
- *  default - default name
+ * @param {number} index - index of player
+ * @param {string} id - id to use for input element
+ * @param {string} default - default name
  */
 export default class PlayerName extends React.Component {
 

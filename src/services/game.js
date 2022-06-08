@@ -339,7 +339,7 @@ class CountsTemplate {
 
     /**
      * Get selection for specified key.
-     * @param {GameKey|string} key - key associated with selection
+     * @param {GameKey|string} key - GameKey or key associated with selection
      * @returns {Selection}  selection or Selection.None if invalid key
      */
     getSelection(key) {
@@ -351,7 +351,7 @@ class CountsTemplate {
 
     /**
      * Check if selection key is valid.
-     * @param {GameKey|string} key - key associated with selection
+     * @param {GameKey|string} key - GameKey or key associated with selection
      * @returns {boolean} true if key is valid otherwise false
      */
     isValidKey(key) {
@@ -924,10 +924,18 @@ export class GameResult {
     /**
      * Get the player with the specified index.
      * @param {number} index - index of player
-     * @returns {Player|undefined} player is valid index, otherwise undefined
+     * @returns {Player|undefined} player if valid index, otherwise undefined
      */
-    getPlayer(index) {
+     getPlayer(index) {
         return index >= 0 && index < this.players.length ? this.players[index] : undefined;
+    }
+
+    /**
+     * Get the current player.
+     * @returns {Player|undefined} player if there is an active player, otherwise undefined
+     */
+    get currentPlayer() {
+        return this.roundInProgress ? this.getPlayer(this.#currentIndex) : undefined;
     }
 
     /**

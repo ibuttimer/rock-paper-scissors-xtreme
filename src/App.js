@@ -37,7 +37,7 @@ export default class App extends React.Component {
     }
 }
 
-export const AppContext = React.createContext();
+export const AppContext = React.createContext(new GameState());
 
 /**
  * A custom render to setup providers. Extends regular

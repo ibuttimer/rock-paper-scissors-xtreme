@@ -2,12 +2,14 @@
 
 /* custom properties */
 :root {
-
+    --selection-grid-auto-flow: column;
 }
 
-.section__select-game {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-around;
+.section__select-play {
+    display: grid;
+	grid-auto-columns: max-content;
+	grid-auto-rows: max-content;
+	grid-auto-flow: var(--selection-grid-auto-flow);
+	grid-template-rows: auto auto;
+	grid-template-columns: auto auto;
 }
