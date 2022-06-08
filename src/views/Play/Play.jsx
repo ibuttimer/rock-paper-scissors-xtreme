@@ -3,7 +3,7 @@ import { AppContext } from '../../App.js'
 import { GAME_NAME } from "../../Globals";
 import { getVariantName, Subscription } from "../../utils/index.js";
 import { SelectionTile } from '../../components/index.js';
-import { GameVariant, RoundResult } from "../../services/index.js";
+import { GameVariant, RoundResult, GameKey } from "../../services/index.js";
 import './Play.css';
 
 /**
@@ -16,6 +16,37 @@ export default function Play() {
 
     const roundSubscription = new Subscription();
     const playerSubscription = new Subscription();
+
+    const beep = new Audio('assets/audio/beep-10.mp3');
+
+
+    useEffect(() => {
+        // https://www.pluralsight.com/guides/event-listeners-in-react-components
+        document.addEventListener('keydown', handleKeyDown, false);
+
+        console.log('added listener');
+
+        // cleanup this component
+        return () => {
+            document.removeEventListener('keydown', handleKeyDown);
+        };
+    });
+
+    /**
+     * Keyboard event listener
+     * @param {KeyboardEvent} event - @see {@link https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent}
+     */
+     const handleKeyDown = (event) => {
+        // https://developer.mozilla.org/en-US/docs/Web/API/UI_Events/Keyboard_event_key_values
+        const key = GameKey.keyEvent(event);
+        const game = gameState.game;
+
+        if (game.roundInProgress && game.variant.isValidKey(key)) {
+            handleSelection(key);
+        } else {
+            beep.play();   
+        }
+    };
 
     /**
      * Generate the selection options
@@ -37,6 +68,10 @@ export default function Play() {
         });
     }
 
+    /**
+     * Handle selection made by player
+     * @param {Selection|GameKey|string} selection - Selection or key associated with selection
+     */
     function handleSelection(selection) {
         const eventResult = gameState.game.makePlayEvent(selection);
         if (eventResult.roundInProgress) {
@@ -90,6 +125,7 @@ function RoundNumber(props) {
         }
         props.subscription.registerListener(handleRoundChange);
         return () => {
+            // clean up run when this component unmounts.
             props.subscription.unregisterListener(handleRoundChange);
         };
     });
@@ -114,6 +150,7 @@ function RoundNumber(props) {
         }
         props.subscription.registerListener(handlePlayerChange);
         return () => {
+            // clean up run when this component unmounts.
             props.subscription.unregisterListener(handlePlayerChange);
         };
     });

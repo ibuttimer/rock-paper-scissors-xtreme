@@ -604,7 +604,7 @@ export class GameResult {
     /**
      * Make a play for the current player and set the next player.
      * @param {Player} player - current player
-     * @param {GameKey|string} selection - key for selection
+     * @param {Selection|GameKey|string} selection - Selection or key associated with selection
      * @returns {Player} new current player
      */
     #makePlayNext(player, selection) {
@@ -615,7 +615,7 @@ export class GameResult {
 
     /**
      * Make a play for the current player.
-     * @param {GameKey|string} selection - key for selection
+     * @param {Selection|GameKey|string} selection - Selection or key associated with selection
      * @returns {object} event result, @see {@link Game#eventResult()}
      */
     makePlayEvent(selection) {
