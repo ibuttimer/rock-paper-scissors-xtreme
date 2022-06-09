@@ -1,5 +1,6 @@
 import React from 'react';
 import { AppContext } from '../../App.js'
+import { ResultCode } from "../../services/index.js";
 import { Subscription, generateId } from "../../utils/index.js";
 import { Title, RoundNumber, PlayerSelectionTile, LeaderBoard } from '../../components/index.js';
 import './RoundResultView.css';
@@ -23,6 +24,8 @@ export default function RoundResultView() {
 
         const selections = gameState.selections;
 
+        const winner = roundResult.resultCode === ResultCode.Winner ? roundResult.data : undefined;
+
         return Array.from(roundResult.playerSelections).map(keyVal => {
             const player = keyVal[0];
             const selection = keyVal[1];
@@ -32,7 +35,8 @@ export default function RoundResultView() {
             return (
                 <div className='div__player-selection-wrapper' key={optionKey}>
                     <PlayerSelectionTile player={player.name} 
-                        src={selectionInfo.src} alt={selectionInfo.alt} selection={selectionInfo.selection} />
+                        src={selectionInfo.src} alt={selectionInfo.alt} selection={selectionInfo.selection}
+                        banner={player === winner ? 'Winner' : undefined} />
                 </div>
             );            
         });

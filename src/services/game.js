@@ -740,8 +740,6 @@ class CountsTemplate {
 
             if (result.resultCode === ResultCode.Winner) {
                 this.endGame();
-            } else if (result.resultCode === ResultCode.PlayAgain){
-                this.startRound();
             }
         }
 

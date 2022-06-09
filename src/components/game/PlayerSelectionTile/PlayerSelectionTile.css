@@ -26,6 +26,10 @@
     width: var(--var-game-tile-size);
 }
 
+.h3__player-selection-tile-banner {
+    text-align: center;
+}
+
 .h4__player-selection-tile-name {
     text-align: center;
 }
