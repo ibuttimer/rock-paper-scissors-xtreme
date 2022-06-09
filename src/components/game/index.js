@@ -5,4 +5,5 @@ export { default as PlayerName } from './PlayerName/PlayerName.js';
 export { default as SelectionTile } from './SelectionTile/SelectionTile.js';
 export { default as PlayerSelectionTile } from './PlayerSelectionTile/PlayerSelectionTile.js';
 export { default as LeaderBoard } from './LeaderBoard/LeaderBoard.js';
-export { Title, RoundNumber, CurrentPlayerName } from './Title/Title.jsx';
+export { default as GameProgress } from './GameProgress/GameProgress.js';
+export { Title, CurrentPlayerName } from './Title/Title.jsx';

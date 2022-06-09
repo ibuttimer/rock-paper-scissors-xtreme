@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { AppContext } from '../../App.js'
 import { ROUND_RESULT_URL } from '../../Globals.js'
 import { Subscription } from "../../utils/index.js";
-import { Title, RoundNumber, CurrentPlayerName, SelectionTile } from '../../components/index.js';
+import { Title, GameProgress, CurrentPlayerName, SelectionTile } from '../../components/index.js';
 import { ResultCode, GameKey } from "../../services/index.js";
 import './Play.css';
 
@@ -17,7 +17,6 @@ export default function Play() {
 
     const navigate = useNavigate();
 
-    const roundSubscription = new Subscription();
     const playerSubscription = new Subscription();
 
     const beep = new Audio('assets/audio/beep-10.mp3');
@@ -99,8 +98,7 @@ export default function Play() {
     return (
         <main>
             <Title />
-            <RoundNumber round={gameState.currentGame} 
-                subscription={roundSubscription} />
+            <GameProgress progress={gameState.progressMap} />
             <CurrentPlayerName playerName={gameState.currentPlayerName}
                 subscription={playerSubscription} />
 

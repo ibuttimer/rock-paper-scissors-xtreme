@@ -54,7 +54,7 @@ export default class GameState {
      * @param {Game} game - game object
      * @param {number} bestOf - max number of games to play
      */
-     constructor(game, bestOf = DEFAULT_GAMES) {
+    constructor(game, bestOf = DEFAULT_GAMES) {
         if (!(game instanceof Game)) {
             game = new Game(GameVariant.Basic, DEFAULT_PLAYERS, DEFAULT_ROBOTS, Game.OPT_CONSOLE)
         }
@@ -128,6 +128,18 @@ export default class GameState {
         return this.game.variant.possibleSelections.map(x => Object.assign({
             selection: x
         }, SELECTIONS.get(x)))
+    }
+
+    /**
+     * Get the game progress map
+     * @returns {Map} progress map 
+     * @type {string} key - name
+     * @type {number} value - value
+     */
+    get progressMap() {
+        return new Map(
+            [['Best of', this.bestOf], ['Game', this.currentGame], ['Round', this.game.roundNumber]]
+        );
     }
 
     /**

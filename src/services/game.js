@@ -532,7 +532,7 @@ class CountsTemplate {
     #currentIndex;
     /** Current round number
      * @type {number} */
-     #currentRound;
+    #currentRound;
 
     /** Function to call at key stages for test purposes with prototype
      * @type {Function} 
@@ -1063,6 +1063,14 @@ class CountsTemplate {
      */
      getRobots() {
         return this.players.filter(player => player.isRobot);
+    }
+
+    /**
+     * Get the current round number
+     * @returns {number}
+     */
+    get roundNumber() {
+        return this.#currentRound;
     }
 
     /**

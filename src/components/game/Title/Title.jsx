@@ -19,31 +19,6 @@ export function Title() {
 }
 
 /**
- * Custom hook to render round number
- * @param {object} props - properties
- * @returns 
- * @see https://reactjs.org/docs/hooks-custom.html
- * @see https://reactjs.org/docs/hooks-effect.html
- */
- export function RoundNumber(props) {
-    const [roundNumber, setRoundNumber] = useState(props.round);    
-
-    useEffect(() => {
-        function handleRoundChange(round) {
-            setRoundNumber(round);
-        }
-        props.subscription.registerListener(handleRoundChange);
-        return () => {
-            // clean up run when this component unmounts.
-            props.subscription.unregisterListener(handleRoundChange);
-        };
-    });
-    return (
-        <h2 className="h2__sub-title">Round {roundNumber}</h2>
-    );
-}
-
-/**
  * Custom hook to render player name
  * @param {object} props - properties
  * @returns 

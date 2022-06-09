@@ -1,8 +1,8 @@
 import React from 'react';
 import { AppContext } from '../../App.js'
 import { ResultCode } from "../../services/index.js";
-import { Subscription, generateId } from "../../utils/index.js";
-import { Title, RoundNumber, PlayerSelectionTile, LeaderBoard } from '../../components/index.js';
+import { generateId } from "../../utils/index.js";
+import { Title, GameProgress, PlayerSelectionTile, LeaderBoard } from '../../components/index.js';
 import './RoundResultView.css';
 
 /**
@@ -12,8 +12,6 @@ import './RoundResultView.css';
 export default function RoundResultView() {
 
     const gameState = React.useContext(AppContext);
-
-    const roundSubscription = new Subscription();
 
     /**
      * Generate the player selections
@@ -46,8 +44,7 @@ export default function RoundResultView() {
     return (
         <main>
             <Title />
-            <RoundNumber round={gameState.currentGame} 
-                subscription={roundSubscription} />
+            <GameProgress progress={gameState.progressMap} />
 
             <LeaderBoard roundResult={gameState.roundResult} scores={gameState.scores} />
 

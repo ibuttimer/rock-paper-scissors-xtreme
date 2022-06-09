@@ -1,0 +1,20 @@
+@import '../../../App.css';
+
+/* custom properties */
+:root {
+    --leader-board-border-colour: #333;
+}
+
+.div__game-progress-wrapper {
+}
+
+.tr__game-progress-row {
+
+}
+
+.table__game-progress, 
+.td__game-progress-info,
+.td__game-progress-data {
+    border: 1px solid var(--leader-board-border-colour);
+}
+
