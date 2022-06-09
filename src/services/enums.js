@@ -264,14 +264,14 @@ import { requiredVariable } from './utils.js';
 /**
  * Enum representing round results.
  */
- export class RoundResult extends Enum {
+ export class ResultCode extends Enum {
     // freeze game statuses so can't be modified
     /** All active players, play again */
-    static PlayAgain = Object.freeze(new RoundResult('PlayAgain'));
+    static PlayAgain = Object.freeze(new ResultCode('PlayAgain'));
     /** Eliminate players with specific selection(s) */
-    static Eliminate = Object.freeze(new RoundResult('Eliminate'));
+    static Eliminate = Object.freeze(new ResultCode('Eliminate'));
     /** Winner found */
-    static Winner = Object.freeze(new RoundResult('Winner'));
+    static Winner = Object.freeze(new ResultCode('Winner'));
   
     /**
      * @constructor
@@ -286,7 +286,7 @@ import { requiredVariable } from './utils.js';
      * @returns {string} string of form '<Class name>.<object name>'
      */
     toString() {
-        return super.toString(RoundResult);
+        return super.toString(ResultCode);
     }
 }
 

@@ -5,7 +5,7 @@
 
 import { variableCheck, requiredVariable, gameParticipantsCheck, mapToString } from './utils.js';
 import { Player, Robot } from './player.js';
-import { Enum, GameKey, Selection, GameMode, GameStatus, GameEvent, RoundResult } from './enums.js';
+import { Enum, GameKey, Selection, GameMode, GameStatus, GameEvent, ResultCode } from './enums.js';
 
 const BASIC_GAME_NAME = 'Basic';
 const BIG_BANG_GAME_NAME = 'BigBang';
@@ -408,7 +408,7 @@ class CountsTemplate {
  export class GameResult {
     
     /** Result code for round 
-     * @type {RoundResult} */
+     * @type {ResultCode} */
     resultCode;
     /** Round number
      * @type {number} */
@@ -427,7 +427,7 @@ class CountsTemplate {
 
     /**
      * @constructor
-     * @param {RoundResult} resultCode - result code for round
+     * @param {ResultCode} resultCode - result code for round
      * @param {number} roundNumber - round number result applies to
      * @param {Map} playerSelections - players who participated in round as keys and their selection as value
      * @param {Array} data - data dependant on round result
@@ -664,7 +664,7 @@ class CountsTemplate {
         this.startGame();
         while (this.inProgress) {
             result = this.playRound(callback);
-            if (result.resultCode === RoundResult.Winner) {
+            if (result.resultCode === ResultCode.Winner) {
                 this.endGame();
             }
         }
@@ -738,9 +738,9 @@ class CountsTemplate {
             const evaluation = this.evaluateRound();
             result = this.processEvaluation(evaluation);
 
-            if (result.resultCode === RoundResult.Winner) {
+            if (result.resultCode === ResultCode.Winner) {
                 this.endGame();
-            } else if (result.resultCode === RoundResult.PlayAgain){
+            } else if (result.resultCode === ResultCode.PlayAgain){
                 this.startRound();
             }
         }
@@ -786,19 +786,20 @@ class CountsTemplate {
     /**
      * Evaluate the result of a round.
      * @returns {GameResult} with:
-     *      result: one of RoundResult,
-     *      playerSelections: map with players who participated in round as keys and their selection as value
-     *      data: PlayAgain - n/a
-     *            Eliminate - array of selections to eliminate
-     *      explanation: PlayAgain - n/a
-     *                   Eliminate - array of explanations of eliminations
+     *      playerSelections: Map with players who participated in round, and their selections
+     *      resultCode: ResultCode.PlayAgain
+     *          data: n/a
+     *          explanation: n/a
+     *      resultCode: ResultCode.Eliminate
+     *          data: array of selections to eliminate
+     *          explanation: array of explanations of eliminations
      */
     evaluateRound() {
         // default result; play again
         const roundSelections = this.roundSelections();
         const counts = roundSelections.counts;
         const evaluation = new GameResult(
-            RoundResult.PlayAgain, this.#currentRound, roundSelections.playerSelections);
+            ResultCode.PlayAgain, this.#currentRound, roundSelections.playerSelections);
 
         // check if all selections picked
         let allPicked = (Object.values(counts).find(count => count === 0) === undefined);
@@ -853,7 +854,7 @@ class CountsTemplate {
 
                 if (activated > 0) {
                     // eliminate losers
-                    evaluation.resultCode = RoundResult.Eliminate;
+                    evaluation.resultCode = ResultCode.Eliminate;
                     evaluation.data = eliminated;
                     evaluation.explanation = explanations;
                 }
@@ -872,17 +873,22 @@ class CountsTemplate {
      * Process evaluation of a round.
      * @param {object} evaluation - result from evaluateRound()
      * @returns {GameResult} with:
-     *      result: one of RoundResult,
-     *      playerSelections: map with players who participated in round as keys and their selection as value
-     *      data: PlayAgain - n/a
-     *            Eliminate - array eliminated players,
-     *            Winner - winning player
+     *      playerSelections: Map with players who participated in round, and their selections
+     *      resultCode: ResultCode.PlayAgain
+     *          data: n/a
+     *          explanation: n/a
+     *      resultCode: ResultCode.Eliminate
+     *          data: array eliminated players
+     *          explanation: array of explanations of eliminations
+     *      resultCode: ResultCode.Winner
+     *          data: winning player
+     *          explanation: array of explanations of eliminations
      */
     processEvaluation(evaluation) {
         let processed = new GameResult(
-            RoundResult.PlayAgain, evaluation.roundNumber, evaluation.playerSelections);
+            ResultCode.PlayAgain, evaluation.roundNumber, evaluation.playerSelections);
         switch (evaluation.resultCode) {
-            case RoundResult.Eliminate:
+            case ResultCode.Eliminate:
                 let eliminated = [];
                 for (const eliminate of evaluation.data) {
                     this.players.forEach(player => {
@@ -894,7 +900,7 @@ class CountsTemplate {
                 }
                 if (this.activePlayerCount === 1) {
                     // only one player remaining return winner
-                    processed.resultCode = RoundResult.Winner;
+                    processed.resultCode = ResultCode.Winner;
                     processed.data = this.players.find(player => player.inGame);
                 } else {
                     // return eliminated players

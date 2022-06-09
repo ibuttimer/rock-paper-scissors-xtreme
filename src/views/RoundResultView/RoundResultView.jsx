@@ -5,7 +5,7 @@ import { Title, RoundNumber, PlayerSelectionTile, LeaderBoard } from '../../comp
 import './RoundResultView.css';
 
 /**
- * Function Component for RoundResult screen
+ * Function Component for Round result screen
  * @returns {React element} element to render
  */
 export default function RoundResultView() {

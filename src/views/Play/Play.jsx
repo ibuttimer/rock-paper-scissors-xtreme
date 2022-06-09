@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import { AppContext } from '../../App.js'
 import { ROUND_RESULT_URL } from '../../Globals.js'
 import { Subscription } from "../../utils/index.js";
 import { Title, RoundNumber, CurrentPlayerName, SelectionTile } from '../../components/index.js';
-import { GameVariant, RoundResult, GameKey } from "../../services/index.js";
+import { ResultCode, GameKey } from "../../services/index.js";
 import './Play.css';
 
 /**
@@ -82,7 +82,7 @@ export default function Play() {
             gameState.roundResult = gameResult;
 
             switch (gameResult.resultCode) {
-                case RoundResult.Winner:
+                case ResultCode.Winner:
                     // update score
                     let player = gameResult.data;
                     gameState.incPlayerScore(player);
