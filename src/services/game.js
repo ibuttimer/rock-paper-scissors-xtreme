@@ -884,7 +884,7 @@ class CountsTemplate {
      */
     processEvaluation(evaluation) {
         let processed = new GameResult(
-            ResultCode.PlayAgain, evaluation.roundNumber, evaluation.playerSelections);
+            evaluation.resultCode, evaluation.roundNumber, evaluation.playerSelections);
         switch (evaluation.resultCode) {
             case ResultCode.Eliminate:
                 let eliminated = [];

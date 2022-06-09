@@ -5,6 +5,12 @@ import { generateId } from "../../utils/index.js";
 import { Title, GameProgress, PlayerSelectionTile, LeaderBoard } from '../../components/index.js';
 import './RoundResultView.css';
 
+const resultTexts = new Map([
+    [ResultCode.Winner, 'Winner'],
+    [ResultCode.Eliminate, 'Eliminations'],
+    [ResultCode.PlayAgain, 'Play Again']
+]);
+
 /**
  * Function Component for Round result screen
  * @returns {React element} element to render
@@ -40,10 +46,24 @@ export default function RoundResultView() {
         });
     }
 
+    /**
+     * Generate the result text
+     * @param {GameResult} roundResult - round result
+     * @returns 
+     */
+     function getResultText(roundResult) {
+        return (
+            <h3 className='h3_round-result-text'>
+                {resultTexts.has(roundResult.resultCode) ? resultTexts.get(roundResult.resultCode) : ''}
+            </h3>
+        );
+    }
+
     /* render something based on the value */
     return (
         <main>
             <Title />
+            {getResultText(gameState.roundResult)}
             <GameProgress progress={gameState.progressMap} />
 
             <LeaderBoard roundResult={gameState.roundResult} scores={gameState.scores} />
