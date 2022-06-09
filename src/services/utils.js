@@ -62,5 +62,25 @@ export function gameParticipantsCheck(numPlayers, numRobots) {
     return errors.length ? errors : null;
 }
 
+/**
+ * Generate a string representation of a Map
+ * @param {Map} map - map to convert to string
+ * @param {string} open - start delimiter
+ * @param {string} close - end delimiter
+ * @param {string} join - key/value join
+ * @param {string} separator - key/value pair separator
+ * @returns {string}
+ */
+export function mapToString(map, open = '[', close = ']', join = ':', separator = ', ') {
+    let str = open;
+    for (const [key, value] of map) {
+        if (str.length > open.length) {
+            str += separator;
+        }
+        str += `${key}${join}${value}`;
+      }
+      return str + close;
+}
+
 /* Jasmine requires a default export */
 export default 'utils.js'

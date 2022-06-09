@@ -3,7 +3,7 @@
     @author Ian Buttimer
 */
 
-import { variableCheck, requiredVariable, gameParticipantsCheck } from './utils.js';
+import { variableCheck, requiredVariable, gameParticipantsCheck, mapToString } from './utils.js';
 import { Player, Robot } from './player.js';
 import { Enum, GameKey, Selection, GameMode, GameStatus, GameEvent, RoundResult } from './enums.js';
 
@@ -19,9 +19,15 @@ export class Contest {
     static WIN_NAME = '<W>';
     static LOSE_NAME = '<l>';
 
-    winner;         // selection that wins
-    loser;          // selection that loses
-    explanation;    // explanation of loss
+    /** Selection that wins
+     * @type {Selection} */
+    winner;
+    /** Selection that loses
+     * @type {Selection} */
+    loser;
+    /** Explanation of loss
+     * @type {string} */
+    explanation;
 
     /**
      * @constructor
@@ -71,8 +77,13 @@ export class Contest {
  */
 export class Rule {
 
-    selection;      // selection this rule applies to
-    contests = [];  // array of Contests for this rule's Selection
+    /** Selection this rule applies to
+     * @type {Selection} */
+    selection;
+    /** Array of Contests for this rule's Selection
+     * @type {Array}
+     * @type {Contest} */
+     contests = [];
 
     /**
      * @constructor
@@ -294,8 +305,14 @@ class CountsTemplate {
         return variant;
     }
 
-    rules = [];              // array of game rules
-    possibleSelections = []; // array of possible selections
+    /** Array of game rules
+     * @type {Array}
+     * @type {Rule} */
+    rules = [];
+    /** Array of possible selections
+     * @type {Array}
+     * @type {Selection} */
+    possibleSelections = [];
 
     /** Finalise object to prepare for freezing. */
     finalise() {
@@ -388,22 +405,37 @@ class CountsTemplate {
 /** 
  * Class representing a game result 
  */
-export class GameResult {
+ export class GameResult {
     
-    result;             // round result
-    playerSelections;   // map with players who participated in round as keys and their selection as value
-    data;               // data dependant on round result
-    explanation;        // explanation dependant on round result
+    /** Result code for round 
+     * @type {RoundResult} */
+    resultCode;
+    /** Round number
+     * @type {number} */
+    roundNumber;
+    /** Map with players who participated in round, and their selections
+     * @type {Map}
+     * @type {Player} key
+     * @type {Selection} value */
+    playerSelections;
+    /** Data dependant on round result
+     * @type {*} */
+    data;
+    /** Explanation dependant on round result
+     * @type {*} */
+    explanation;
 
     /**
      * @constructor
-     * @param {RoundResult} result - round result
+     * @param {RoundResult} resultCode - result code for round
+     * @param {number} roundNumber - round number result applies to
      * @param {Map} playerSelections - players who participated in round as keys and their selection as value
      * @param {Array} data - data dependant on round result
      * @param {Array} explanation - explanation dependant on round result
      */
-    constructor(result, playerSelections = new Map(), data = [], explanation = []) {
-         this.result = result;
+    constructor(resultCode, roundNumber, playerSelections = new Map(), data = [], explanation = []) {
+         this.resultCode = resultCode;
+         this.roundNumber = roundNumber;
          this.playerSelections = playerSelections;
          this.data = data;
          this.explanation = explanation;
@@ -426,8 +458,43 @@ export class GameResult {
      * @returns {string}
      */
      toString() {
-         return `result: ${this.result}\n  playerSelections: ${this.playerSelections}\n  data: ${this.data}\n  explanation: ${this.explanation}` 
+         return `resultCode: ${this.resultCode}\n  roundNumber: ${this.roundNumber}\n  playerSelections: ${mapToString(this.playerSelections)}\n  data: ${this.data}\n  explanation: ${this.explanation}` 
      }
+}
+
+/** 
+ * Class representing a game result for the event API
+ */
+ export class PlayEventResult {
+   
+    /** Game object
+     * @type {Game} */
+    game;
+    /** Game in progress flag
+     * @type {boolean} */
+    gameInProgress;
+    /** Round in progress flag
+     * @type {boolean} */
+    roundInProgress;
+    /** Current player
+     * @type {Player} */
+    player;
+    /** Result of round
+     * @type {GameResult} */
+    gameResult;
+
+    /**
+     * @constructor
+     * @param {Game} game - game object
+     * @param {GameResult} gameResult - result of round
+     */
+    constructor(game, gameResult) {
+        this.game = game;
+        this.gameResult = gameResult;
+        this.gameInProgress = game.inProgress;
+        this.roundInProgress = game.roundInProgress;
+        this.player = game.currentPlayer;
+    }
 }
 
 /**
@@ -438,21 +505,44 @@ export class GameResult {
     static OPT_NONE = 0;           // no options
     static OPT_CONSOLE = 0x01;     // log events to console
 
-    variant;        // game variant
-    gameMode;       // game mode
-    numPlayers;     // number of players
-    numRobots;      // number of robots
-    players;        // array of game players
-    #status;        // game status
-    #options;       // game options
-    #currentIndex;  // current player index
-    #currentRound;  // current round number
+    /** Game variant 
+     * @type {GameVariant} */
+    variant;
+    /** Game mode
+     * @type {GameMode} */
+    gameMode;
+    /** Number of players 
+     * @type {number} */
+    numPlayers;
+    /** Number of robots
+     * @type {number} */
+    numRobots;
+    /** Array of game players
+     * @type {Array}
+     * @type {Player|Robot} */
+    players;
+    /** Game status
+     * @type {GameStatus} */
+    #status;
+    /** Game options
+     * @type {number} */
+    #options;
+    /** Current player index 
+     * @type {number} */
+    #currentIndex;
+    /** Current round number
+     * @type {number} */
+     #currentRound;
 
-    #stageCallback; // function to call at key stages for test purposes with prototype
-                    // * param {GameEvent} stage - one of GameEvent.xxx
-                    // * param {Game} game - game object
-                    // * param {number} roundNumber - current round number
-                    // * param {object} data - current round number
+    /** Function to call at key stages for test purposes with prototype
+     * @type {Function} 
+     * with prototype 
+     * @param {GameEvent} stage - one of GameEvent.xxx
+     * @param {Game} game - game object
+     * @param {number} roundNumber - current round number
+     * @param {object} data - current round number
+     *  */
+    #stageCallback;
 
     static NONE_ACTIVE = -1; // no active player index
 
@@ -574,7 +664,7 @@ export class GameResult {
         this.startGame();
         while (this.inProgress) {
             result = this.playRound(callback);
-            if (result.result === RoundResult.Winner) {
+            if (result.resultCode === RoundResult.Winner) {
                 this.endGame();
             }
         }
@@ -648,9 +738,9 @@ export class GameResult {
             const evaluation = this.evaluateRound();
             result = this.processEvaluation(evaluation);
 
-            if (result.result === RoundResult.Winner) {
+            if (result.resultCode === RoundResult.Winner) {
                 this.endGame();
-            } else if (result.result === RoundResult.PlayAgain){
+            } else if (result.resultCode === RoundResult.PlayAgain){
                 this.startRound();
             }
         }
@@ -661,17 +751,10 @@ export class GameResult {
     /**
      * Generate an event result.
      * @param {GameResult} result - event result
-     * @returns {object} event result object
+     * @returns {PlayEventResult} event result object
      */
     #eventResult(result) {
-        return {
-            game: this,
-            gameInProgress: this.inProgress,
-            roundInProgress: this.roundInProgress,
-            player: this.getPlayer(this.#currentIndex),
-            playerIndex: this.#currentIndex,
-            result: result
-        }
+        return new PlayEventResult(this, result);
     }
 
     /** Start a round */
@@ -715,7 +798,7 @@ export class GameResult {
         const roundSelections = this.roundSelections();
         const counts = roundSelections.counts;
         const evaluation = new GameResult(
-            RoundResult.PlayAgain, roundSelections.playerSelections);
+            RoundResult.PlayAgain, this.#currentRound, roundSelections.playerSelections);
 
         // check if all selections picked
         let allPicked = (Object.values(counts).find(count => count === 0) === undefined);
@@ -770,7 +853,7 @@ export class GameResult {
 
                 if (activated > 0) {
                     // eliminate losers
-                    evaluation.result = RoundResult.Eliminate;
+                    evaluation.resultCode = RoundResult.Eliminate;
                     evaluation.data = eliminated;
                     evaluation.explanation = explanations;
                 }
@@ -796,8 +879,9 @@ export class GameResult {
      *            Winner - winning player
      */
     processEvaluation(evaluation) {
-        let processed = new GameResult(RoundResult.PlayAgain, evaluation.playerSelections);
-        switch (evaluation.result) {
+        let processed = new GameResult(
+            RoundResult.PlayAgain, evaluation.roundNumber, evaluation.playerSelections);
+        switch (evaluation.resultCode) {
             case RoundResult.Eliminate:
                 let eliminated = [];
                 for (const eliminate of evaluation.data) {
@@ -810,7 +894,7 @@ export class GameResult {
                 }
                 if (this.activePlayerCount === 1) {
                     // only one player remaining return winner
-                    processed.result = RoundResult.Winner;
+                    processed.resultCode = RoundResult.Winner;
                     processed.data = this.players.find(player => player.inGame);
                 } else {
                     // return eliminated players

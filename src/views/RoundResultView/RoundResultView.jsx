@@ -1,7 +1,7 @@
 import React from 'react';
 import { AppContext } from '../../App.js'
 import { Subscription, generateId } from "../../utils/index.js";
-import { Title, RoundNumber, PlayerSelectionTile } from '../../components/index.js';
+import { Title, RoundNumber, PlayerSelectionTile, LeaderBoard } from '../../components/index.js';
 import './RoundResultView.css';
 
 /**
@@ -45,10 +45,11 @@ export default function RoundResultView() {
             <RoundNumber round={gameState.currentGame} 
                 subscription={roundSubscription} />
 
+            <LeaderBoard roundResult={gameState.roundResult} scores={gameState.scores} />
+
             <section className="section__round-result">
                 {getPlayerSelections(gameState.roundResult)}
             </section>
         </main>
     );
 }
-

@@ -33,11 +33,21 @@ const SELECTIONS = new Map();
  */
 export default class GameState {
 
-    game;           // game object
-    bestOf;         // max number of games to play
-    currentGame;    // current game number
-    scores;         // map of scores
-    roundResult;    // current round result
+    /** Game object 
+     * @type {Game} */
+    game;
+    /** Max number of games to play 
+     * @type {number} */
+    bestOf;
+    /** Current game number 
+     * @type {number} */
+    currentGame;
+    /** Map of scores with players as key
+     * @type {Map} */
+    scores;
+    /** Current round result 
+     * @type {GameResult} */
+    roundResult;
 
     /**
      * @constructor
@@ -57,6 +67,7 @@ export default class GameState {
 
     /** Start the game */
     startGame() {
+        this.scores.clear();
         this.game.players.forEach(player => this.scores.set(player, 0));
 
         this.currentGame = 1;
@@ -68,6 +79,41 @@ export default class GameState {
     /** Current player's name */
     get currentPlayerName() {
         return this.game.currentPlayer.name;
+    }
+
+    /**
+     * Set a player's score
+     * @param {Player} player - player whose score to set
+     * @param {number} score - score to set
+     */
+     setPlayerScore(player, score) {
+        this.scores.set(player, score);
+    }
+
+    /**
+     * Get a player's score
+     * @param {Player} player - player whose score to get
+     * @returns {number} score
+     */
+    getPlayerScore(player) {
+        return this.scores.get(player);
+    }
+
+    /**
+     * Update a player's score
+     * @param {Player} player - player whose score to update
+     * @param {number} update - amount to update by
+     */
+    updatePlayerScore(player, update = 0) {
+        this.setPlayerScore(player, this.getPlayerScore(player) + update);
+    }
+
+    /**
+     * Increment a player's score
+     * @param {Player} player - player whose score to increment
+     */
+    incPlayerScore(player) {
+        this.updatePlayerScore(player, 1);
     }
 
     /**

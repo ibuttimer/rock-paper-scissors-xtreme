@@ -74,25 +74,24 @@ export default function Play() {
     function handleSelection(selection) {
         const eventResult = gameState.game.makePlayEvent(selection);
         if (eventResult.roundInProgress) {
-            // round in progress, update for next player
+            // round in progress, update display for next player
             playerSubscription.notifyListeners(gameState.currentPlayerName);
         } else  {
             // round finished
-            gameState.roundResult = eventResult.result;
+            const gameResult = eventResult.gameResult;
+            gameState.roundResult = gameResult;
+
+            switch (gameResult.resultCode) {
+                case RoundResult.Winner:
+                    // update score
+                    let player = gameResult.data;
+                    gameState.incPlayerScore(player);
+                    break;
+                default:
+                    break;
+            }
 
             navigate(ROUND_RESULT_URL);
-
-            // const roundResult = eventResult.result;
-            // switch (roundResult.result) {
-            //     case RoundResult.Winner:
-            //         let player = roundResult.data;
-            //         let score = gameState.scores.get(player);
-            //         gameState.scores.set(player, score + 1);
-            //         break;
-            //     default:
-            //         break;
-            // }
-
         }
     }
 

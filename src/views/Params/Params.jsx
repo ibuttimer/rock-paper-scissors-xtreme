@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import { AppContext } from '../../App.js'
 import { useNavigate } from "react-router-dom";
 import { 
-    GAME_NAME, MIN_PLAYERS, MAX_PLAYERS, MIN_ROBOTS, MAX_ROBOTS, DEFAULT_PLAYERS, DEFAULT_ROBOTS,
+    MIN_PLAYERS, MAX_PLAYERS, MIN_ROBOTS, MAX_ROBOTS, DEFAULT_PLAYERS, DEFAULT_ROBOTS,
     MIN_GAMES, MAX_GAMES, DEFAULT_GAMES, PLAY_URL
 } from './../../Globals.js'
-import { getVariantName, generateId } from "../../utils";
+import { generateId } from "../../utils";
 import { Title, NumPlayers, NumGames, numGamesOption, PlayerName } from "../../components/index.js";
 import { Player } from "../../services/index.js";
 import './Params.css';
@@ -86,6 +86,9 @@ import './Params.css';
 
     /** Apply settings and start game */
     function playGame() {
+        
+        // TODO ensure unique player names
+        
         players.array.forEach((player, index) => {
             let id = generatePlayerInputId(index);
             let name = document.getElementById(id).value;

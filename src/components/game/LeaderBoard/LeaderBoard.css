@@ -1,0 +1,26 @@
+@import '../../../App.css';
+
+/* custom properties */
+:root {
+    --leader-board-border-colour: #333;
+    --leader-board-header-colour: #333;
+    --leader-board-header-text-colour: #fff;
+}
+
+.div__leader-board-wrapper {
+}
+
+.tr__player-score-row {
+
+}
+
+.table__leader-board, 
+.td__player-name,
+.td__player-score {
+    border: 1px solid var(--leader-board-border-colour);
+}
+
+.thead__leader-board {
+    background-color: var(--leader-board-header-colour);
+    color: var(--leader-board-header-text-colour);
+}
