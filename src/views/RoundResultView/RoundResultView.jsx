@@ -59,6 +59,22 @@ export default function RoundResultView() {
         );
     }
 
+    /**
+     * Generate the explanation text
+     * @param {GameResult} roundResult - round result
+     * @returns 
+     */
+     function getExplanation(roundResult) {
+        const resultCode = gameState.roundResult.resultCode;
+        if (resultCode !== ResultCode.Eliminate && resultCode !== ResultCode.Winner) {
+            return null;
+        }
+
+        return roundResult.explanation.map(x => {
+            return <p className='p__elimination-explanation'>{x}</p>
+        });
+    }
+
     /* render something based on the value */
     return (
         <main>
@@ -71,6 +87,9 @@ export default function RoundResultView() {
             <section className="section__round-result">
                 {getPlayerSelections(gameState.roundResult)}
             </section>
+
+            {getExplanation(gameState.roundResult)}
+
         </main>
     );
 }

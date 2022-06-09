@@ -25,7 +25,7 @@ export class Contest {
     /** Selection that loses
      * @type {Selection} */
     loser;
-    /** Explanation of loss
+    /** Explanation of loss; e.g. 'A beats B'
      * @type {string} */
     explanation;
 
