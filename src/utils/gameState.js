@@ -76,6 +76,17 @@ export default class GameState {
         this.game.playGameEvents();
     }
 
+    /** Reset the game */
+    resetGame(numPlayers = DEFAULT_PLAYERS, numRobots = DEFAULT_ROBOTS, bestOf = DEFAULT_GAMES) {
+        this.game.variant = GameVariant.Basic;
+        this.game.init(numPlayers, numRobots);
+
+        this.bestOf = bestOf;
+        this.currentGame = 0;
+        this.scores.clear();
+        this.roundResult = null;
+    }
+
     /** Next round */
     nextRound() {
         this.game.startRound();
@@ -143,6 +154,23 @@ export default class GameState {
             }
         });
         return playerScores.sort((a, b) => b.score - a.score);
+    }
+
+    /**
+     * Check if there is a 'best of' winner
+     * @returns {object} 
+     */
+    haveBestOfWinner() {
+        const playerScores = this.topDownScores;
+        const toWinScore = Math.floor(this.bestOf / 2) + 1;
+        const haveScore = playerScores.filter(ps => ps.score >= toWinScore);
+        return {
+            soleWinner: haveScore.length === 1,     // single winner flag
+            multiWinner: haveScore.length > 1,      // multiple winners flag
+            count: haveScore.length,                // number of winners
+            solePlayer: haveScore.length === 1 ? haveScore[0].player : undefined,           // winning player if single winner
+            multiPlayer: haveScore.length > 1 ? haveScore.map(x => x.player) : undefined    // winning players if more than 1 winner
+        };
     }
 
     /**

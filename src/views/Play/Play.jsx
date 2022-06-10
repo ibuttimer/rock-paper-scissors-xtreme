@@ -85,6 +85,15 @@ export default function Play() {
                     // update score
                     let player = gameResult.data;
                     gameState.incPlayerScore(player);
+
+                    // check if best of winner
+                    const bestOfWinner = gameState.haveBestOfWinner();
+                    if (bestOfWinner.soleWinner) {
+                        // single winner, match over
+                        gameResult.resultCode = ResultCode.MatchOver;
+                    } else if (bestOfWinner.multiWinner) {
+                        throw new Error(`Unexpected multi-winner: ${bestOfWinner.count}`);
+                    }
                     break;
                 default:
                     break;

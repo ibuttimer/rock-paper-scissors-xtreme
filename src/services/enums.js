@@ -272,6 +272,8 @@ import { requiredVariable } from './utils.js';
     static Eliminate = Object.freeze(new ResultCode('Eliminate'));
     /** Winner found */
     static Winner = Object.freeze(new ResultCode('Winner'));
+    /** Game over */
+    static MatchOver = Object.freeze(new ResultCode('MatchOver'));
   
     /**
      * @constructor

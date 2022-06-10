@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from "react-router-dom";
 import { AppContext } from '../../App.js'
-import { PLAY_URL } from '../../Globals.js'
+import { ROOT_URL, PLAY_URL } from '../../Globals.js'
 import { ResultCode } from "../../services/index.js";
 import { generateId } from "../../utils/index.js";
 import { Title, GameProgress, PlayerSelectionTile, LeaderBoard } from '../../components/index.js';
@@ -27,6 +27,7 @@ function resultCodeMapping(resultText, buttonText, buttonClass) {
  * @type {object} value - info params
  */
 const resultTexts = new Map([
+    [ResultCode.MatchOver, resultCodeMapping('Match Over', 'Done', 'button__round-result-next-game')],
     [ResultCode.Winner, resultCodeMapping('Winner', 'Next game', 'button__round-result-next-game')],
     [ResultCode.Eliminate, resultCodeMapping('Eliminations', 'Next round', 'button__round-result-next-round')],
     [ResultCode.PlayAgain, resultCodeMapping('Play Again', 'Next round', 'button__round-result-next-round')]
@@ -51,7 +52,8 @@ export default function RoundResultView() {
 
         const selections = gameState.selections;
 
-        const winner = roundResult.resultCode === ResultCode.Winner ? roundResult.data : undefined;
+        const winner = (roundResult.resultCode === ResultCode.Winner ||
+                            roundResult.resultCode === ResultCode.MatchOver) ? roundResult.data : undefined;
 
         return Array.from(roundResult.playerSelections).map(keyVal => {
             const player = keyVal[0];
@@ -113,6 +115,13 @@ export default function RoundResultView() {
         navigate(PLAY_URL);
     }
 
+    /** Reset game */
+    function resetGame() {
+        gameState.resetGame();
+
+        navigate(ROOT_URL);
+    }
+
     /**
      * Generate the 'continue' button
      * @param {GameResult} roundResult - round result
@@ -130,12 +139,15 @@ export default function RoundResultView() {
             className = setting.buttonClass;
             
             switch (resultCode) {
-                case ResultCode.Winner:
-                    continueFunction = () => nextGame();
-                    break;
                 case ResultCode.Eliminate:
                 case ResultCode.PlayAgain:
                     continueFunction = () => nextRound();
+                    break;
+                case ResultCode.Winner:
+                    continueFunction = () => nextGame();
+                    break;
+                case ResultCode.MatchOver:
+                    continueFunction = () => resetGame();
                     break;
                 default:
                     break;
