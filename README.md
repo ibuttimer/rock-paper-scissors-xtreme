@@ -1,6 +1,6 @@
 # Rock, Paper, Scissors Xtreme
 
-Rock, Paper, Scissors Xtreme is am extreme veriosn of the well known Rock, Paper, Scissors.
+Rock, Paper, Scissors Xtreme is am extreme version of the well known Rock, Paper, Scissors.
 
 The site is aimed at game enthusiasts and procrastinators.
 
@@ -27,7 +27,7 @@ The development environment requires:
 * [git](https://git-scm.com/)
 
 > __Note:__ At time of development the LTS version of Node.js was v16.15.0.
-> Please check [Using Jasmine with Node](https://jasmine.github.io/setup/nodejs.html#using-jasmine-with-node) to ensure version compatibility.  
+> Please check [Using Jasmine with Node](https://jasmine.github.io/setup/nodejs.html#using-jasmine-with-node) to ensure version compatibility. 
 
 ### Setup
 In an appropriate folder, run the following commands:
@@ -37,9 +37,29 @@ In an appropriate folder, run the following commands:
 > npm install
 ```
 
+### Application structure
+The application structure is based on [React Architecture: How to Structure and Organize a React Application](https://www.taniarascia.com/react-architecture-directory-structure/).
+
+```
+├─ README.md            - this file
+├─ index.html           - landing page
+├─ design               - design documentation
+│  └─ design.md         - design document
+├─ assets               - app assets
+│  ├─ audio             - audio files
+│  ├─ css               - css files
+│  ├─ img               - image files
+│  └─ js                - JavaScript modules
+├─ spec                 - Jasmine test scripts
+└─ test                 - test results
+   └─ lighthouse        - Lighthouse test results
+```
+
+### General
+- CSS classnames follow the [Block, Element, Modifier (BEM)](https://css-tricks.com/bem-101/) methodology.
+
 ## Testing 
 Details of the testing undertaken are outlined in [test.md](test/test.md), along with the results.
-
 
 ## Deployment
 
