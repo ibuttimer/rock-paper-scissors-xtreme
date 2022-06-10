@@ -2,7 +2,7 @@
   Test suite for game.js
  */
 import { Contest, Rule, GameVariant, Game, GameResult } from '../assets/js/game.js'
-import { GameKey, Selection, GameMode, GameEvent, RoundResult } from '../assets/js/enums.js'
+import { GameKey, Selection, GameMode, GameEvent, ResultCode } from '../assets/js/enums.js'
 import { getRequiredVariableMessage } from './utils.spec.js';
 import { Player } from '../assets/js/player.js';
 
@@ -296,9 +296,9 @@ describe("check Game class", function() {
      * @param {object} plays - player plays map with selection keys and count values
      * @param {string} context - optional context; default undefined
      */
-    function confirmCounts(counts, plays, context = undefined) {
+    function confirmCounts(counts, plays, context = '') {
         for (let selection in plays) {
-            expect(counts[selection]).withContext(context).toBe(plays[selection]);
+            expect(counts[selection]).withContext(`${context} ${selection}`).toBe(plays[selection]);
         }
     }
 
@@ -463,11 +463,11 @@ describe("check Game class", function() {
          * @param {GameEvent} stage - one of GameEvent.xxx
          * @param {Game} game - game object
          * @param {number} roundNumber - current round number
-         * @param {object} payload - stage data
+         * @param {GameResult|number} payload - stage data
          */
         function testCallback(stage, game, roundNumber, payload) {
             let roundSelections;
-            let context = null;
+            let context = `round ${roundNumber}`;
             let explanations = new Set();   // individual win explanations
             let params;                     // round params
 
@@ -495,12 +495,12 @@ describe("check Game class", function() {
                         case 1:
                         case 2:
                             // confirm play again result for round
-                            expect(payload.result).toBe(RoundResult.PlayAgain);
+                            expect(payload.resultCode).toBe(ResultCode.PlayAgain);
                             checkGame(game, numPayers, numRobots, expectedActive, false, true, false);
                             break;
                         case 3:
                             // confirm eliminate 1 player result for round
-                            expect(payload.result).toBe(RoundResult.Eliminate);
+                            expect(payload.resultCode).toBe(ResultCode.Eliminate);
                             expect(payload.data).toEqual(params.rule.contests);
                             expect(payload.explanation.length).toBe(1);
                             expect(payload.explanation[0])
@@ -530,7 +530,7 @@ describe("check Game class", function() {
                             debugLog(explanations, 'expected explanations', false);
                             debugLog(payload, 'evaluation');
 
-                            expect(payload.result).toBe(RoundResult.Eliminate);
+                            expect(payload.resultCode).toBe(ResultCode.Eliminate);
                             expect(payload.data).toEqual(params.rule.contests);
                             expect(payload.explanation.length).toBe(explanations.size);
                             for (let index = 0; index < payload.explanation.length; index++) {
@@ -558,13 +558,13 @@ describe("check Game class", function() {
                         case 1:
                         case 2:
                             // confirm play again result for round
-                            expect(payload.result).toBe(RoundResult.PlayAgain);
+                            expect(payload.resultCode).toBe(ResultCode.PlayAgain);
                             checkGame(game, numPayers, numRobots, expectedActive, false, true, false);
                             break;
                         case 3:
                             // confirm eliminated one player
                             --expectedActive;
-                            expect(payload.result).toBe(RoundResult.PlayAgain);
+                            expect(payload.resultCode).toBe(ResultCode.Eliminate);
                             expect(payload.data).toEqual([
                                 game.getPlayer(params.selectedPlayer)
                             ]);
@@ -573,7 +573,7 @@ describe("check Game class", function() {
                         case 4:
                             // confirm eliminated all player bar winner
                             expectedActive = 1;
-                            expect(payload.result).toBe(RoundResult.Winner);
+                            expect(payload.resultCode).toBe(ResultCode.Winner);
                             expect(payload.data).toBe(game.getPlayer(params.selectedPlayer));
                             checkGame(game, numPayers, numRobots, expectedActive, false, true, false);
                             break;
@@ -606,6 +606,9 @@ describe("check Game class", function() {
                     if (selection instanceof Selection && selection !== Selection.None) {
                         game.makePlayEvent(selection.key.key);  // use key
                     }
+                }
+                if (roundNum < NUM_OF_ROUNDS) {
+                    game.startRound();
                 }
             }
         }

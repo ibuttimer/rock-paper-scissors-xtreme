@@ -3,9 +3,9 @@
     @author Ian Buttimer
 */
 
-import { variableCheck, requiredVariable } from './utils.js';
+import { variableCheck, requiredVariable, gameParticipantsCheck, mapToString } from './utils.js';
 import { Player, Robot } from './player.js';
-import { Enum, GameKey, Selection, GameMode, GameStatus, GameEvent, RoundResult } from './enums.js';
+import { Enum, GameKey, Selection, GameMode, GameStatus, GameEvent, ResultCode } from './enums.js';
 
 const BASIC_GAME_NAME = 'Basic';
 const BIG_BANG_GAME_NAME = 'BigBang';
@@ -19,9 +19,15 @@ export class Contest {
     static WIN_NAME = '<W>';
     static LOSE_NAME = '<l>';
 
-    winner;         // selection that wins
-    loser;          // selection that loses
-    explanation;    // explanation of loss
+    /** Selection that wins
+     * @type {Selection} */
+    winner;
+    /** Selection that loses
+     * @type {Selection} */
+    loser;
+    /** Explanation of loss; e.g. 'A beats B'
+     * @type {string} */
+    explanation;
 
     /**
      * @constructor
@@ -71,8 +77,13 @@ export class Contest {
  */
 export class Rule {
 
-    selection;      // selection this rule applies to
-    contests = [];  // array of Contests for this rule's Selection
+    /** Selection this rule applies to
+     * @type {Selection} */
+    selection;
+    /** Array of Contests for this rule's Selection
+     * @type {Array}
+     * @type {Contest} */
+     contests = [];
 
     /**
      * @constructor
@@ -254,9 +265,6 @@ function xtremeRules() {
 /** Template class for a counts object */
 class CountsTemplate {
 
-    constructor() {
-    }
-
     toString() {
         let str = '{';
         for (const key in this) {
@@ -278,46 +286,33 @@ class CountsTemplate {
  */
  export class GameVariant extends Enum {
     // freeze variants so can't be modified
-    static Basic;
-    static BigBang;
-    static Xtreme;
-  
-    static {
-        // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes/Class_static_initialization_blocks
-        let variants = {};
-        variants[BASIC_GAME_NAME] = basicRules;
-        variants[BIG_BANG_GAME_NAME] = bigBangRules;
-        variants[XTREME_GAME_NAME] = xtremeRules;
+    static Basic = GameVariant.getFrozen(BASIC_GAME_NAME, basicRules());
+    static BigBang = GameVariant.getFrozen(BIG_BANG_GAME_NAME, bigBangRules());
+    static Xtreme = GameVariant.getFrozen(XTREME_GAME_NAME, xtremeRules());
 
-        for (let name in variants) {
-            let variant = new GameVariant(name);
-            variant.rules = variants[name]();
-            variant.finalise();
-
-            switch (name) {
-                case BASIC_GAME_NAME:
-                    this.Basic = Object.freeze(variant);
-                    break;
-                case BIG_BANG_GAME_NAME:
-                    this.BigBang = Object.freeze(variant);
-                    break;
-                case XTREME_GAME_NAME:
-                    this.Xtreme = Object.freeze(variant);
-                    break;
-            }
-        }
-    }
-
-    rules = [];              // array of game rules
-    possibleSelections = []; // array of possible selections
+    static AllVariants = [GameVariant.Basic, GameVariant.BigBang, GameVariant.Xtreme];
 
     /**
-     * @constructor
-     * @param {string} name - variant name.
+     * Make a frozen variant
+     * @param {string} name - name of variant
+     * @param {Array} rules - game rules
+     * @returns {GameVariant}
      */
-    constructor(name) {
-        super(name);
+    static getFrozen(name, rules) {
+        let variant = new GameVariant(name);
+        variant.rules = rules;
+        variant.finalise();
+        return variant;
     }
+
+    /** Array of game rules
+     * @type {Array}
+     * @type {Rule} */
+    rules = [];
+    /** Array of possible selections
+     * @type {Array}
+     * @type {Selection} */
+    possibleSelections = [];
 
     /** Finalise object to prepare for freezing. */
     finalise() {
@@ -342,7 +337,7 @@ class CountsTemplate {
 
     /**
      * Get a selection counts template object.
-     * @returns {object} map with selection keys and count values
+     * @returns {object} object with selection keys and count values
      */
     getCountsTemplate() {
         let template = new CountsTemplate();
@@ -361,7 +356,7 @@ class CountsTemplate {
 
     /**
      * Get selection for specified key.
-     * @param {GameKey|string} key - key associated with selection
+     * @param {GameKey|string} key - GameKey or key associated with selection
      * @returns {Selection}  selection or Selection.None if invalid key
      */
     getSelection(key) {
@@ -373,7 +368,7 @@ class CountsTemplate {
 
     /**
      * Check if selection key is valid.
-     * @param {GameKey|string} key - key associated with selection
+     * @param {GameKey|string} key - GameKey or key associated with selection
      * @returns {boolean} true if key is valid otherwise false
      */
     isValidKey(key) {
@@ -412,29 +407,94 @@ class CountsTemplate {
  */
 export class GameResult {
     
-    result;         // round result
-    data;           // data dependant on round result
-    explanation;    // explanation dependant on round result
+    /** Result code for round 
+     * @type {ResultCode} */
+    resultCode;
+    /** Round number
+     * @type {number} */
+    roundNumber;
+    /** Map with players who participated in round, and their selections
+     * @type {Map}
+     * @type {Player} key
+     * @type {Selection} value */
+    playerSelections;
+    /** Data dependant on round result
+     * @type {*} */
+    data;
+    /** Explanation dependant on round result
+     * @type {*} */
+    explanation;
 
     /**
      * @constructor
-     * @param {RoundResult} result - round result
+     * @param {ResultCode} resultCode - result code for round
+     * @param {number} roundNumber - round number result applies to
+     * @param {Map} playerSelections - players who participated in round as keys and their selection as value
      * @param {Array} data - data dependant on round result
      * @param {Array} explanation - explanation dependant on round result
      */
-     constructor(result, data = [], explanation = []) {
-         this.result = result;
+    constructor(resultCode, roundNumber, playerSelections = new Map(), data = [], explanation = []) {
+         this.resultCode = resultCode;
+         this.roundNumber = roundNumber;
+         this.playerSelections = playerSelections;
          this.data = data;
          this.explanation = explanation;
-     }
+    }
+
+    /**
+     * All players who participated in round
+     * @return {Array} array of players
+     */
+    get players() {
+        const players = [];
+        for (let player of this.playerSelections.keys()) {
+            players.push(player);
+        }
+        return players;
+    }
 
     /**
      * String representation of object.
      * @returns {string}
      */
      toString() {
-         return `result: ${this.result}\n  data: ${this.data}\n  explanation: ${this.explanation}` 
+         return `resultCode: ${this.resultCode}\n  roundNumber: ${this.roundNumber}\n  playerSelections: ${mapToString(this.playerSelections)}\n  data: ${this.data}\n  explanation: ${this.explanation}` 
      }
+}
+
+/** 
+ * Class representing a game result for the event API
+ */
+ export class PlayEventResult {
+   
+    /** Game object
+     * @type {Game} */
+    game;
+    /** Game in progress flag
+     * @type {boolean} */
+    gameInProgress;
+    /** Round in progress flag
+     * @type {boolean} */
+    roundInProgress;
+    /** Current player
+     * @type {Player} */
+    player;
+    /** Result of round
+     * @type {GameResult} */
+    gameResult;
+
+    /**
+     * @constructor
+     * @param {Game} game - game object
+     * @param {GameResult} gameResult - result of round
+     */
+    constructor(game, gameResult) {
+        this.game = game;
+        this.gameResult = gameResult;
+        this.gameInProgress = game.inProgress;
+        this.roundInProgress = game.roundInProgress;
+        this.player = game.currentPlayer;
+    }
 }
 
 /**
@@ -445,21 +505,44 @@ export class GameResult {
     static OPT_NONE = 0;           // no options
     static OPT_CONSOLE = 0x01;     // log events to console
 
-    variant;        // game variant
-    gameMode;       // game mode
-    numPlayers;     // number of players
-    numRobots;      // number of robots
-    players;        // array of game players
-    #status;        // game status
-    #options;       // game options
-    #currentIndex;  // current player index
-    #currentRound;  // current round number
+    /** Game variant 
+     * @type {GameVariant} */
+    variant;
+    /** Game mode
+     * @type {GameMode} */
+    gameMode;
+    /** Number of players 
+     * @type {number} */
+    numPlayers;
+    /** Number of robots
+     * @type {number} */
+    numRobots;
+    /** Array of game players
+     * @type {Array}
+     * @type {Player|Robot} */
+    players;
+    /** Game status
+     * @type {GameStatus} */
+    #status;
+    /** Game options
+     * @type {number} */
+    #options;
+    /** Current player index 
+     * @type {number} */
+    #currentIndex;
+    /** Current round number
+     * @type {number} */
+    #currentRound;
 
-    #stageCallback; // function to call at key stages for test purposes with prototype
-                    // * param {GameEvent} stage - one of GameEvent.xxx
-                    // * param {Game} game - game object
-                    // * param {number} roundNumber - current round number
-                    // * param {object} data - current round number
+    /** Function to call at key stages for test purposes with prototype
+     * @type {Function} 
+     * with prototype 
+     * @param {GameEvent} stage - one of GameEvent.xxx
+     * @param {Game} game - game object
+     * @param {number} roundNumber - current round number
+     * @param {object} data - current round number
+     *  */
+    #stageCallback;
 
     static NONE_ACTIVE = -1; // no active player index
 
@@ -473,36 +556,71 @@ export class GameResult {
     constructor(variant, numPlayers = 1, numRobots = 1, options = Game.OPT_NONE) {
         // sanity checks
         requiredVariable(variant, 'variant');
-        if (numPlayers + numRobots < 2) {
-            throw 'Insufficient number of players';
-        }
-        if (numPlayers < 1) {
-            throw 'Insufficient number of players';
-        }
 
         this.variant = variant;
         this.gameMode = GameMode.Live;
-        this.numPlayers = numPlayers;
-        this.numRobots = numRobots;
         this.#status = GameStatus.NotStarted;
         this.#options = options;
 
-        this.init();
+        this.init(numPlayers, numRobots);
     }
 
     /**
      * Initialise the game
      */
-    init() {
-        this.players = [];
-        for (let i = 0; i < this.numPlayers; i++) {
-            this.players.push(new Player());
+    init(numPlayers, numRobots, playerList = null) {
+        const errors = gameParticipantsCheck(numPlayers, numRobots);
+        if (errors) {
+            let errorMsg = errors.reduce(
+                (previousValue, currentValue) => {
+                    let msg = previousValue.length ? previousValue + ', ' : previousValue;
+                    return msg + currentValue
+                }, ''
+              );
+            throw new Error(errorMsg);
         }
-        for (let i = 0; i < this.numRobots; i++) {
-            this.players.push(new Robot());
+
+        if (!playerList) {
+            // get array of existing player objects
+            playerList = this.players ? this.players.filter(player => !player.isRobot) : [];
         }
+        // get array of existing robot objects
+        let robots = this.players ? this.players.filter(player => player.isRobot) : [];
+        
+        if (numPlayers > playerList.length) {
+            // add new player objects
+            for (let index = playerList.length; index < numPlayers; index++) {
+                playerList.push(new Player(`Player ${index + 1}`))
+            }
+        } else if (numPlayers < playerList.length){
+            // remove excess player objects
+            playerList = playerList.slice(0, numPlayers);
+        }
+
+        if (numRobots > robots.length) {
+            // add new robot objects
+            for (let index = robots.length; index < numRobots; index++) {
+                robots.push(new Robot(index))
+            }
+        } else if (numRobots < robots.length) {
+            // remove excess robot objects
+            robots = robots.slice(0, numRobots);
+        }
+
+        this.players = playerList.concat(robots);
+        this.numPlayers = numPlayers;
+        this.numRobots = numRobots;
+
+        this.applyToPlayers(player => player.initState());
         this.#currentIndex = Game.NONE_ACTIVE;
         this.#currentRound = 0;
+    }
+
+    /**
+     * Reinitialise the game
+     */
+     reInit(playerList = null) {
+        this.init(this.numPlayers, this.numRobots, playerList);
     }
 
     /**
@@ -546,7 +664,7 @@ export class GameResult {
         this.startGame();
         while (this.inProgress) {
             result = this.playRound(callback);
-            if (result.result == RoundResult.Winner) {
+            if (result.resultCode === ResultCode.Winner) {
                 this.endGame();
             }
         }
@@ -591,7 +709,7 @@ export class GameResult {
     /**
      * Make a play for the current player and set the next player.
      * @param {Player} player - current player
-     * @param {GameKey|string} selection - key for selection
+     * @param {Selection|GameKey|string} selection - Selection or key associated with selection
      * @returns {Player} new current player
      */
     #makePlayNext(player, selection) {
@@ -602,7 +720,7 @@ export class GameResult {
 
     /**
      * Make a play for the current player.
-     * @param {GameKey|string} selection - key for selection
+     * @param {Selection|GameKey|string} selection - Selection or key associated with selection
      * @returns {object} event result, @see {@link Game#eventResult()}
      */
     makePlayEvent(selection) {
@@ -620,10 +738,8 @@ export class GameResult {
             const evaluation = this.evaluateRound();
             result = this.processEvaluation(evaluation);
 
-            if (result.result == RoundResult.Winner) {
+            if (result.resultCode === ResultCode.Winner) {
                 this.endGame();
-            } else if (result.result == RoundResult.PlayAgain){
-                this.startRound();
             }
         }
 
@@ -632,18 +748,11 @@ export class GameResult {
 
     /**
      * Generate an event result.
-     * @param {object} result - event result
-     * @returns {object} event result object
+     * @param {GameResult} result - event result
+     * @returns {PlayEventResult} event result object
      */
     #eventResult(result) {
-        return {
-            game: this,
-            gameInProgress: this.inProgress,
-            roundInProgress: this.roundInProgress,
-            player: this.getPlayer(this.#currentIndex),
-            playerIndex: this.#currentIndex,
-            result: result
-        }
+        return new PlayEventResult(this, result);
     }
 
     /** Start a round */
@@ -661,7 +770,7 @@ export class GameResult {
      * @returns {boolean} true if in progress, otherwise false
      */
     get roundInProgress() {
-        return this.#currentIndex != Game.NONE_ACTIVE;
+        return this.#currentIndex !== Game.NONE_ACTIVE;
     }
 
     /**
@@ -675,18 +784,20 @@ export class GameResult {
     /**
      * Evaluate the result of a round.
      * @returns {GameResult} with:
-     *      result: one of RoundResult,
-     *      data: PlayAgain - n/a
-     *            Eliminate - array of selections to eliminate,
-     *            Winner - winning selection ??
-     *      explanation: PlayAgain - n/a
-     *                   Eliminate - array of explanations of eliminations,
-     *                   Winner - winning selection ??
+     *      playerSelections: Map with players who participated in round, and their selections
+     *      resultCode: ResultCode.PlayAgain
+     *          data: n/a
+     *          explanation: n/a
+     *      resultCode: ResultCode.Eliminate
+     *          data: array of selections to eliminate
+     *          explanation: array of explanations of eliminations
      */
     evaluateRound() {
         // default result; play again
-        let evaluation = new GameResult(RoundResult.PlayAgain);
-        let counts = this.roundSelections();
+        const roundSelections = this.roundSelections();
+        const counts = roundSelections.counts;
+        const evaluation = new GameResult(
+            ResultCode.PlayAgain, this.#currentRound, roundSelections.playerSelections);
 
         // check if all selections picked
         let allPicked = (Object.values(counts).find(count => count === 0) === undefined);
@@ -708,7 +819,7 @@ export class GameResult {
             const top = countEntries[0];
             
             // check if all same selection
-            if (top.count < Object.keys(counts).length) {
+            if (top.count < this.activePlayerCount) {
 
                 let eliminated = [];    // selections which lose
                 let explanations = [];  // explanation of losses
@@ -741,7 +852,7 @@ export class GameResult {
 
                 if (activated > 0) {
                     // eliminate losers
-                    evaluation.result = RoundResult.Eliminate;
+                    evaluation.resultCode = ResultCode.Eliminate;
                     evaluation.data = eliminated;
                     evaluation.explanation = explanations;
                 }
@@ -760,15 +871,22 @@ export class GameResult {
      * Process evaluation of a round.
      * @param {object} evaluation - result from evaluateRound()
      * @returns {GameResult} with:
-     *      result: one of RoundResult,
-     *      data: PlayAgain - n/a
-     *            Eliminate - array eliminated players,
-     *            Winner - winning player
+     *      playerSelections: Map with players who participated in round, and their selections
+     *      resultCode: ResultCode.PlayAgain
+     *          data: n/a
+     *          explanation: n/a
+     *      resultCode: ResultCode.Eliminate
+     *          data: array eliminated players
+     *          explanation: array of explanations of eliminations
+     *      resultCode: ResultCode.Winner
+     *          data: winning player
+     *          explanation: array of explanations of eliminations
      */
     processEvaluation(evaluation) {
-        let processed = new GameResult(RoundResult.PlayAgain);
-        switch (evaluation.result) {
-            case RoundResult.Eliminate:
+        let processed = new GameResult(
+            evaluation.resultCode, evaluation.roundNumber, evaluation.playerSelections);
+        switch (evaluation.resultCode) {
+            case ResultCode.Eliminate:
                 let eliminated = [];
                 for (const eliminate of evaluation.data) {
                     this.players.forEach(player => {
@@ -778,15 +896,17 @@ export class GameResult {
                         }
                     });
                 }
-                if (this.activePlayerCount == 1) {
+                if (this.activePlayerCount === 1) {
                     // only one player remaining return winner
-                    processed.result = RoundResult.Winner;
+                    processed.resultCode = ResultCode.Winner;
                     processed.data = this.players.find(player => player.inGame);
                 } else {
                     // return eliminated players
                     processed.data = eliminated;
                 }
                 processed.explanation = evaluation.explanation;
+                break;
+            default:
                 break;
         }
 
@@ -817,21 +937,26 @@ export class GameResult {
     }
 
     /**
-     * Get the counts for each selection
-     * @returns {object} map with selection keys and count values
+     * Get the counts for each selection and map of player selections.
+     * @returns {object} {
+     *          counts: {object with selection keys and count values},
+     *          playerSelections: {map with players as key and selection as value}
+     *      }
      */
-     roundSelections() {
-        let counts = this.variant.getCountsTemplate();
+    roundSelections() {
+        const counts = this.variant.getCountsTemplate();    // selection counts
+        const playerSelections = new Map();      // player selections
         this.players.forEach(player => {
             if (player.inGame) {
                 counts[player.selection]++;
+                playerSelections.set(player, player.selection);
             }
         });
 
         this.log(`roundSelections: ${counts}`, false);
         this.#doStageCallback(GameEvent.RoundSelections, counts);
 
-        return counts;
+        return { counts: counts, playerSelections: playerSelections };
     }
 
     /**
@@ -859,6 +984,28 @@ export class GameResult {
     }
 
     /**
+     * Set the number of players
+     * @param {number} num - number of players
+     */
+    setNumPlayers(num) {
+        if (typeof num === 'string') {
+            num = parseInt(num);
+        }
+        this.init(num, this.numRobots);
+    }
+
+    /**
+     * Set the number of robots
+     * @param {number} num - number of robots
+     */
+    setNumRobots(num) {
+        if (typeof num === 'string') {
+            num = parseInt(num);
+        }
+        this.init(this.numPlayers, num);
+    }
+
+    /**
      * Apply the applicator to all players
      * @param {Function} applicator 
      */
@@ -870,7 +1017,7 @@ export class GameResult {
      * Get the number of players; both active and inactive.
      * @returns {number} player count
      */
-     get playerCount() {
+    get playerCount() {
         return this.players.length;
     }
 
@@ -888,10 +1035,42 @@ export class GameResult {
     /**
      * Get the player with the specified index.
      * @param {number} index - index of player
-     * @returns {Player|undefined} player is valid index, otherwise undefined
+     * @returns {Player|undefined} player if valid index, otherwise undefined
      */
     getPlayer(index) {
         return index >= 0 && index < this.players.length ? this.players[index] : undefined;
+    }
+
+    /**
+     * Get the current player.
+     * @returns {Player|undefined} player if there is an active player, otherwise undefined
+     */
+    get currentPlayer() {
+        return this.roundInProgress ? this.getPlayer(this.#currentIndex) : undefined;
+    }
+
+    /**
+     * Get an array of players, excluding robots.
+     * @returns {Array} array of players
+     */
+    getPlayers() {
+        return this.players.filter(player => !player.isRobot);
+    }
+
+    /**
+     * Get an array of robots, excluding physical players.
+     * @returns {Array} array of robots
+     */
+     getRobots() {
+        return this.players.filter(player => player.isRobot);
+    }
+
+    /**
+     * Get the current round number
+     * @returns {number}
+     */
+    get roundNumber() {
+        return this.#currentRound;
     }
 
     /**
@@ -917,10 +1096,10 @@ export class GameResult {
     /**
      * Call stage callback function when in test mode.
      * @param {GameEvent} stage - one of GameEvent.xxx
-     * @param {object} payload - stage data
+     * @param {GameResult|number} payload - stage data
      */
     #doStageCallback(stage, payload = undefined) {
-        if (this.gameMode == GameMode.Test && typeof this.#stageCallback === 'function') {
+        if (this.gameMode === GameMode.Test && typeof this.#stageCallback === 'function') {
             this.#stageCallback(stage, this, this.#currentRound, payload);
         }
     }

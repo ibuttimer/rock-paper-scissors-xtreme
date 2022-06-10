@@ -79,7 +79,7 @@ import { requiredVariable } from './utils.js';
 
     /**
      * @constructor
-     * @param {string} name - game event name.
+     * @param {string} name - game key name.
      * @param {string} key - selection key.
      */
     constructor(name, key) {
@@ -88,12 +88,12 @@ import { requiredVariable } from './utils.js';
     }
 
     /**
-     * Check if the specified key matches this game key.
-     * @param {string} keyName - key
+     * Check if the specified key matches this object's key.
+     * @param {string} keyName - key to check
      * @returns true if matches, otherwise false
      */
     matches(keyName) {
-        return keyName.toLowerCase() == this.key;
+        return keyName.toLowerCase() === this.key;
     }
 
     /**
@@ -110,9 +110,11 @@ import { requiredVariable } from './utils.js';
                 case GameKey.NewGame.key:   // new game
                     gameKey = GameKey.NewGame;
                     break;
+                default:
+                    break;
             }
         } else {
-            let key = GameKey.SelectionKeys.find(k => k.key == keyName);
+            let key = GameKey.SelectionKeys.find(k => k.key === keyName);
             if (key) {
                 gameKey = key;
             }
@@ -263,14 +265,16 @@ import { requiredVariable } from './utils.js';
 /**
  * Enum representing round results.
  */
- export class RoundResult extends Enum {
+ export class ResultCode extends Enum {
     // freeze game statuses so can't be modified
     /** All active players, play again */
-    static PlayAgain = Object.freeze(new RoundResult('PlayAgain'));
+    static PlayAgain = Object.freeze(new ResultCode('PlayAgain'));
     /** Eliminate players with specific selection(s) */
-    static Eliminate = Object.freeze(new RoundResult('Eliminate'));
+    static Eliminate = Object.freeze(new ResultCode('Eliminate'));
     /** Winner found */
-    static Winner = Object.freeze(new RoundResult('Winner'));
+    static Winner = Object.freeze(new ResultCode('Winner'));
+    /** Game over */
+    static MatchOver = Object.freeze(new ResultCode('MatchOver'));
   
     /**
      * @constructor
@@ -285,7 +289,7 @@ import { requiredVariable } from './utils.js';
      * @returns {string} string of form '<Class name>.<object name>'
      */
     toString() {
-        return super.toString(RoundResult);
+        return super.toString(ResultCode);
     }
 }
 
