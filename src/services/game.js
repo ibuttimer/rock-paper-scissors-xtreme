@@ -819,7 +819,7 @@ class CountsTemplate {
             const top = countEntries[0];
             
             // check if all same selection
-            if (top.count < Object.keys(counts).length) {
+            if (top.count < this.activePlayerCount) {
 
                 let eliminated = [];    // selections which lose
                 let explanations = [];  // explanation of losses

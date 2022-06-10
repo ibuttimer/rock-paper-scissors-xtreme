@@ -76,6 +76,19 @@ export default class GameState {
         this.game.playGameEvents();
     }
 
+    /** Next round */
+    nextRound() {
+        this.game.startRound();
+    }
+
+    /** Next game */
+    nextGame() {
+        this.currentGame++;
+
+        // game play using events
+        this.game.playGameEvents();
+    }
+
     /** Current player's name */
     get currentPlayerName() {
         return this.game.currentPlayer.name;

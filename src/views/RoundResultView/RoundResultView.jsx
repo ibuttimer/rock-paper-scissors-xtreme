@@ -1,14 +1,35 @@
 import React from 'react';
+import { useNavigate } from "react-router-dom";
 import { AppContext } from '../../App.js'
+import { PLAY_URL } from '../../Globals.js'
 import { ResultCode } from "../../services/index.js";
 import { generateId } from "../../utils/index.js";
 import { Title, GameProgress, PlayerSelectionTile, LeaderBoard } from '../../components/index.js';
 import './RoundResultView.css';
 
+/**
+ * Round result params for display
+ * @param {string} resultText - result text to display
+ * @param {string} buttonText - continue button text
+ * @param {string} buttonClass - continue button class
+ * @returns {object}
+ */
+function resultCodeMapping(resultText, buttonText, buttonClass) {
+    return {
+        resultText: resultText, 
+        buttonText: buttonText, 
+        buttonClass: buttonClass
+    };
+}
+
+/** Map of ResultCode and round result params
+ * @type {ResultCode} key - result code
+ * @type {object} value - info params
+ */
 const resultTexts = new Map([
-    [ResultCode.Winner, 'Winner'],
-    [ResultCode.Eliminate, 'Eliminations'],
-    [ResultCode.PlayAgain, 'Play Again']
+    [ResultCode.Winner, resultCodeMapping('Winner', 'Next game', 'button__round-result-next-game')],
+    [ResultCode.Eliminate, resultCodeMapping('Eliminations', 'Next round', 'button__round-result-next-round')],
+    [ResultCode.PlayAgain, resultCodeMapping('Play Again', 'Next round', 'button__round-result-next-round')]
 ]);
 
 /**
@@ -18,6 +39,8 @@ const resultTexts = new Map([
 export default function RoundResultView() {
 
     const gameState = React.useContext(AppContext);
+
+    const navigate = useNavigate();
 
     /**
      * Generate the player selections
@@ -54,7 +77,8 @@ export default function RoundResultView() {
      function getResultText(roundResult) {
         return (
             <h3 className='h3_round-result-text'>
-                {resultTexts.has(roundResult.resultCode) ? resultTexts.get(roundResult.resultCode) : ''}
+                {resultTexts.has(roundResult.resultCode) ? 
+                    resultTexts.get(roundResult.resultCode).resultText : ''}
             </h3>
         );
     }
@@ -65,7 +89,7 @@ export default function RoundResultView() {
      * @returns 
      */
      function getExplanation(roundResult) {
-        const resultCode = gameState.roundResult.resultCode;
+        const resultCode = roundResult.resultCode;
         if (resultCode !== ResultCode.Eliminate && resultCode !== ResultCode.Winner) {
             return null;
         }
@@ -73,6 +97,58 @@ export default function RoundResultView() {
         return roundResult.explanation.map(x => {
             return <p className='p__elimination-explanation'>{x}</p>
         });
+    }
+
+    /** Start next round */
+    function nextRound() {
+        gameState.nextRound();
+
+        navigate(PLAY_URL);
+    }
+
+    /** Start next game */
+    function nextGame() {
+        gameState.nextGame();
+
+        navigate(PLAY_URL);
+    }
+
+    /**
+     * Generate the 'continue' button
+     * @param {GameResult} roundResult - round result
+     * @returns 
+     */
+     function getContinueButton(roundResult) {
+        const resultCode = roundResult.resultCode;
+        let text;
+        let className;
+        let continueFunction;
+
+        if (resultTexts.has(resultCode)) {
+            let setting = resultTexts.get(resultCode);
+            text = setting.buttonText;
+            className = setting.buttonClass;
+            
+            switch (resultCode) {
+                case ResultCode.Winner:
+                    continueFunction = () => nextGame();
+                    break;
+                case ResultCode.Eliminate:
+                case ResultCode.PlayAgain:
+                    continueFunction = () => nextRound();
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        return text ? (
+            <div className="div__round-result-next-button-wrapper">
+                <button className={className} type='button' onClick={continueFunction}>
+                    {text}
+                </button>
+            </div>
+        ) : null;
     }
 
     /* render something based on the value */
@@ -89,6 +165,8 @@ export default function RoundResultView() {
             </section>
 
             {getExplanation(gameState.roundResult)}
+
+            {getContinueButton(gameState.roundResult)}
 
         </main>
     );
