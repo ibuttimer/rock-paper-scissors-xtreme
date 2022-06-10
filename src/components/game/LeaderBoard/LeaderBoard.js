@@ -10,19 +10,20 @@ export default class LeaderBoard extends React.Component {
 
     /**
      * Generate the player selections
-     * @param {GameResult} roundResult - round result
-     * @param {scores} scores - map of scores with players as key
+     * @param {Array} scores - array of player and score objects
+     * @type {Player} player - player object
+     * @type {number} score - player's score
      * @returns 
      */
-    getPlayerScores(roundResult, scores) {
+    getPlayerScores(scores) {
 
-        return roundResult.players.map((player, index) => {
+        return scores.map((playerScore, index) => {
             let rowKey = `player-score-row-${index}`;
 
             return (
                 <tr className='tr__player-score-row' key={rowKey}>
-                    <td className='td__player-name'>{player.name}</td>
-                    <td className='td__player-score'>{scores.get(player)}</td>
+                    <td className='td__player-name'>{playerScore.player.name}</td>
+                    <td className='td__player-score'>{playerScore.score}</td>
                 </tr>
             );            
         });
@@ -38,7 +39,7 @@ export default class LeaderBoard extends React.Component {
                         </tr>
                     </thead>
                     <tbody>
-                        {this.getPlayerScores(this.props.roundResult, this.props.scores)}
+                        {this.getPlayerScores(this.props.scores)}
                     </tbody>
                 </table>
             </div>

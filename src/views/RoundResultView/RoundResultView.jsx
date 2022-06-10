@@ -158,7 +158,7 @@ export default function RoundResultView() {
             {getResultText(gameState.roundResult)}
             <GameProgress progress={gameState.progressMap} />
 
-            <LeaderBoard roundResult={gameState.roundResult} scores={gameState.scores} />
+            <LeaderBoard scores={gameState.topDownScores} />
 
             <section className="section__round-result">
                 {getPlayerSelections(gameState.roundResult)}

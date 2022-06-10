@@ -130,6 +130,22 @@ export default class GameState {
     }
 
     /**
+     * Get player scores in descending order
+     * @returns {Array} object with
+     * @type {Player} player - player object
+     * @type {number} score - player's score
+     */
+    get topDownScores() {
+        const playerScores = this.game.players.map(player => {
+            return {
+                player: player,
+                score: this.scores.get(player)
+            }
+        });
+        return playerScores.sort((a, b) => b.score - a.score);
+    }
+
+    /**
      * All possible selections for game variant
      * @returns {Array} array of {
      *      selection: {selection},
