@@ -1,0 +1,39 @@
+@import 'styles-base.css';
+
+/* TODO navbar hamburger */
+
+/* custom properties */
+:root {
+    --menu-item-padding: 120px;
+}
+  
+.nav__top {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.div__logo {
+    padding: var(--std-padding-vert) var(--std-padding-horz);
+    vertical-align: bottom;
+}
+
+.menu__row {
+    width: 90%;
+    list-style-type: none;
+    text-align: end;
+}
+
+.menu__list {
+    display: inline-block;
+    vertical-align: bottom;
+    font-size: 1.1rem;
+}
+
+.menu__link {
+display: block;
+text-decoration: none;
+padding: var(--std-padding-vert) var(--std-padding-horz);
+}
+    
