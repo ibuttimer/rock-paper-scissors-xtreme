@@ -22,6 +22,14 @@
 
     --std-margin-horz: 7.5%;
     --std-margin-vert: 5px;
+    --std-margin-between: 10px;
+
+    --std-padding-horz: 10px;
+    --std-padding-vert: 10px;
+
+    --footer-height: 50px;
+
+    --footer-height-padded: calc(var(--footer-height) + (2 * var(--std-padding-vert)))
 }
 
 * {
@@ -45,7 +53,10 @@ body {
     flex-direction: column;
 }
 
-.content {
+.div__content {
     /* sticky footer */
     flex: 1 0 auto;
+
+    margin-left: var(--std-margin-horz);
+    margin-right: var(--std-margin-horz);
 }

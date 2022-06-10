@@ -8,7 +8,7 @@
 
 /* sticky footer courtesy of
   https://css-tricks.com/couple-takes-sticky-footer/#aa-there-is-flexbox */
-footer {
+.footer__footer {
     flex-shrink: 0;
 
     margin-left: var(--std-margin-horz);
@@ -18,6 +18,6 @@ footer {
     line-height: var(--footer-height);
 }
 
-.copyright {
+.div__copyright {
     float: left;
 }
