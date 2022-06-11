@@ -17,6 +17,8 @@ export const MIN_GAMES = 1;
 export const MAX_GAMES = 15;
 export const DEFAULT_GAMES = 3;
 
+export const ENABLE_LOG = true;
+
 /**
  * Make a url.
  * @returns {string} url
@@ -45,5 +47,16 @@ export const PLAY_ROUTE = 'play';
 export const PLAY_URL = makePath(PLAY_ROUTE);
 export const ROUND_RESULT_ROUTE = 'roundresult';
 export const ROUND_RESULT_URL = makePath(ROUND_RESULT_ROUTE);
+
+
+/**
+ * Log to console
+ * @param {...any} data - info to log
+ */
+export function log(...data) {
+    if (ENABLE_LOG){
+        console.log(...data);
+    }
+}
 
 export default COPYRIGHT;

@@ -1,5 +1,7 @@
+import { ENABLE_LOG, log } from './globals.js';
 import { GameVariant, Game } from './game.js';
 import { GameKey } from './enums.js'
+import { View, setView } from './views.js'
 
 
 /* Wait for the DOM to finish loading before running the game
@@ -41,11 +43,16 @@ function runGame() {
 
     console.log('runGame');
 
-    game = new Game(GameVariant.Basic, 2, 0, Game.OPT_CONSOLE);
+    game = new Game(GameVariant.Basic, 2, 0, ENABLE_LOG ? Game.OPT_CONSOLE: Game.OPT_NONE);
 
     game.players.forEach(element => {
         console.log(element.name);
     });
 
-    game.playGameEvents()
+    game.playGameEvents();
+
+
+    setView(View.GameMenu, game);
+
 }
+

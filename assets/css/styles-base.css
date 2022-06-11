@@ -60,3 +60,7 @@ body {
     margin-left: var(--std-margin-horz);
     margin-right: var(--std-margin-horz);
 }
+
+.h1__main-title, .h2__sub-title, .h3__sub-title {
+    text-align: center;
+}

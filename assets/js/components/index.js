@@ -1,0 +1,1 @@
+export { default as getGameSelectMenu, setMenuHandler } from './game-menu.js';
