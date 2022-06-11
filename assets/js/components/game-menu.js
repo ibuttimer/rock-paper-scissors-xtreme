@@ -1,8 +1,9 @@
 import { 
     GAME_NAME, BASIC_URL, BASIC_VARIANT_NAME, BIGBANG_URL, BIGBANG_VARIANT_NAME, 
-    XTREME_URL, XTREME_VARIANT_NAME, log 
+    XTREME_URL, XTREME_VARIANT_NAME, IMG_ASSETS_BASE_URL, log 
 } from '../globals.js';
 import { GameVariant } from '../game.js';
+import { View, setView } from '../views.js'
 
 
 // Parameters for game select menu options
@@ -17,7 +18,7 @@ const gameParams = [
 ]
 const gameSelects = gameParams.map(params => {
     return gameSelectParams(params[URL_IDX], params[VARIANT_IDX], 
-                gameTileParams(params[VARIANT_NAME_IDX], `assets/img/${params[VARIANT_IMG_IDX]}`, 
+                gameTileParams(params[VARIANT_NAME_IDX], `${IMG_ASSETS_BASE_URL}${params[VARIANT_IMG_IDX]}`, 
                                 `${params[VARIANT_IDX].name} game image`))
 
 })
@@ -95,28 +96,30 @@ function getGameTile(params) {
 
 /**
  * Set click handlers for game select menu
- * @param {Game} game - game object
+ * @param {GameState} gameState - game state object
  */
-export function setMenuHandler(game) {
+export function setMenuHandler(gameState) {
     const buttons = document.getElementsByTagName('button');
     for (const button of buttons) {
-        button.addEventListener('click', (event) => gameMenuHandler(event, game), false);
+        button.addEventListener('click', (event) => gameMenuHandler(event, gameState), false);
     }
 }
 
 /**
  * Handle game selection
  * @param {Event} event - event object
- * @param {Game} game - game object
+ * @param {GameState} gameState - game state object
  */
-function gameMenuHandler(event, game) {
+function gameMenuHandler(event, gameState) {
     const url = event.currentTarget.dataset.url;
     const index = gameParams.findIndex(p => p[URL_IDX] === url);
     if (index >= 0)  {
-        game.variant = gameParams[index][VARIANT_IDX];
+        gameState.game.variant = gameParams[index][VARIANT_IDX];
+
+        log(event, gameState);
+
+        setView(gameParams[index][URL_IDX], gameState);
     } else {
         throw new Error(`Unknown game url: ${url}`);
     }
-
-    log(event, game);
 }

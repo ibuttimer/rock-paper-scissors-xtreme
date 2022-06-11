@@ -295,7 +295,7 @@ class CountsTemplate {
     /**
      * Make a frozen variant
      * @param {string} name - name of variant
-     * @param {Array} rules - game rules
+     * @param {Array[Rule]} rules - game rules
      * @returns {GameVariant}
      */
     static getFrozen(name, rules) {
@@ -551,7 +551,7 @@ export class GameResult {
      * @param {GameVariant} variant - game variant
      * @param {number} numPlayers - number of players; default 1
      * @param {number} numRobots - number of robots; default 1
-     * @param {number} options - OR bitmask of OPTxxx; default OPT_NONE
+     * @param {number} options - OR bitmask of OPTxxx; default {@link Game.OPT_NONE}
      */
     constructor(variant, numPlayers = 1, numRobots = 1, options = Game.OPT_NONE) {
         // sanity checks
@@ -567,6 +567,9 @@ export class GameResult {
 
     /**
      * Initialise the game
+     * @param {number} numPlayers - number of players
+     * @param {number} numRobots - number of robots
+     * @param {Array[Player|Robot]} playerList - array of game players
      */
     init(numPlayers, numRobots, playerList = null) {
         const errors = gameParticipantsCheck(numPlayers, numRobots);

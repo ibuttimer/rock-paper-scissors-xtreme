@@ -19,6 +19,8 @@ export const DEFAULT_GAMES = 3;
 
 export const ENABLE_LOG = true;
 
+export const IMG_ASSETS_BASE_URL = 'assets/img/';
+
 /**
  * Make a url.
  * @returns {string} url

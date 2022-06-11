@@ -2,7 +2,7 @@ import {
     ROOT_URL, BASIC_URL, BIGBANG_URL, XTREME_URL
 } from './globals.js';
 import { Enum } from './enums.js'
-import { getGameSelectMenu, setMenuHandler } from './components/index.js'
+import { getGameSelectMenu, setMenuHandler, getGameParams, setParamsHandler } from './components/index.js'
 
 /**
  * Enum representing views.
@@ -11,6 +11,9 @@ import { getGameSelectMenu, setMenuHandler } from './components/index.js'
     // freeze views so can't be modified
     /** All active players, play again */
     static GameMenu = Object.freeze(new View('GameMenu'));
+    static BasicGame = Object.freeze(new View('BasicGame'));
+    static BigBangGame = Object.freeze(new View('BigBangGame'));
+    static XtremeGame = Object.freeze(new View('XtremeGame'));
   
     /**
      * @constructor
@@ -31,32 +34,50 @@ import { getGameSelectMenu, setMenuHandler } from './components/index.js'
 
 /** Application routes */
 const routes = new Map([
-    [ROOT_URL, View.GameMenu]
+    [ROOT_URL, View.GameMenu],
+    [BASIC_URL, View.BasicGame],
+    [BIGBANG_URL, View.BigBangGame],
+    [XTREME_URL, View.XtremeGame],
 ]);
 
 /**
  * Set the current view
- * @param {View} view - view to set
- * @param {Game} game - game object
+ * @param {View|string} view - view to set or url
+ * @param {GameState} gameState - game state object
  */
-export function setView(view, game) {
+export function setView(view, gameState) {
     let innerHTML;
     let setClickHandler;
+
+    if (typeof view === 'string') {
+        for (const [url, urlView] of routes.entries()) {
+            if (url === view) {
+                view = urlView;
+                break;
+            }
+        }
+    }
     switch (view) {
         case View.GameMenu:
             innerHTML = getGameSelectMenu();
             setClickHandler = setMenuHandler;
+            break;
+        case View.BasicGame:
+        case View.BigBangGame:
+        case View.XtremeGame:
+            innerHTML = getGameParams(gameState);
+            setClickHandler = setParamsHandler;
             break;
         default:
             throw new Error(`Unknown view: ${view}`);
     }
 
     // set view html
-    let myElement = document.getElementById('main');
-    myElement.innerHTML = innerHTML;
+    let mainElement = document.getElementById('main');
+    mainElement.innerHTML = innerHTML;
 
     // add handlers
     if (setClickHandler) {
-        setClickHandler(game);
+        setClickHandler(gameState);
     }
 }

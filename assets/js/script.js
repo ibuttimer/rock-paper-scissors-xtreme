@@ -1,5 +1,6 @@
 import { ENABLE_LOG, log } from './globals.js';
 import { GameVariant, Game } from './game.js';
+import { default as GameState } from './game-state.js';
 import { GameKey } from './enums.js'
 import { View, setView } from './views.js'
 
@@ -13,27 +14,26 @@ document.addEventListener("DOMContentLoaded", function() {
 
 });
 
+let gameState;
 
-let game;
+// TODO enable when actually playing game
+// document.addEventListener('keydown', 
+//     /**
+//      * Keyboard event listener
+//      * @param {KeyboardEvent} event - @see {@link https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent}
+//      */
+//     (event) => {
+//         // https://developer.mozilla.org/en-US/docs/Web/API/UI_Events/Keyboard_event_key_values
+//         const key = GameKey.keyEvent(event);
 
-
-document.addEventListener('keydown', 
-    /**
-     * Keyboard event listener
-     * @param {KeyboardEvent} event - @see {@link https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent}
-     */
-    (event) => {
-        // https://developer.mozilla.org/en-US/docs/Web/API/UI_Events/Keyboard_event_key_values
-        const key = GameKey.keyEvent(event);
-
-        if (key === GameKey.NewGame) {
-            game.playGameBrowser();
-        } else if (game.roundInProgress && game.variant.isValidKey(key)) {
-            game.makePlayEvent(key);
-        } else {
-            // TODO audio feedback
-        }
-    }, false);
+//         if (key === GameKey.NewGame) {
+//             gameState.game.playGameBrowser();
+//         } else if (gameState.game.roundInProgress && game.variant.isValidKey(key)) {
+//             gameState.game.makePlayEvent(key);
+//         } else {
+//             // TODO audio feedback
+//         }
+//     }, false);
 
 /**
  * The main game "loop", called when the script is first loaded
@@ -43,16 +43,13 @@ function runGame() {
 
     console.log('runGame');
 
-    game = new Game(GameVariant.Basic, 2, 0, ENABLE_LOG ? Game.OPT_CONSOLE: Game.OPT_NONE);
+    gameState = new GameState(
+        new Game(GameVariant.Basic, 2, 0, ENABLE_LOG ? Game.OPT_CONSOLE: Game.OPT_NONE)
+    )
 
-    game.players.forEach(element => {
-        console.log(element.name);
-    });
+    gameState.startGame();
 
-    game.playGameEvents();
-
-
-    setView(View.GameMenu, game);
+    setView(View.GameMenu, gameState);
 
 }
 
