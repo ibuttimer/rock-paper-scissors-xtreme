@@ -84,18 +84,28 @@ export default function getGameParams(gameState) {
  */
 function playGame(event, gameState) {
     
-    // TODO ensure unique player names
-    
-    wip.playerArray.forEach((player, index) => {
-        let id = generatePlayerInputId(index);
-        let name = document.getElementById(id).value;
-        player.name = name ? name : defaultPlayerName(index);
-    })
+    persistPlayerNames();
 
     gameState.game.init(wip.numPlayers, wip.numRobots, wip.playerArray);
     gameState.startGame();
 
     setView(PLAY_URL, gameState);
+}
+
+/**
+ * Save the entered player names
+ * @returns {Array[Player]} player array
+ */
+function persistPlayerNames() {
+    
+    // TODO ensure unique player names
+    
+    wip.playerArray.forEach((player, index) => {
+        let id = generatePlayerInputId(index + 1);
+        let name = document.getElementById(id).value;
+        player.name = name ? name : defaultPlayerName(index);
+    })
+    return wip.playerArray;
 }
 
 /**
@@ -144,7 +154,7 @@ function getNumPlayers(params) {
 function setNumPlayers(event) {
     let num = parseInt(event.target.value);
     if (num !== wip.numPlayers){
-        let array = wip.playerArray;
+        let array = persistPlayerNames();
         if (num > array.length) {
             // add new player objects
             for (let index = array.length; index < num; index++) {
