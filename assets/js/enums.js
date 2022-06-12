@@ -88,7 +88,6 @@ import { requiredVariable } from './utils/index.js';
     static Batman = Object.freeze(new GameKey('Batman', 'b'));
     static Wizard = Object.freeze(new GameKey('Wizard', 'w'));
     static Glock = Object.freeze(new GameKey('Glock', 'g'));
-    // TODO implement random selection for player
     static Random = Object.freeze(new GameKey('Random', '#'));
 
     static SelectionKeys = [
@@ -96,7 +95,7 @@ import { requiredVariable } from './utils/index.js';
         GameKey.Spock, GameKey.Spiderman, GameKey.Batman, GameKey.Wizard, GameKey.Glock
     ];
     static ControlKeys = [
-        GameKey.Next
+        GameKey.Next, GameKey.Random
     ];
 
     /**

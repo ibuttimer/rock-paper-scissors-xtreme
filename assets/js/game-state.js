@@ -163,7 +163,7 @@ export default class GameState {
      */
      handleEvent(event) {
         // https://developer.mozilla.org/en-US/docs/Web/API/UI_Events/Keyboard_event_key_values
-        const key = GameKey.keyEvent(event);
+        let key = GameKey.keyEvent(event);
         let invalid = false;
 
         if (key === GameKey.NewGame) {
@@ -176,8 +176,13 @@ export default class GameState {
             if (!invalid) {
                 this.handleRoundResult();
             }
-        } else if (this.game.roundInProgress && this.game.variant.isValidKey(key)) {
-            this.handleSelection(key);
+        } else if (this.game.roundInProgress) {
+            if (key === GameKey.Random) {
+                key = this.game.variant.randomSelection().key;
+            }
+            if (this.game.variant.isValidKey(key)) {
+                this.handleSelection(key);
+            }
         } else {
             invalid = true;
         }
