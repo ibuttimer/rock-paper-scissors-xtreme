@@ -1,8 +1,11 @@
 import { 
-    ROOT_URL, BASIC_URL, BIGBANG_URL, XTREME_URL
+    ROOT_URL, BASIC_URL, BIGBANG_URL, XTREME_URL, PLAY_URL
 } from './globals.js';
 import { Enum } from './enums.js'
-import { getGameSelectMenu, setMenuHandler, getGameParams, setParamsHandler } from './components/index.js'
+import { 
+    getGameSelectMenu, setMenuHandler, getGameParams, setParamsHandler,
+    getGamePlayView, setPlayHandler
+} from './components/index.js'
 
 /**
  * Enum representing views.
@@ -14,6 +17,7 @@ import { getGameSelectMenu, setMenuHandler, getGameParams, setParamsHandler } fr
     static BasicGame = Object.freeze(new View('BasicGame'));
     static BigBangGame = Object.freeze(new View('BigBangGame'));
     static XtremeGame = Object.freeze(new View('XtremeGame'));
+    static Play = Object.freeze(new View('Play'));
   
     /**
      * @constructor
@@ -38,6 +42,7 @@ const routes = new Map([
     [BASIC_URL, View.BasicGame],
     [BIGBANG_URL, View.BigBangGame],
     [XTREME_URL, View.XtremeGame],
+    [PLAY_URL, View.Play],
 ]);
 
 /**
@@ -67,6 +72,10 @@ export function setView(view, gameState) {
         case View.XtremeGame:
             innerHTML = getGameParams(gameState);
             setClickHandler = setParamsHandler;
+            break;
+        case View.Play:
+            innerHTML = getGamePlayView(gameState);
+            setClickHandler = setPlayHandler;
             break;
         default:
             throw new Error(`Unknown view: ${view}`);

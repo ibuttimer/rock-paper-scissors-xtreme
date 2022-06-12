@@ -152,5 +152,8 @@ export function optionsList(id, array, defaultValue, valueModifier = y => y) {
         });
 }
 
+/** Accumulator function for {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/reduce} */
+export const accumulator = (previousValue, currentValue) => previousValue + currentValue;
+
 /* Jasmine requires a default export */
 export default 'utils.js'

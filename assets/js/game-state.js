@@ -4,13 +4,18 @@ import { Enum, GameKey, Selection, GameMode, GameStatus, GameEvent, ResultCode }
 
 
 /**
- * Generate selection info object
+ * Generate a selection tile parameters object
  * @param {string} src - image source
- * @param {string} alt - alt text for image
- * @returns {object}
+ * @param {string} alt - image alt text
+ * @param {Selection} selection - selection
+ * @returns {object} selection tile parameters
  */
-function selectionInfo(src, alt) {
-    return { src: src, alt: alt };
+ function selectionTileParams(src, alt, selection) {
+    return {
+        src: src, 
+        alt: alt, 
+        selection: selection
+    }
 }
 
 // info for all possible selections
@@ -26,8 +31,8 @@ const SELECTIONS = new Map();
     [Selection.Wizard, 'wizard.png'],
     [Selection.Glock, 'handgun.png']
 ].forEach(entry => 
-    SELECTIONS.set(entry[0], selectionInfo(`${IMG_ASSETS_BASE_URL}${entry[1]}`, `${entry[0].name} selection`)));
-
+    SELECTIONS.set(entry[0], 
+        selectionTileParams(`${IMG_ASSETS_BASE_URL}${entry[1]}`, `${entry[0].name} selection.`, entry[0])));
 
 /**
  * Class representing the game state
@@ -179,16 +184,10 @@ export default class GameState {
 
     /**
      * All possible selections for game variant
-     * @returns {Array} array of {
-     *      selection: {selection},
-     *      src: {image source},
-     *      alt: {alt text for image}
-     * }
+     * @returns {Array[object]} array of {@link selectionTileParams}
      */
     get selections() {
-        return this.game.variant.possibleSelections.map(x => Object.assign({
-            selection: x
-        }, SELECTIONS.get(x)))
+        return this.game.variant.possibleSelections.map(sel => SELECTIONS.get(sel));
     }
 
     /**

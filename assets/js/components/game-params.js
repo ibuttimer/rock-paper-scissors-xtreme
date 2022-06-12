@@ -4,7 +4,7 @@ import {
 } from '../globals.js';
 import { Player } from '../player.js';
 import { default as titleHeader } from './title.js'
-import { generateId, optionsList } from '../utils.js';
+import { generateId, optionsList, accumulator } from '../utils.js';
 import { View, setView } from '../views.js'
 
 
@@ -265,10 +265,7 @@ const generateSelectId = (option, id, index) => option.selectId ? option.selectI
                         ${radioInput}
                         ${selectElement}
                         ${closeDiv}`;
-            }).reduce(
-                (previousValue, currentValue) => previousValue + currentValue,
-                ''
-            );
+            }).reduce(accumulator, '');
     }
  
     return `<div class='div__num-games-wrapper'>
@@ -318,10 +315,7 @@ const defaultPlayerName = (index) => `Player ${index + 1}`;
 function playerNames() {
     return wip.playerArray
         .map((player, index) => getPlayerName(index + 1, player.name))
-        .reduce(
-            (previousValue, currentValue) => previousValue + currentValue,
-            ''
-        );
+        .reduce(accumulator, '');
 }
 
 /**
