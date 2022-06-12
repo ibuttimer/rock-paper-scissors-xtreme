@@ -4,7 +4,7 @@
 */
 import { ROUND_RESULT_URL, log } from '../globals.js';
 import { ResultCode, GameKey } from "../enums.js";
-import { default as titleHeader, currentPlayerNameHeader } from './title.js'
+import { titleHeader, currentPlayerNameHeader, gameProgress } from './index.js'
 import { generateId, optionsList, accumulator } from '../utils/index.js';
 import { View, setView } from '../views.js'
 
@@ -52,38 +52,6 @@ function getSelectable(selections) {
                 <img class="img__selection-tile-img" src="${params.src}" alt="${params.alt}" />
                 <h4 class="h4__selection-tile-name">${params.selection.name}</h4>
             </div>`;
-}
-
-/**
- * Get game play progress component
- * @param {Map} progress - match progress {@link GameState#progressMap()}
- */
- export function gameProgress(progress) {
-    return `<div class='div__game-progress-wrapper'>
-                <table class='table__game-progress'>
-                    <tbody>
-                        ${getGameProgress(progress)}
-                    </tbody>
-                </table>
-            </div>`;
-}
-
-/**
- * Generate the progress rows
- * @param {Map} progress - round result {@link GameState#progressMap()}
- * @param {scores} scores - map of scores with players as key
- * @returns 
- */
-function getGameProgress(progress) {
-
-    return Array.from(progress).map((entry, index) => {
-        let rowKey = `game-progress-row-${index}`;
-
-        return `<tr class='tr__game-progress-row' key=${rowKey}>
-                    <td class='td__game-progress-info'>${entry[0]}</td>
-                    <td class='td__game-progress-data'>${entry[1]}</td>
-                </tr>`;
-    }).reduce(accumulator, '');
 }
 
 /**

@@ -8,9 +8,6 @@
 	/* selection tile component */
     --var-game-tile-margin: calc(2 * var(--std-margin-between));
     --var-game-tile-size: 80px;
-
-	/* game progress component */
-	--leader-board-border-colour: #333;
 }
 
 /* play view */
@@ -45,18 +42,4 @@
 
 .h4__selection-tile-name {
     text-align: center;
-}
-
-/* game progress component */
-.div__game-progress-wrapper {
-}
-
-.tr__game-progress-row {
-
-}
-
-.table__game-progress, 
-.td__game-progress-info,
-.td__game-progress-data {
-    border: 1px solid var(--leader-board-border-colour);
 }

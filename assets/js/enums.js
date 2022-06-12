@@ -30,7 +30,7 @@ import { requiredVariable } from './utils/index.js';
 
     /**
      * Get a finder function suitable for use in Array.find() to match a selection.
-     * @param {object|string} seeking - enum to find
+     * @param {object|string} seeking - enum or string of enum, to find
      * @param {object} classDeclaration - class declaration
      * @param {function} accessor - accessor function to get Enum objects from array elements; 
      *                              default pass through
@@ -39,7 +39,7 @@ import { requiredVariable } from './utils/index.js';
      static getFinder(seeking, classDeclaration, accessor = x => x) {
         let predicate;
         if (typeof seeking === 'string') {
-            if (seeking.startsWith(`${classDeclaration.name}.`)) {
+            if (Enum.isFullyQualifiedName(seeking, classDeclaration)) {
                 // if toString() is passed check toString()'s matches
                 predicate = element => accessor(element).toString() === seeking;
             } else {
@@ -51,6 +51,20 @@ import { requiredVariable } from './utils/index.js';
             predicate = element => accessor(element) === seeking;
         }
         return predicate;
+    }
+
+    /**
+     * Check if the specified 'name' is fully qualified i.e. of form '<Class name>.<object name>'.
+     * @param {string} name - enum to find or object containing it
+     * @param {object} classDeclaration - class declaration
+     * @returns {boolean}  true if fully qualified, otherwise false
+     */
+     static isFullyQualifiedName(name, classDeclaration) {
+        let isFullyQualified = false;
+        if (typeof name === 'string') {
+            isFullyQualified = name.startsWith(`${classDeclaration.name}.`);
+        }
+        return isFullyQualified;
     }
 }
 
@@ -171,13 +185,22 @@ import { requiredVariable } from './utils/index.js';
 
     /**
      * Get a finder function suitable for use in Array.find() to match a Selection.
-     * @param {object|string} element - element to find
+     * @param {object|string} seeking - enum or string of enum, to find
      * @param {function} accessor - accessor function to get Selection objects from array elements; 
      *                              default pass through
      * @returns {function}  finder function
      */
-    static getFinder(element, accessor = x => x) {
-        return Enum.getFinder(element, Selection, accessor);
+    static getFinder(seeking, accessor = x => x) {
+        return Enum.getFinder(seeking, Selection, accessor);
+    }
+
+    /**
+     * Check if the specified 'name' is fully qualified i.e. of form '<Class name>.<object name>'.
+     * @param {string} name - enum to find or object containing it
+     * @returns {boolean}  true if fully qualified, otherwise false
+     */
+     static isFullyQualifiedName(name) {
+        return Enum.isFullyQualifiedName(name, Selection);
     }
 }
 

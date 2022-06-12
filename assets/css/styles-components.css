@@ -1,0 +1,84 @@
+@import 'styles-base.css';
+
+/* custom properties */
+:root {
+	/* game progress component */
+	--game-progress-border-colour: #333;
+
+	/* leader board component */
+	--leader-board-border-colour: #333;
+    --leader-board-header-colour: #333;
+    --leader-board-header-text-colour: #fff;
+
+	/* player selection tile */
+	--var-player-selection-tile-margin: calc(2 * var(--std-margin-between));
+    --var-player-selection-tile-size: 80px;
+
+}
+
+
+/* game progress component */
+.div__game-progress-wrapper {
+}
+
+.tr__game-progress-row {
+
+}
+
+.table__game-progress, 
+.td__game-progress-info,
+.td__game-progress-data {
+    border: 1px solid var(--game-progress-border-colour);
+}
+
+/* leader board component */
+.div__leader-board-wrapper {
+}
+
+.tr__player-score-row {
+
+}
+
+.table__leader-board, 
+.td__player-name,
+.td__player-score {
+    border: 1px solid var(--leader-board-border-colour);
+}
+
+.thead__leader-board {
+    background-color: var(--leader-board-header-colour);
+    color: var(--leader-board-header-text-colour);
+}
+
+
+/* player selection tile */
+.div__player-selection-tile-wrapper {
+    margin: var(--var-player-selection-tile-margin);
+    border: calc(var(--std-margin-between) / 2) solid var(--dark-blue);
+    border-radius: calc(var(--var-player-selection-tile-size) * 0.2);
+    padding: var(--std-margin-between);
+}
+
+.div__player-selection-tile-wrapper:hover {
+    margin: var(--var-player-selection-tile-margin);
+    border: calc(var(--std-margin-between) / 2) solid var(--dark-blue);
+    border-radius: calc(var(--var-player-selection-tile-size) * 0.2);
+    padding: var(--std-margin-between);
+}
+
+.img__player-selection-tile-img {
+    height: var(--var-player-selection-tile-size);
+    width: var(--var-player-selection-tile-size);
+}
+
+.h3__player-selection-tile-banner {
+    text-align: center;
+}
+
+.h4__player-selection-tile-name {
+    text-align: center;
+}
+
+.h4__player-selection-tile-player-name {
+    text-align: center;
+}

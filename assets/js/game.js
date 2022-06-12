@@ -306,12 +306,10 @@ class CountsTemplate {
     }
 
     /** Array of game rules
-     * @type {Array}
-     * @type {Rule} */
+     * @type {Array[Rule]} */
     rules = [];
     /** Array of possible selections
-     * @type {Array}
-     * @type {Selection} */
+     * @type {Array[Selection]} */
     possibleSelections = [];
 
     /** Finalise object to prepare for freezing. */
@@ -356,12 +354,19 @@ class CountsTemplate {
 
     /**
      * Get selection for specified key.
-     * @param {GameKey|string} key - GameKey or key associated with selection
+     * @param {GameKey|string} key - GameKey, key associated with selection or Selection string
      * @returns {Selection}  selection or Selection.None if invalid key
      */
     getSelection(key) {
         // match the GameKey object or the key string
-        let matcher = key instanceof GameKey ? sel => sel.key === key : sel => sel.key.matches(key);
+        let matcher;
+        if (key instanceof GameKey) {
+            matcher = sel => sel.key === key;
+        } else {
+            // string can be key or selection name
+            matcher = Selection.isFullyQualifiedName(key) ? 
+                Selection.getFinder(key) : sel => sel.key.matches(key);
+        }
         let selection = this.possibleSelections.find(matcher);
         return selection ? selection : Selection.None;
     }

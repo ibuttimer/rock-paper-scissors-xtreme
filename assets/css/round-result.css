@@ -1,0 +1,43 @@
+@import 'styles-base.css';
+
+/* custom properties */
+:root {
+    --selection-grid-auto-flow: column;
+}
+
+.section__round-result {
+    display: grid;
+	grid-auto-columns: max-content;
+	grid-auto-rows: max-content;
+	grid-auto-flow: var(--selection-grid-auto-flow);
+	grid-template-rows: auto auto;
+	grid-template-columns: auto auto;
+}
+
+.div__player-selection-wrapper {
+	
+}
+
+.h3_round-result-text {
+	text-align: center;
+}
+
+.p__elimination-explanation {
+	text-align: center;
+}
+
+.div__round-result-next-button-wrapper {
+	
+}
+
+.button__round-result-done {
+
+}
+
+.button__round-result-next-round {
+	
+}
+
+.button__round-result-next-game {
+	
+}
