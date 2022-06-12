@@ -1,5 +1,7 @@
-/* Application global constants */
-
+/**
+    Application global constants.
+    @author Ian Buttimer
+*/
 export const GAME_NAME = 'Rock Paper Scissors';
 export const BASIC_VARIANT_NAME = 'Basic';
 export const BIGBANG_VARIANT_NAME = 'Big Bang';

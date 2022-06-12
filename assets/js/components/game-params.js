@@ -1,10 +1,14 @@
+/**
+    Game parameters view.
+    @author Ian Buttimer
+*/
 import { 
     MIN_PLAYERS, MAX_PLAYERS, DEFAULT_PLAYERS, MIN_ROBOTS, MAX_ROBOTS, DEFAULT_ROBOTS,
     MIN_GAMES, DEFAULT_GAMES, MAX_GAMES, PLAY_URL, log 
 } from '../globals.js';
 import { Player } from '../player.js';
 import { default as titleHeader } from './title.js'
-import { generateId, optionsList, accumulator } from '../utils.js';
+import { generateId, optionsList, accumulator } from '../utils/index.js';
 import { View, setView } from '../views.js'
 
 

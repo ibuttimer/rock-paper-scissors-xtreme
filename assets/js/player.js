@@ -3,7 +3,7 @@
     @author Ian Buttimer
 */
 import { GameKey, Selection, GameMode } from './enums.js'
-import { variableCheck, requiredVariable } from './utils.js';
+import { variableCheck, requiredVariable } from './utils/index.js';
 
 /**
  * Class representing a player.

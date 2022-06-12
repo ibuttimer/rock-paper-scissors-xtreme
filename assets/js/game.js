@@ -3,7 +3,7 @@
     @author Ian Buttimer
 */
 
-import { variableCheck, requiredVariable, gameParticipantsCheck, mapToString } from './utils.js';
+import { variableCheck, requiredVariable, gameParticipantsCheck, mapToString } from './utils/index.js';
 import { Player, Robot } from './player.js';
 import { Enum, GameKey, Selection, GameMode, GameStatus, GameEvent, ResultCode } from './enums.js';
 

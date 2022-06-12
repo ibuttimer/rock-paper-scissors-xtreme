@@ -1,5 +1,9 @@
+/**
+    Game utility components.
+    @author Ian Buttimer
+*/
 import { GAME_NAME } from "../globals.js";
-import { getVariantName } from "../utils.js";
+import { getVariantName } from "../utils/index.js";
 
 /**
  * Page title component

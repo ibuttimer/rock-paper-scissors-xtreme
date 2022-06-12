@@ -5,8 +5,8 @@
 import { 
     MIN_PLAYERS, MAX_PLAYERS, MIN_ROBOTS, MAX_ROBOTS, MIN_PARTICIPANTS,
     BASIC_VARIANT_NAME, BIGBANG_VARIANT_NAME, XTREME_VARIANT_NAME
-} from './globals.js'
-import { Game, GameVariant } from "./game.js";
+} from '../globals.js'
+import { Game, GameVariant } from "../game.js";
 
 /**
  * Check if a variable is null or undefined.

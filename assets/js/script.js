@@ -1,3 +1,7 @@
+/**
+    Application entry point script.
+    @author Ian Buttimer
+*/
 import { ENABLE_LOG, log } from './globals.js';
 import { GameVariant, Game } from './game.js';
 import { default as GameState } from './game-state.js';

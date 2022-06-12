@@ -1,7 +1,11 @@
+/**
+    Game play view.
+    @author Ian Buttimer
+*/
 import { ROUND_RESULT_URL, log } from '../globals.js';
 import { ResultCode, GameKey } from "../enums.js";
 import { default as titleHeader, currentPlayerNameHeader } from './title.js'
-import { generateId, optionsList, accumulator } from '../utils.js';
+import { generateId, optionsList, accumulator } from '../utils/index.js';
 import { View, setView } from '../views.js'
 
 

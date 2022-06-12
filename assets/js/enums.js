@@ -3,7 +3,7 @@
     Based on examples from https://masteringjs.io/tutorials/fundamentals/enum
     @author Ian Buttimer
 */
-import { requiredVariable } from './utils.js';
+import { requiredVariable } from './utils/index.js';
 
 /**
  * Enum representing all possible game selections.

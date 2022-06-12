@@ -1,3 +1,7 @@
+/**
+    Game selection menu view.
+    @author Ian Buttimer
+*/
 import { 
     GAME_NAME, BASIC_URL, BASIC_VARIANT_NAME, BIGBANG_URL, BIGBANG_VARIANT_NAME, 
     XTREME_URL, XTREME_VARIANT_NAME, IMG_ASSETS_BASE_URL, log 

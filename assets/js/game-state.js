@@ -1,3 +1,7 @@
+/**
+    Game state class.
+    @author Ian Buttimer
+*/
 import { DEFAULT_PLAYERS, DEFAULT_ROBOTS, DEFAULT_GAMES, IMG_ASSETS_BASE_URL } from './globals.js'
 import { Game, GameVariant } from './game.js'
 import { Enum, GameKey, Selection, GameMode, GameStatus, GameEvent, ResultCode } from './enums.js';

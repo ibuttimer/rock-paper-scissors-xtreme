@@ -1,3 +1,7 @@
+/**
+    Application views routing functions.
+    @author Ian Buttimer
+*/
 import { 
     ROOT_URL, BASIC_URL, BIGBANG_URL, XTREME_URL, PLAY_URL
 } from './globals.js';
