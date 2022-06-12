@@ -7,7 +7,7 @@ import {
     XTREME_URL, XTREME_VARIANT_NAME, IMG_ASSETS_BASE_URL, log 
 } from '../globals.js';
 import { GameVariant } from '../game.js';
-import { View, setView } from '../views.js'
+import { View, setView } from '../routing.js'
 
 
 // Parameters for game select menu options
@@ -31,7 +31,7 @@ const gameSelects = gameParams.map(params => {
  * Generate the game select menu.
  * @returns {string} html for menu
  */
-export default function getGameSelectMenu() {
+export default function gameSelectMenu() {
     return `<h1 class="h1__main-title">${GAME_NAME}</h1>
             <h2 class="h2__sub-title">Select game</h2>
             <section class="section__select-game">

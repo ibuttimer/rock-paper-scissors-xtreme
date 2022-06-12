@@ -6,9 +6,9 @@ import { ROOT_URL, PLAY_URL, log } from '../globals.js';
 import { ResultCode } from "../enums.js";
 import { 
     titleHeader, gameProgress, leaderBoard, playerSelectionTile, getPlayerSelectionTileParam
-} from './index.js'
+} from '../components/index.js'
 import { generateId, accumulator } from '../utils/index.js';
-import { View, setView } from '../views.js'
+import { View, setView } from '../routing.js'
 
 
 const continueButtonId = 'continue-button'
@@ -44,7 +44,7 @@ const resultTexts = new Map([
  * @param {GameState} gameState - game state object
  * @returns {string} html for view
  */
-export default function getRoundResultView(gameState) {
+export default function roundResultView(gameState) {
     const roundResult = gameState.roundResult;
     return `${titleHeader(gameState)}
             ${getResultText(roundResult)}

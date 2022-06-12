@@ -6,7 +6,7 @@ import { ENABLE_LOG, log } from './globals.js';
 import { GameVariant, Game } from './game.js';
 import { default as GameState } from './game-state.js';
 import { GameKey } from './enums.js'
-import { View, setView } from './views.js'
+import { View, setView } from './routing.js'
 
 
 /* Wait for the DOM to finish loading before running the game

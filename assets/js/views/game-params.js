@@ -7,9 +7,9 @@ import {
     MIN_GAMES, DEFAULT_GAMES, MAX_GAMES, PLAY_URL, log 
 } from '../globals.js';
 import { Player } from '../player.js';
-import { default as titleHeader } from './title.js'
+import { default as titleHeader } from '../components/title.js'
 import { generateId, optionsList, accumulator } from '../utils/index.js';
-import { View, setView } from '../views.js'
+import { View, setView } from '../routing.js'
 
 
 // Parameters for game parameters
@@ -51,7 +51,7 @@ let wip = {
  * @param {GameState} gameState - game state object
  * @returns {string} html game parameters view
  */
-export default function getGameParams(gameState) {
+export default function gameParamsView(gameState) {
 
     // set initial working values
     wip.numPlayers = gameState.game.numPlayers;

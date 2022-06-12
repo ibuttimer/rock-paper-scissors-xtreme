@@ -7,9 +7,9 @@ import {
 } from './globals.js';
 import { Enum } from './enums.js'
 import { 
-    getGameSelectMenu, setMenuHandler, getGameParams, setParamsHandler,
-    getGamePlayView, setPlayHandler, getRoundResultView, setRoundResultHandler
-} from './components/index.js'
+    gameSelectMenu, setMenuHandler, gameParamsView, setParamsHandler,
+    gamePlayView, setPlayHandler, roundResultView, setRoundResultHandler
+} from './views/index.js'
 
 /**
  * Enum representing views.
@@ -70,21 +70,21 @@ export function setView(view, gameState) {
     }
     switch (view) {
         case View.GameMenu:
-            innerHTML = getGameSelectMenu();
+            innerHTML = gameSelectMenu();
             setClickHandler = setMenuHandler;
             break;
         case View.BasicGame:
         case View.BigBangGame:
         case View.XtremeGame:
-            innerHTML = getGameParams(gameState);
+            innerHTML = gameParamsView(gameState);
             setClickHandler = setParamsHandler;
             break;
         case View.Play:
-            innerHTML = getGamePlayView(gameState);
+            innerHTML = gamePlayView(gameState);
             setClickHandler = setPlayHandler;
             break;
         case View.RoundResult:
-            innerHTML = getRoundResultView(gameState);
+            innerHTML = roundResultView(gameState);
             setClickHandler = setRoundResultHandler;
             break;
         default:

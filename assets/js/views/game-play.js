@@ -4,9 +4,9 @@
 */
 import { ROUND_RESULT_URL, log } from '../globals.js';
 import { ResultCode, GameKey } from "../enums.js";
-import { titleHeader, currentPlayerNameHeader, gameProgress } from './index.js'
+import { titleHeader, currentPlayerNameHeader, gameProgress } from '../components/index.js'
 import { generateId, optionsList, accumulator } from '../utils/index.js';
-import { View, setView } from '../views.js'
+import { View, setView } from '../routing.js'
 
 
 const currentPlayerHeaderId = 'current-player-header'
@@ -16,7 +16,7 @@ const currentPlayerHeaderId = 'current-player-header'
  * @param {GameState} gameState - game state object
  * @returns {string} html for view
  */
- export default function getGamePlayView(gameState) {
+ export default function gamePlayView(gameState) {
     return `${titleHeader(gameState)}
             ${gameProgress(gameState.progressMap)}
             <div id="${currentPlayerHeaderId}">
