@@ -74,8 +74,11 @@ import { requiredVariable } from './utils/index.js';
  export class GameKey extends Enum {
     // freeze game keys so can't be modified
     static Ignore = Object.freeze(new GameKey('Ignore'));
+    // special combination keys; Alt + game key
     static NewGame = Object.freeze(new GameKey('NewGame', 'n'));
-    static Random = Object.freeze(new GameKey('Random', '#'));
+    // general game control keys
+    static Next = Object.freeze(new GameKey('Next', 'n'));
+    // standard selection keys
     static Rock = Object.freeze(new GameKey('Rock', 'r'));
     static Paper = Object.freeze(new GameKey('Paper', 'p'));
     static Scissors = Object.freeze(new GameKey('Scissors', 's'));
@@ -85,10 +88,15 @@ import { requiredVariable } from './utils/index.js';
     static Batman = Object.freeze(new GameKey('Batman', 'b'));
     static Wizard = Object.freeze(new GameKey('Wizard', 'w'));
     static Glock = Object.freeze(new GameKey('Glock', 'g'));
+    // TODO implement random selection for player
+    static Random = Object.freeze(new GameKey('Random', '#'));
 
     static SelectionKeys = [
         GameKey.Random, GameKey.Rock, GameKey.Paper, GameKey.Scissors, GameKey.Lizard,
         GameKey.Spock, GameKey.Spiderman, GameKey.Batman, GameKey.Wizard, GameKey.Glock
+    ];
+    static ControlKeys = [
+        GameKey.Next
     ];
 
     /**
@@ -120,6 +128,7 @@ import { requiredVariable } from './utils/index.js';
         let gameKey = GameKey.Ignore;
 
         if (event.altKey) {
+            // special keys combinations; Alt + game key
             switch (keyName) {
                 case GameKey.NewGame.key:   // new game
                     gameKey = GameKey.NewGame;
@@ -128,7 +137,12 @@ import { requiredVariable } from './utils/index.js';
                     break;
             }
         } else {
-            let key = GameKey.SelectionKeys.find(k => k.key === keyName);
+            // look for control key
+            let key = GameKey.ControlKeys.find(k => k.key === keyName);
+            if (!key) {
+                // look for selection key
+                key = GameKey.SelectionKeys.find(k => k.key === keyName);
+            }
             if (key) {
                 gameKey = key;
             }

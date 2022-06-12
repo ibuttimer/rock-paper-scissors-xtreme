@@ -17,6 +17,9 @@ const currentPlayerHeaderId = 'current-player-header'
  * @returns {string} html for view
  */
  export default function gamePlayView(gameState) {
+
+    gameState.selectionHandledCallback = handleSelectionCallback;
+
     return `${titleHeader(gameState)}
             ${gameProgress(gameState.progressMap)}
             <div id="${currentPlayerHeaderId}">
@@ -55,40 +58,17 @@ function getSelectable(selections) {
 }
 
 /**
- * Handle selection made by player
- * @param {Selection|GameKey|string} selection - Selection or key associated with selection
+ * Handle in progress callback following selection made by player
  * @param {GameState} gameState - game state object
+ * @param {PlayEventResult} eventResult - result of handling event
  */
-function handleSelection(selection, gameState) {
-    const eventResult = gameState.game.makePlayEvent(selection);
+export function handleSelectionCallback(gameState, eventResult) {
     if (eventResult.roundInProgress) {
         // round in progress, update display for next player
         const currentPlayerHeaderElement = document.getElementById(currentPlayerHeaderId);
         currentPlayerHeaderElement.innerHTML = currentPlayerNameHeader(gameState);
     } else  {
         // round finished
-        const gameResult = eventResult.gameResult;
-        gameState.roundResult = gameResult;
-
-        switch (gameResult.resultCode) {
-            case ResultCode.Winner:
-                // update score
-                let player = gameResult.data;
-                gameState.incPlayerScore(player);
-
-                // check if best of winner
-                const bestOfWinner = gameState.haveBestOfWinner();
-                if (bestOfWinner.soleWinner) {
-                    // single winner, match over
-                    gameResult.resultCode = ResultCode.MatchOver;
-                } else if (bestOfWinner.multiWinner) {
-                    throw new Error(`Unexpected multi-winner: ${bestOfWinner.count}`);
-                }
-                break;
-            default:
-                break;
-        }
-
         setView(ROUND_RESULT_URL, gameState);
     }
 }
@@ -112,8 +92,6 @@ export function setPlayHandler(gameState) {
  function gamePlayHandler(event, gameState) {
     const selection = event.currentTarget.dataset.selection;
     if (selection) {
-        if (gameState.game.variant.isValidSelection(selection)) {
-            handleSelection(selection, gameState);
-        }
+        gameState.handleSelection(selection)
     }
 }

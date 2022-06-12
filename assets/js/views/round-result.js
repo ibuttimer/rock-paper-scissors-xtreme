@@ -154,33 +154,6 @@ function getContinueButton(roundResult) {
 export function setRoundResultHandler(gameState) {
     const button = document.getElementById(continueButtonId);
     if (button) {
-        button.addEventListener('click', (event) => roundResultHandler(event, gameState), false);
+        button.addEventListener('click', (event) => gameState.handleRoundResult(), false);
     }
-}
-
-/**
- * Handle round result
- * @param {Event} event - event object
- * @param {GameState} gameState - game state object
- */
- function roundResultHandler(event, gameState) {
-    let url = PLAY_URL; // default url to continue
-    const resultCode = gameState.roundResult.resultCode;
-
-    switch (resultCode) {
-        case ResultCode.Eliminate:
-        case ResultCode.PlayAgain:
-            gameState.nextRound();
-            break;
-        case ResultCode.Winner:
-            gameState.nextGame();
-            break;
-        case ResultCode.MatchOver:
-            gameState.resetGame();
-            url = ROOT_URL;
-            break;
-        default:
-            throw new Error(`Unknown ResultCode: ${resultCode}`);
-    }
-    setView(url, gameState);
 }
