@@ -34,7 +34,7 @@ const gameSelects = gameParams.map(params => {
 export default function gameSelectMenu() {
     return `<h1 class="h1__main-title">${GAME_NAME}</h1>
             <h2 class="h2__sub-title">Select game</h2>
-            <section class="section__select-game">
+            <section class="section__select-variant">
                 ${gameSelects.reduce(
                     (innerHtml, params) => innerHtml + getGameSelect(params),
                     ''
@@ -63,8 +63,8 @@ function gameSelectParams(url, variant, tile) {
  * @returns {string} html for game select option
  */
 function getGameSelect(params) {
-    return `<article>
-                <button type="button" class="button__game-select" data-url="${params.url}" 
+    return `<article class="article__variant-select">
+                <button type="button" class="button__variant-select" data-url="${params.url}" 
                         aria-label="select ${params.variant.name} game." rel="next">
                     ${getGameTile(params.tile)}
                 </button>
@@ -92,9 +92,9 @@ function gameTileParams(name, src, alt) {
  * @returns {string} html for game select option
  */
 function getGameTile(params) {
-    return `<div class="div__game-tile-wrapper">
-                <img class="img__game-tile-img" src="${params.src}" alt="${params.alt}" />
-                <h3 class="h3__game-tile-name">${params.name}</h3>
+    return `<div class="div__variant-tile-wrapper">
+                <img class="img__variant-tile-img" src="${params.src}" alt="${params.alt}" />
+                <h3 class="h3__variant-tile-name">${params.name}</h3>
             </div>`
 }
 
