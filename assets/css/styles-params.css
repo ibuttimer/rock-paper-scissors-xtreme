@@ -131,3 +131,12 @@
     border-radius: 5px;
     padding: 6px;
 }
+
+.div__play {
+    text-align: center;
+    margin: var(--var-input-margin) 0 var(--var-input-margin);
+}
+
+.button__play {
+    width: 200px;
+}

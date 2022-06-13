@@ -70,3 +70,34 @@ body {
 .h1__main-title, .h2__sub-title, .h3__sub-title {
     text-align: center;
 }
+
+/* based on css from https://developer.mozilla.org/en-US/docs/Web/HTML/Element/button */
+.debossable {
+    background-image: linear-gradient(to top left,
+                                      rgba(0, 0, 0, .1),
+                                      rgba(0, 0, 0, .1) 30%,
+                                      rgba(0, 0, 0, 0));
+    box-shadow: inset 2px 2px 3px rgba(255, 255, 255, 0.6),
+                inset -2px -2px 3px rgba(0, 0, 0, .6);
+}
+
+.debossable:active {
+    box-shadow: inset -2px -2px 3px rgba(255, 255, 255, .6),
+                inset 2px 2px 3px rgba(0, 0, 0, .6);
+}
+
+.button__clickable {
+    border: 0;
+    line-height: 2.5;
+    padding: 0 20px;
+    font-size: 1rem;
+    text-align: center;
+    color: #fff;
+    text-shadow: 1px 1px 1px #000;
+    border-radius: 10px;
+    background-color: orange;
+}
+
+.button__clickable:hover {
+    background-image: none;
+}

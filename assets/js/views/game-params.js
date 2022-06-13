@@ -77,7 +77,7 @@ export default function gameParamsView(gameState) {
                 )}`
             )}
             <div class="div__play">
-                <button type='button' class='button__play' id=${playButtonId} aria-label="play game." rel="next">
+                <button type='button' class='button__play button__clickable debossable' id=${playButtonId} aria-label="play game." rel="next">
                     Play
                 </button>
             </div>`;
