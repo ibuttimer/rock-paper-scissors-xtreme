@@ -21,8 +21,10 @@
 
     --heading-font: 'Shojumaru', cursive;
     --heading-font-weight: 400;
+    --heading-bold-font-weight: 600;
     --paragraph-font: 'Sofadi One', cursive;
     --paragraph-font-weight: 400;
+    --paragraph-bold-font-weight: 600;
 
     --std-margin-horz: 7.5%;
     --std-margin-vert: 5px;

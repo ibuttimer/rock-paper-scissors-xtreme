@@ -59,21 +59,23 @@ export default function gameParamsView(gameState) {
     wip.numRobots = gameState.game.numRobots;
 
     return `${titleHeader(gameState)}
-            <div class="div__num-of-game-participants">
-                ${getNumPlayers(numPlayersInfo)}
-                ${getNumPlayers(numRobotsInfo)}
-            </div>
-            <div class="div__num-games-wrapper">
-                ${getNumOfGames('num-of-games', DEFAULT_GAMES, numGameOptions)}
-            </div>
-            <div class="div__player-names">
-                <div class="div__player-names-title">
-                    <p>Name</p> 
-                </div>
-                <div class="div__player-name-group-wrapper" id=${playerNameGroupId}>
-                    ${playerNames()}
-                </div>
-            </div>
+            ${divWrapper('div__num-of-game-participants', 
+                `${getNumPlayers(numPlayersInfo)}
+                ${getNumPlayers(numRobotsInfo)}`
+            )}
+            ${divWrapper('div__num-games-wrapper', 
+                getNumOfGames('num-of-games', DEFAULT_GAMES, numGameOptions)
+            )}
+            ${divWrapper('div__player-names', 
+                `${divWrapper('div__player-name-wrapper', 
+                    `<p/>
+                    ${divWrapper('div__player-names-title', 
+                                `<p>Name</p>`)}`
+                )}
+                ${divWrapper('div__player-name-group-wrapper', 
+                    playerNames(), {id: playerNameGroupId}
+                )}`
+            )}
             <div class="div__play">
                 <button type='button' class='button__play' id=${playButtonId} aria-label="play game." rel="next">
                     Play
@@ -330,10 +332,39 @@ function playerNames() {
     const divKey = `${id}-div-key`;
     const playerKey = `${id}-key`;
 
-    return `<div class='div__player-name-wrapper' key=${divKey}>
-                <label for="${id}">${title}:</label>
-                <input type="text" id="${id}" key="${id}" name="${id}" value="${defaultValue}" />
-            </div>`;
+    return divWrapper('div__player-name-wrapper', 
+        `<label for="${id}">${title}:</label>
+         <input type="text" id="${id}" key="${id}" name="${id}" value="${defaultValue}" 
+                    class="input__player-name"/>`, 
+        { key: divKey}
+    );
+}
+
+/**
+ * Wrap a div element around the specified html.
+ * @returns {string} html for wrapped entity
+ * @see {@link htmlWrapper}
+ */
+const divWrapper = (className, innerHtml, attribs = {}, selfClosing = false) => {
+    return htmlWrapper('div', className, innerHtml, attribs, selfClosing);
+}
+
+/**
+ * Wrap a div element around the specified html.
+ * @param {string} tag - tag name of element
+ * @param {string} className - name of class to give div
+ * @param {string} innerHTML - html to wrap
+ * @param {object} attribs - object of attributes; keys and values
+ * @returns {string} html for wrapped entity
+ */
+const htmlWrapper = (tag, className, innerHtml, attribs = {}, selfClosing = false) => {
+    const attribString = Object.entries(attribs)
+            .map(([key, value]) => `${key}="${value}" `)
+            .reduce(accumulator, '');
+    return `<${tag} class="${className}" ${attribString} ${selfClosing ? '/' : ''}>
+                ${selfClosing ? '' : `${innerHtml}
+            </${tag}>`}        
+    `;
 }
 
 /**
