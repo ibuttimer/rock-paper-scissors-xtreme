@@ -63,7 +63,7 @@ export default function gameParamsView(gameState) {
                 ${getNumPlayers(numPlayersInfo)}
                 ${getNumPlayers(numRobotsInfo)}
             </div>
-            <div class="div__num-of-games">
+            <div class="div__num-games-wrapper">
                 ${getNumOfGames('num-of-games', DEFAULT_GAMES, numGameOptions)}
             </div>
             <div class="div__player-names">
@@ -245,14 +245,9 @@ const generateSelectId = (option, id, index) => option.selectId ? option.selectI
     function selectionsList() {
         return options.map((x, index) => {
                 const id = generateRadioId(x);
-                const optionKey = `num-games-option-${index}`;
                 // check if default value is option's default
                 const checked = defaultValue === x.optionDefault;
 
-                const openDiv = `<div class='div__num-games-option-wrapper' key=${optionKey}>`;
-                const closeDiv = '</div>';
-                const radioInput = `<input type="radio" id=${id} key=${id} name=${group} value=${x.optionDefault} ${checked ? 'checked' : ''}/>
-                                    <label for=${id}>${x.title}</label>`;
                 let selectElement;
                 if (x.selections) {
                     // a radio option with a select
@@ -264,17 +259,16 @@ const generateSelectId = (option, id, index) => option.selectId ? option.selectI
                     // no select, just a radio option
                     selectElement = '';
                 }
+                const radioInput = `<input type="radio" id=${id} key=${id} name=${group} value=${x.optionDefault} ${checked ? 'checked' : ''}/>
+                                    <label for=${id}>
+                                        ${x.title} ${selectElement}
+                                    </label>`;
 
-                return `${openDiv}
-                        ${radioInput}
-                        ${selectElement}
-                        ${closeDiv}`;
+                return `${radioInput}`;
             }).reduce(accumulator, '');
     }
  
-    return `<div class='div__num-games-wrapper'>
-                ${selectionsList()}
-            </div>`;
+    return `${selectionsList()}`;
 }
 
 /**
