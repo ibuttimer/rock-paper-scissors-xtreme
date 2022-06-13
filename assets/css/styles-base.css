@@ -15,6 +15,10 @@
     --yellow-text: #000;
     --orange-text: #fff;
 
+    /* https://htmlcolorcodes.com/color-picker/ 
+        Color shades, tints and tones are created by adding black, white and gray respectively to a chosen color. */
+    --light-blue-tone: #96D3FF;
+
     --heading-font: 'Shojumaru', cursive;
     --heading-font-weight: 400;
     --paragraph-font: 'Sofadi One', cursive;

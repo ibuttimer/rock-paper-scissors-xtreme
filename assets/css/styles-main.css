@@ -21,24 +21,30 @@
 
 .div__variant-tile-wrapper {
     margin: var(--var-variant-tile-margin);
-    border: calc(var(--std-margin-between) / 2) solid var(--dark-blue);
+    border: calc(var(--std-margin-between) / 4) solid var(--dark-blue);
     border-radius: calc(var(--var-variant-tile-size) * 0.2);
     padding: var(--std-margin-between);
 
     cursor: pointer;
-    box-shadow: var(--var-variant-button-shadow-size) var(--var-variant-button-shadow-size) var(--var-variant-button-shadow-colour);
+    background-color: var(--light-blue);
+
+    /* https://developer.mozilla.org/en-US/docs/Web/HTML/Element/button */
+    box-shadow: inset 2px 2px 3px rgba(255, 255, 255, .6),
+                inset -2px -2px 3px rgba(0, 0, 0, .6);
+    background-image: linear-gradient(to top left,
+                                    rgba(0, 0, 0, .1),
+                                    rgba(0, 0, 0, .1) 30%,
+                                    rgba(0, 0, 0, 0));
 }
 
 .div__variant-tile-wrapper:hover {
-    background-color: rgb(241, 241, 241);
+    background-color: var(--light-blue-tone);
 }
 
-/* pressed effect based on https://www.w3schools.com/howto/howto_css_animate_buttons.asp */
 .div__variant-tile-wrapper:active {
     background-color: var(--yellow);
-    box-shadow: var(--var-variant-button-active-shadow-size) var(--var-variant-button-active-shadow-size) var(--var-variant-button-shadow-colour);
-    transform: translateY(calc(var(--var-variant-button-shadow-size) - var(--var-variant-button-active-shadow-size)));
-  }
+    transform: scale(0.99, 0.99);
+}
 
 .img__variant-tile-img {
     height: var(--var-variant-tile-size);
