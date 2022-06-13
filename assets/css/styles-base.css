@@ -17,7 +17,8 @@
 
     /* https://htmlcolorcodes.com/color-picker/ 
         Color shades, tints and tones are created by adding black, white and gray respectively to a chosen color. */
-    --light-blue-tone: #96D3FF;
+    --light-blue-tone-1: #96D3FF;
+    --light-blue-tone-2: #ABDBFF;
 
     --heading-font: 'Shojumaru', cursive;
     --heading-font-weight: 400;
@@ -100,4 +101,28 @@ body {
 
 .button__clickable:hover {
     background-image: none;
+}
+
+.color__variant_basic {
+    color: var(--light-blue);
+}
+
+.color__variant_bigbang {
+    color: var(--yellow);
+}
+
+.color__variant_xtreme {
+    color: var(--orange);
+}
+
+.background-color__variant_basic {
+    background-color: var(--light-blue);
+}
+
+.background-color__variant_bigbang {
+    background-color: var(--yellow);
+}
+
+.background-color__variant_xtreme {
+    background-color: var(--orange);
 }

@@ -8,6 +8,7 @@ import {
 } from '../globals.js';
 import { GameVariant } from '../game.js';
 import { View, setView } from '../routing.js'
+import { getVariantInfo } from '../utils/index.js'
 
 
 // Parameters for game select menu options
@@ -21,10 +22,15 @@ const gameParams = [
     [XTREME_URL, GameVariant.Xtreme, XTREME_VARIANT_NAME, 'xtreme.png'],
 ]
 const gameSelects = gameParams.map(params => {
-    return gameSelectParams(params[URL_IDX], params[VARIANT_IDX], 
-                gameTileParams(params[VARIANT_NAME_IDX], `${IMG_ASSETS_BASE_URL}${params[VARIANT_IMG_IDX]}`, 
-                                `${params[VARIANT_IDX].name} game image`))
-
+    const info = getVariantInfo(params[VARIANT_IDX]);
+    return gameSelectParams(
+                params[URL_IDX], 
+                params[VARIANT_IDX], 
+                gameTileParams(params[VARIANT_NAME_IDX], 
+                                `${IMG_ASSETS_BASE_URL}${params[VARIANT_IMG_IDX]}`, 
+                                `${params[VARIANT_IDX].name} game image`, 
+                                info.css)
+            );
 })
 
 /**
@@ -76,13 +82,15 @@ function getGameSelect(params) {
  * @param {string} name - name of game variant
  * @param {string} src - image source
  * @param {string} alt - image alt text
+ * @param {object} css - object with variant specific css class names; key is property and value is class
  * @returns {object}
  */
-function gameTileParams(name, src, alt) {
+function gameTileParams(name, src, alt, css) {
     return {
         name: name,
         src: src,
-        alt: alt
+        alt: alt,
+        css: css
     }
 }
 
@@ -92,7 +100,7 @@ function gameTileParams(name, src, alt) {
  * @returns {string} html for game select option
  */
 function getGameTile(params) {
-    return `<div class="div__variant-tile-wrapper">
+    return `<div class="div__variant-tile-wrapper debossable ${params.css.background_color}">
                 <img class="img__variant-tile-img" src="${params.src}" alt="${params.alt}" />
                 <h3 class="h3__variant-tile-name">${params.name}</h3>
             </div>`

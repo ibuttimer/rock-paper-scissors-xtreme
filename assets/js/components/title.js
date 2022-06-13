@@ -3,7 +3,7 @@
     @author Ian Buttimer
 */
 import { GAME_NAME } from "../globals.js";
-import { getVariantName } from "../utils/index.js";
+import { getVariantInfo } from "../utils/index.js";
 
 /**
  * Page title component
@@ -11,7 +11,8 @@ import { getVariantName } from "../utils/index.js";
  * @returns {string} html for title component
  */
 export default function titleHeader(gameState) {
-    return `<h1 class="h1__main-title">${GAME_NAME} ${getVariantName(gameState.game)}</h1>`;
+    const variant = getVariantInfo(gameState.game);
+    return `<h1 class="h1__main-title">${GAME_NAME} <span class="${variant.css.color}">${variant.name}</span></h1>`;
 }
 
 /**

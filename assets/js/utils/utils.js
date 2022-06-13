@@ -85,11 +85,16 @@ export function mapToString(map, open = '[', close = ']', join = ':', separator 
 }
 
 /**
- * Get the display name for the game variant.
+ * Get the display information for the game variant.
  * @param {Game|GameVariant} game - game or game variant object
+ * @returns {object} object of the form {
+ *                      name: {variant name}
+ *                      css: {css class}
+ *                   }
  */
- export function getVariantName(game) {
+ export function getVariantInfo(game) {
     let name;
+    let variant;
     if (game instanceof Game) {
         game = game.variant;
     } else if (!(game instanceof GameVariant)) {
@@ -98,17 +103,27 @@ export function mapToString(map, open = '[', close = ']', join = ':', separator 
     switch (game) {
         case GameVariant.Basic:
             name = BASIC_VARIANT_NAME;
+            variant ='variant_basic';
             break;
         case GameVariant.BigBang:
             name = BIGBANG_VARIANT_NAME;
+            variant = 'variant_bigbang';
             break;
         case GameVariant.Xtreme:
             name = XTREME_VARIANT_NAME;
+            variant = 'variant_xtreme';
             break;
         default:
             throw new Error(`Unknown variant ${game.variant}`);
     }
-    return name;
+    // css classes have naming convention '<css property>__<variant>'
+    return {
+        name: name,
+        css: {
+            color: `color__${variant}`,
+            background_color: `background-color__${variant}`,
+        }
+    };
 }
 
 /**

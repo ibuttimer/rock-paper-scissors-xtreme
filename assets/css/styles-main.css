@@ -26,24 +26,6 @@
     padding: var(--std-margin-between);
 
     cursor: pointer;
-    background-color: var(--light-blue);
-
-    /* https://developer.mozilla.org/en-US/docs/Web/HTML/Element/button */
-    box-shadow: inset 2px 2px 3px rgba(255, 255, 255, .6),
-                inset -2px -2px 3px rgba(0, 0, 0, .6);
-    background-image: linear-gradient(to top left,
-                                    rgba(0, 0, 0, .1),
-                                    rgba(0, 0, 0, .1) 30%,
-                                    rgba(0, 0, 0, 0));
-}
-
-.div__variant-tile-wrapper:hover {
-    background-color: var(--light-blue-tone);
-}
-
-.div__variant-tile-wrapper:active {
-    background-color: var(--yellow);
-    transform: scale(0.99, 0.99);
 }
 
 .img__variant-tile-img {
