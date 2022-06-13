@@ -4,6 +4,10 @@
 :root {
     --var-variant-tile-margin: calc(2 * var(--std-margin-between));
     --var-variant-tile-size: 150px;
+
+    --var-variant-button-shadow-colour: #999;
+    --var-variant-button-shadow-size: 5px;
+    --var-variant-button-active-shadow-size: 2px;
 }
   
 .section__select-variant {
@@ -17,16 +21,24 @@
 
 .div__variant-tile-wrapper {
     margin: var(--var-variant-tile-margin);
-    border: calc(var(--std-margin-between) / 2) solid transparent;
-    padding: var(--std-margin-between);
-}
-
-.div__variant-tile-wrapper:hover {
-    margin: var(--var-variant-tile-margin);
     border: calc(var(--std-margin-between) / 2) solid var(--dark-blue);
     border-radius: calc(var(--var-variant-tile-size) * 0.2);
     padding: var(--std-margin-between);
+
+    cursor: pointer;
+    box-shadow: var(--var-variant-button-shadow-size) var(--var-variant-button-shadow-size) var(--var-variant-button-shadow-colour);
 }
+
+.div__variant-tile-wrapper:hover {
+    background-color: rgb(241, 241, 241);
+}
+
+/* pressed effect based on https://www.w3schools.com/howto/howto_css_animate_buttons.asp */
+.div__variant-tile-wrapper:active {
+    background-color: var(--yellow);
+    box-shadow: var(--var-variant-button-active-shadow-size) var(--var-variant-button-active-shadow-size) var(--var-variant-button-shadow-colour);
+    transform: translateY(calc(var(--var-variant-button-shadow-size) - var(--var-variant-button-active-shadow-size)));
+  }
 
 .img__variant-tile-img {
     height: var(--var-variant-tile-size);
