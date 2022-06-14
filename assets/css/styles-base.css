@@ -15,6 +15,16 @@
     --yellow-text: #000;
     --orange-text: #fff;
 
+    --light-blue-r: 87;
+    --light-blue-g: 187;
+    --light-blue-b: 255;
+    --yellow-r: 251;
+    --yellow-g: 177;
+    --yellow-b: 60;
+    --orange-r: 254;
+    --orange-g: 104;
+    --orange-b: 71;
+
     /* https://htmlcolorcodes.com/color-picker/ 
         Color shades, tints and tones are created by adding black, white and gray respectively to a chosen color. */
     --light-blue-tone-1: #96D3FF;
