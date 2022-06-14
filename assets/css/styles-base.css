@@ -136,3 +136,76 @@ body {
 .background-color__variant_xtreme {
     background-color: var(--orange);
 }
+
+.color_1 {
+    color: red; 
+}
+.color_2 {
+    color: green;
+}
+.color_3 {
+    color: blue;
+}
+.color_4 {
+    color: aqua;
+}
+.color_5 {
+    color: yellow;
+}
+.color_6 {
+    color: orange;
+}
+.color_7 {
+    color: deeppink;
+}
+.color_8 {
+    color: salmon;
+}
+.color_9 {
+    color: teal;
+}
+.color_10 {
+    color: chocolate;
+}
+.color_11 {
+    color: orchid;
+}
+.color_12 {
+    color: darkseagreen;
+}
+.background-color_1 {
+    background-color: red; 
+}
+.background-color_2 {
+    background-color: green;
+}
+.background-color_3 {
+    background-color: blue;
+}
+.background-color_4 {
+    background-color: aqua;
+}
+.background-color_5 {
+    background-color: yellow;
+}
+.background-color_6 {
+    background-color: orange;
+}
+.background-color_7 {
+    background-color: deeppink;
+}
+.background-color_8 {
+    background-color: salmon;
+}
+.background-color_9 {
+    background-color: teal;
+}
+.background-color_10 {
+    background-color: chocolate;
+}
+.background-color_11 {
+    background-color: orchid;
+}
+.background-color_12 {
+    background-color: darkseagreen;
+}

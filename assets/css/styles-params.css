@@ -132,6 +132,11 @@
     padding: 6px;
 }
 
+.div__player-colour {
+    width: 25px;
+    height: 25px;
+}
+
 .div__play {
     text-align: center;
     margin: var(--var-input-margin) 0 var(--var-input-margin);

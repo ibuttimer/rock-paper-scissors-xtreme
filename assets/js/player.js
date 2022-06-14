@@ -10,10 +10,26 @@ import { variableCheck, requiredVariable } from './utils/index.js';
  */
  export class Player {
 
-    name;       // player name
-    isRobot;    // is a robot flag
-    inGame;     // is a game flag
-    selection;  // current selection
+    /**
+     * Player name
+     * @type{string} */
+    name;
+    /**
+     * Player is robot flag
+     * @type{boolean} */
+    isRobot;
+    /**
+     * Player in game flag
+     * @type{boolean} */
+    inGame;
+    /**
+     * Player's current selection
+     * @type{Selection} */
+    selection;
+    /**
+     * Player-specific css classes
+     * @type{object} - key: css property name, value: css class */
+    css;
 
     static #playerCount = 0;   // private counter for number of Player objects created
 
@@ -28,6 +44,7 @@ import { variableCheck, requiredVariable } from './utils/index.js';
         }
 
         this.name = name;
+        this.css = {};
         this.initState();
 
         ++Player.#playerCount;
