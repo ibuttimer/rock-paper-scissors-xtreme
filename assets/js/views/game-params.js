@@ -10,6 +10,7 @@ import { Player } from '../player.js';
 import { default as titleHeader } from '../components/title.js'
 import { generateId, optionsList, accumulator } from '../utils/index.js';
 import { View, setView } from '../routing.js'
+import { htmlDiv, htmlButton } from '../utils/index.js';
 
 
 // Parameters for game parameters
@@ -58,29 +59,29 @@ export default function gameParamsView(gameState) {
     wip.playerArray = gameState.game.getPlayers();
     wip.numRobots = gameState.game.numRobots;
 
+    const button = htmlButton(['button__play', 'button__clickable', 'debossable'], 'Play', {
+        id: playButtonId,
+        'aria-label': 'play game.',
+        rel: 'next'
+    });
     return `${titleHeader(gameState)}
-            ${divWrapper('div__num-of-game-participants', 
+            ${htmlDiv('div__num-of-game-participants', 
                 `${getNumPlayers(numPlayersInfo)}
                 ${getNumPlayers(numRobotsInfo)}`
             )}
-            ${divWrapper('div__num-games-wrapper', 
+            ${htmlDiv('div__num-games-wrapper', 
                 getNumOfGames('num-of-games', DEFAULT_GAMES, numGameOptions)
             )}
-            ${divWrapper('div__player-names', 
-                `${divWrapper('div__player-name-wrapper', 
+            ${htmlDiv('div__player-names', 
+                `${htmlDiv('div__player-name-wrapper', 
                     `<p/>
-                    ${divWrapper('div__player-names-title', 
-                                `<p>Name</p>`)}`
+                    ${htmlDiv('div__player-names-title', '<p>Name</p>')}`
                 )}
-                ${divWrapper('div__player-name-group-wrapper', 
-                    playerNames(), {id: playerNameGroupId}
-                )}`
+                ${htmlDiv('div__player-name-group-wrapper', playerNames(), {
+                    id: playerNameGroupId
+                })}`
             )}
-            <div class="div__play">
-                <button type='button' class='button__play button__clickable debossable' id=${playButtonId} aria-label="play game." rel="next">
-                    Play
-                </button>
-            </div>`;
+            ${htmlDiv('div__play', button)}`;
 }
 
 /** 
@@ -332,39 +333,12 @@ function playerNames() {
     const divKey = `${id}-div-key`;
     const playerKey = `${id}-key`;
 
-    return divWrapper('div__player-name-wrapper', 
+    return htmlDiv('div__player-name-wrapper', 
         `<label for="${id}">${title}:</label>
          <input type="text" id="${id}" key="${id}" name="${id}" value="${defaultValue}" 
                     class="input__player-name"/>`, 
         { key: divKey}
     );
-}
-
-/**
- * Wrap a div element around the specified html.
- * @returns {string} html for wrapped entity
- * @see {@link htmlWrapper}
- */
-const divWrapper = (className, innerHtml, attribs = {}, selfClosing = false) => {
-    return htmlWrapper('div', className, innerHtml, attribs, selfClosing);
-}
-
-/**
- * Wrap a div element around the specified html.
- * @param {string} tag - tag name of element
- * @param {string} className - name of class to give div
- * @param {string} innerHTML - html to wrap
- * @param {object} attribs - object of attributes; keys and values
- * @returns {string} html for wrapped entity
- */
-const htmlWrapper = (tag, className, innerHtml, attribs = {}, selfClosing = false) => {
-    const attribString = Object.entries(attribs)
-            .map(([key, value]) => `${key}="${value}" `)
-            .reduce(accumulator, '');
-    return `<${tag} class="${className}" ${attribString} ${selfClosing ? '/' : ''}>
-                ${selfClosing ? '' : `${innerHtml}
-            </${tag}>`}        
-    `;
 }
 
 /**

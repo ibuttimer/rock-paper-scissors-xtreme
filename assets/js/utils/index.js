@@ -3,3 +3,4 @@ export {
     variableCheck, requiredVariable, gameParticipantsCheck, mapToString, 
     getVariantInfo as getVariantInfo, generateId, optionsList, accumulator 
 } from './utils.js'
+export { htmlDiv, htmlButton } from './html.js'
