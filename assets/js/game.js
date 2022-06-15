@@ -3,7 +3,9 @@
     @author Ian Buttimer
 */
 
-import { variableCheck, requiredVariable, gameParticipantsCheck, mapToString } from './utils/index.js';
+import { 
+    variableCheck, requiredVariable, gameParticipantsCheck, mapToString, adjustArray
+} from './utils/index.js';
 import { Player, Robot } from './player.js';
 import { Enum, GameKey, Selection, GameMode, GameStatus, GameEvent, ResultCode } from './enums.js';
 
@@ -588,34 +590,28 @@ export class GameResult {
             throw new Error(errorMsg);
         }
 
+        let incomingPlayers = playerList;
+        let incomingRobots = playerList;
         if (!playerList) {
             // get array of existing player objects
-            playerList = this.players ? this.players.filter(player => !player.isRobot) : [];
+            incomingPlayers = this.players ? this.players : [];
+            incomingRobots = incomingPlayers;
         }
-        // get array of existing robot objects
-        let robots = this.players ? this.players.filter(player => player.isRobot) : [];
+        // filter player and robot objects
+        incomingPlayers = adjustArray(
+            incomingPlayers.filter(player => !player.isRobot),  // just player objects
+            numPlayers, 
+            (index) => {
+                return new Player(`Player ${index + 1}`);
+            });
+        incomingRobots = adjustArray(
+            incomingRobots.filter(player => player.isRobot),  // just robot objects
+            numRobots, 
+            (index) => {
+                return new Robot(index);
+            });
         
-        if (numPlayers > playerList.length) {
-            // add new player objects
-            for (let index = playerList.length; index < numPlayers; index++) {
-                playerList.push(new Player(`Player ${index + 1}`))
-            }
-        } else if (numPlayers < playerList.length){
-            // remove excess player objects
-            playerList = playerList.slice(0, numPlayers);
-        }
-
-        if (numRobots > robots.length) {
-            // add new robot objects
-            for (let index = robots.length; index < numRobots; index++) {
-                robots.push(new Robot(index))
-            }
-        } else if (numRobots < robots.length) {
-            // remove excess robot objects
-            robots = robots.slice(0, numRobots);
-        }
-
-        this.players = playerList.concat(robots);
+        this.players = incomingPlayers.concat(incomingRobots);
         this.numPlayers = numPlayers;
         this.numRobots = numRobots;
 

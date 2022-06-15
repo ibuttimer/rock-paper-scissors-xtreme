@@ -83,18 +83,24 @@ body {
 }
 
 /* based on css from https://developer.mozilla.org/en-US/docs/Web/HTML/Element/button */
-.debossable {
-    background-image: linear-gradient(to top left,
-                                      rgba(0, 0, 0, .1),
-                                      rgba(0, 0, 0, .1) 30%,
-                                      rgba(0, 0, 0, 0));
+.debossable,        /* debossible with background when active */
+.debossable-nbi {   /* debossible without background when active */
     box-shadow: inset 2px 2px 3px rgba(255, 255, 255, 0.6),
                 inset -2px -2px 3px rgba(0, 0, 0, .6);
 }
 
-.debossable:active {
+.debossable:active,
+.debossable-nbi:active {
     box-shadow: inset -2px -2px 3px rgba(255, 255, 255, .6),
                 inset 2px 2px 3px rgba(0, 0, 0, .6);
+}
+
+.debossable:active {
+    /* slightly darken background when active */
+    background-image: linear-gradient(to top left,
+                                      rgba(0, 0, 0, .1),
+                                      rgba(0, 0, 0, .1) 30%,
+                                      rgba(0, 0, 0, 0));
 }
 
 .button__clickable {

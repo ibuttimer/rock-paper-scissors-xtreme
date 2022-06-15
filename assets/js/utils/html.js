@@ -20,23 +20,85 @@ const htmlWrapper = (tag, className, innerHtml, attribs = {}, selfClosing = fals
         className = className.join(' ');
     }
     return `<${tag} class="${className}" ${attribString} ${selfClosing ? '/' : ''}>
-                ${selfClosing ? '' : `${innerHtml}
-            </${tag}>`}        
-    `;
+                ${selfClosing ? '' : `${innerHtml ? innerHtml : ''}
+            </${tag}>`}`;
 };
 
 /**
- * Wrap a div element around the specified html.
- * @returns {string} - html for wrapped entity
+ * Generate a h1 element.
+ * @returns {string} - html for element
  * @see {@link htmlWrapper}
  */
-export const htmlButton = (className, innerHtml, attribs = {}, selfClosing = false) => {
-    return htmlWrapper('button', className, innerHtml, attribs, selfClosing);
+ export const htmlH1 = (className, innerHtml, attribs = {}) => {
+    return htmlWrapper('h1', className, innerHtml, attribs, false);
+};
+
+/**
+ * Generate a h2 element.
+ * @returns {string} - html for element
+ * @see {@link htmlWrapper}
+ */
+ export const htmlH2 = (className, innerHtml, attribs = {}) => {
+    return htmlWrapper('h2', className, innerHtml, attribs, false);
+};
+
+/**
+ * Generate a h3 element.
+ * @returns {string} - html for element
+ * @see {@link htmlWrapper}
+ */
+ export const htmlH3 = (className, innerHtml, attribs = {}) => {
+    return htmlWrapper('h3', className, innerHtml, attribs, false);
+};
+
+/**
+ * Generate a h4 element.
+ * @returns {string} - html for element
+ * @see {@link htmlWrapper}
+ */
+ export const htmlH4 = (className, innerHtml, attribs = {}) => {
+    return htmlWrapper('h4', className, innerHtml, attribs, false);
+};
+
+/**
+ * Generate a h5 element.
+ * @returns {string} - html for element
+ * @see {@link htmlWrapper}
+ */
+ export const htmlH5 = (className, innerHtml, attribs = {}) => {
+    return htmlWrapper('h5', className, innerHtml, attribs, false);
+};
+
+/**
+ * Generate a h6 element.
+ * @returns {string} - html for element
+ * @see {@link htmlWrapper}
+ */
+ export const htmlH6 = (className, innerHtml, attribs = {}) => {
+    return htmlWrapper('h6', className, innerHtml, attribs, false);
+};
+
+/**
+ * Generate an image element.
+ * @returns {string} - html for element
+ * @see {@link htmlWrapper}
+ */
+ export const htmlImg = (className, attribs = {}) => {
+    return htmlWrapper('img', className, null, attribs, true);
+};
+
+/**
+ * Generate a button element.
+ * @returns {string} - html for element
+ * @see {@link htmlWrapper}
+ */
+ export const htmlButton = (className, innerHtml, attribs = {}) => {
+    return htmlWrapper('button', className, innerHtml, attribs, false);
 };
 
 /**
  * Generate a div element containing the specified html.
- * @returns {string} - html for wrapped entity
+ * @returns {string} - html for element
  * @see {@link htmlWrapper}
  */
 export const htmlDiv = (className, innerHtml, attribs = {}, selfClosing = false) => {

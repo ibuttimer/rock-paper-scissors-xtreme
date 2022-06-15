@@ -170,5 +170,92 @@ export function optionsList(id, array, defaultValue, valueModifier = y => y) {
 /** Accumulator function for {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/reduce} */
 export const accumulator = (previousValue, currentValue) => previousValue + currentValue;
 
+const ADD_STYLE = 0;
+const REMOVE_STYLE = 1;
+const REPLACE_STYLE = 2;
+/**
+ * Add/remove/replace element classes
+ * @param {number} action - action to perform
+ * @param {Element|Array[Element]} elements - element(s) to perform action on
+ * @param {string|Array[string]} classes - class(s) to add/remove, or class to replace
+ * @param {string} replacement - replacement class
+ */
+const modifyElementClassList = (action, elements, classes, replacement) => {
+    if (!(elements instanceof HTMLCollection)) {
+        elements = [elements];
+    }
+    for (const element of elements) {
+        switch (action) {
+            case ADD_STYLE:
+            case REMOVE_STYLE:
+                if (typeof classes === 'string') {
+                    classes = [classes];
+                }
+                if (action == ADD_STYLE) {
+                    element.classList.add(...classes);
+                } else {
+                    element.classList.remove(...classes);
+                }
+                break;
+            case REPLACE_STYLE:
+                element.classList.replace(classes, replacement);
+                break;
+            default:
+                throw new Error(`Unknown action: ${action}`);
+        }
+    }
+}
+
+/**
+ * Add element class(es)
+ * @param {Element|Array[Element]} elements - element(s) to perform action on
+ * @param {string|Array[string]} classes - class(es) to add
+ */
+export const addElementClass = (elements, classes) => modifyElementClassList(ADD_STYLE, elements, classes);
+/**
+ * Remove element class(es)
+ * @param {Element|Array[Element]} elements - element(s) to perform action on
+ * @param {string|Array[string]} classes - class(es) to remove
+ */
+export const removeElementClass = (elements, classes) => modifyElementClassList(REMOVE_STYLE, elements, classes);
+/**
+ * Replace element class
+ * @param {Element|Array[Element]} elements - element(s) to perform action on
+ * @param {string} remove - class to replace
+ * @param {string} replacement - replacement class
+ */
+export const replaceElementClass = (elements, remove, replacement) => modifyElementClassList(REPLACE_STYLE, elements, remove, replacement);
+
+/**
+ * Delay execution of a function; e.g. delay(1000).then(() => console.log('1 sec later))
+ * @param {number} time - time, in milliseconds that the timer should wait before the specified function or code is executed
+ * @returns {Promise} Promise that will be resolved after the specified time
+ * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise}
+ * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/setTimeout}
+ */
+export function delay(time) {
+    return new Promise(resolve => setTimeout(resolve, time));
+}
+
+/**
+ * Adjust the specified array to contain the required number of entries
+ * @param {Array[any]} array - current array
+ * @param {number} requiredNum - required number of entries
+ * @param {function} newEntry - function accepting an index argument to create a new entry object
+ * @returns {Array[any]} adjusted array
+ */
+export function adjustArray(array, requiredNum, newEntry) {
+    if (requiredNum > array.length) {
+        // add new objects
+        for (let index = array.length; index < requiredNum; index++) {
+            array.push(newEntry(index));
+        }
+    } else if (requiredNum < array.length) {
+        // remove excess objects
+        array = array.slice(0, requiredNum);
+    }
+    return array;
+}
+
 /* Jasmine requires a default export */
 export default 'utils.js'

@@ -15,9 +15,19 @@ export const MIN_ROBOTS = 0;
 export const MAX_ROBOTS = 3;
 export const DEFAULT_ROBOTS = 0;
 export const MIN_PARTICIPANTS = DEFAULT_PLAYERS + DEFAULT_ROBOTS;
+export const MAX_PARTICIPANTS = MAX_PLAYERS + MAX_ROBOTS;
 export const MIN_GAMES = 1;
 export const MAX_GAMES = 15;
 export const DEFAULT_GAMES = 3;
+
+export const PLAYER_COLOURS = [
+    'red', 'green', 'blue', 'aqua', 'yellow', 'orange', 
+    'deeppink', 'salmon', 'teal', 'chocolate', 'orchid', 'darkseagreen'
+];
+console.assert(
+    PLAYER_COLOURS.length === MAX_PARTICIPANTS, 
+    `Incorrect number of player colours: ${PLAYER_COLOURS.length}, expected ${MAX_PARTICIPANTS}`
+);
 
 export const ENABLE_LOG = true;
 

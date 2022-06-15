@@ -28,8 +28,12 @@ import { variableCheck, requiredVariable } from './utils/index.js';
     selection;
     /**
      * Player-specific css classes
-     * @type{object} - key: css property name, value: css class */
+     * @type{object} - key: css property name, value: css class which sets the property */
     css;
+    /**
+     * Player-specific colour
+     * @type{string} */
+    colour;
 
     static #playerCount = 0;   // private counter for number of Player objects created
 
@@ -45,6 +49,7 @@ import { variableCheck, requiredVariable } from './utils/index.js';
 
         this.name = name;
         this.css = {};
+        this.colour = '';
         this.initState();
 
         ++Player.#playerCount;
@@ -89,7 +94,7 @@ import { variableCheck, requiredVariable } from './utils/index.js';
      * @returns {string}
      */
      toString() {
-        return `{${this.name}, robot:${this.isRobot ? 'Y' : 'N'}, inGame:${this.inGame ? 'Y' : 'N'}, selection:${this.selection}}`;
+        return `{${this.name}, robot:${this.isRobot ? 'Y' : 'N'}, inGame:${this.inGame ? 'Y' : 'N'}, selection:${this.selection}}, colour:${this.colour}}`;
     }
 }
 

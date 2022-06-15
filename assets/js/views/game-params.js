@@ -4,11 +4,11 @@
 */
 import { 
     MIN_PLAYERS, MAX_PLAYERS, DEFAULT_PLAYERS, MIN_ROBOTS, MAX_ROBOTS, DEFAULT_ROBOTS,
-    MIN_GAMES, DEFAULT_GAMES, MAX_GAMES, PLAY_URL, log 
+    MIN_GAMES, DEFAULT_GAMES, MAX_GAMES, PLAY_URL, PLAYER_COLOURS, log 
 } from '../globals.js';
-import { Player } from '../player.js';
+import { Player, Robot } from '../player.js';
 import { default as titleHeader } from '../components/title.js'
-import { generateId, optionsList, accumulator } from '../utils/index.js';
+import { generateId, optionsList, accumulator, adjustArray } from '../utils/index.js';
 import { View, setView } from '../routing.js'
 import { htmlDiv, htmlButton } from '../utils/index.js';
 
@@ -39,6 +39,12 @@ const numGameOptions = [
         bestOfSelectId
     )
 ];
+
+export const COLOR_PROP = 'color';
+export const BACKGROUND_COLOR_PROP = 'background-color';
+export const SELECTION_TILE_DIV_PROP = 'div__selection-tile-wrapper';
+const PROPS = [COLOR_PROP, BACKGROUND_COLOR_PROP, SELECTION_TILE_DIV_PROP];
+
 
 /** Working values for params */
 let wip = {
@@ -92,7 +98,19 @@ export default function gameParamsView(gameState) {
  */
 function playGame(event, gameState) {
     
-    gameState.game.init(wip.numPlayers, wip.numRobots, persistPlayerNames());
+    // generate player list
+    const robots = wip.numRobots ? 
+        [...Array(wip.numRobots).keys()].map(index => new Robot(index + 1)) : [];
+    const players = persistPlayerNames().concat(robots);
+
+    // set player specific css
+    players.forEach((player, index) => {
+        player.css = {};
+        PROPS.forEach(prop => player.css[prop] = playerCss(index, prop));
+        player.colour = PLAYER_COLOURS[index];
+    })
+
+    gameState.game.init(wip.numPlayers, wip.numRobots, players);
     gameState.startGame();
 
     setView(PLAY_URL, gameState);
@@ -107,13 +125,9 @@ function persistPlayerNames() {
     // TODO ensure unique player names
     
     wip.playerArray.forEach((player, index) => {
-        let id = generatePlayerInputId(playerIndexToId(index));
+        let id = generatePlayerInputId(playerIndexToIdNum(index));
         let name = document.getElementById(id).value;
         player.name = name ? name : defaultPlayerName(index);
-        player.css = {
-            color: playerColour(index, false),
-            'background-color': playerColour(index, true)
-        }
     })
     return wip.playerArray;
 }
@@ -163,17 +177,11 @@ function getNumPlayers(params) {
  */
 function setNumPlayers(event) {
     let num = parseInt(event.target.value);
-    if (num !== wip.numPlayers){
-        let array = persistPlayerNames();
-        if (num > array.length) {
-            // add new player objects
-            for (let index = array.length; index < num; index++) {
-                array.push(new Player(`${defaultPlayerName(index)}`))
-            }
-        } else if (num < array.length) {
-            // remove excess player objects
-            array = array.slice(0, num);
-        }
+    if (num !== wip.numPlayers) {
+        let array = adjustArray(
+            persistPlayerNames(), num, (index) => {
+                return new Player(`${defaultPlayerName(index)}`);
+            });
 
         wip.numPlayers = num;
         wip.playerArray = array;
@@ -310,14 +318,21 @@ const generatePlayerInputId = (index) => `player-name-${index}`;
  * @param {number} index 
  * @returns {number}
  */
-const playerIndexToId = (index) => { return index + 1 };
+const playerIndexToIdNum = (index) => { return index + 1 };
 
 /**
+ * Convert one-based player id number to player index
+ * @param {number} idNum 
+ * @returns {number}
+ */
+ const playerIdNumToIndex = (idNum) => { return idNum - 1 };
+ 
+ /**
  * Generate default player name
  * @param {number} index - player index
  * @returns {string} name
  */
-const defaultPlayerName = (index) => `Player ${playerIndexToId(index)}`;
+const defaultPlayerName = (index) => `Player ${playerIndexToIdNum(index)}`;
 
 /**
  * Generate player name elements 
@@ -325,8 +340,33 @@ const defaultPlayerName = (index) => `Player ${playerIndexToId(index)}`;
  */
 function playerNames() {
     return wip.playerArray
-        .map((player, index) => getPlayerName(playerIndexToId(index), player.name))
+        .map((player, index) => getPlayerName(playerIndexToIdNum(index), player.name))
         .reduce(accumulator, '');
+}
+
+/**
+ * Generate the css class for the specified player index and property
+ * @param {number} index - player index 
+ * @param {string} property - css property
+ * @returns {string} css class
+ */
+ const playerCss = (index, property) => {
+    const idNum = playerIndexToIdNum(index);
+    let cssClass;
+    switch (property) {
+        case COLOR_PROP:
+            cssClass = `color_${idNum}`;
+            break;
+        case BACKGROUND_COLOR_PROP:
+            cssClass = `background-color_${idNum}`;
+            break;
+        case SELECTION_TILE_DIV_PROP:
+            cssClass = `div__selection-tile-wrapper-${idNum}`;
+            break;
+        default:
+            throw new Error(`Unknown property: ${property}`);
+    }
+    return cssClass;
 }
 
 /**
@@ -334,24 +374,24 @@ function playerNames() {
  * @param {number} index - player index 
  * @returns {string} css class
  */
-const playerColour = (index, background = false) => {
-    return `${background ? 'background-' : ''}color_${playerIndexToId(index)}`;
+ const playerColour = (index, background = false) => {
+    return `${background ? 'background-' : ''}color_${playerIndexToIdNum(index)}`;
 }
 
 /**
  * Player name component.
- * @param {number} index - index of player
+ * @param {number} idNum - player id number
  * @param {string} defaultValue - default name
  * @returns {string} html for player name input
  */
- function getPlayerName(index, defaultValue) {
+ function getPlayerName(idNum, defaultValue) {
 
-    const title = `Player ${index}`;
+    const title = `Player ${idNum}`;
 
-    let id = generatePlayerInputId(index);
+    let id = generatePlayerInputId(idNum);
     const divKey = `${id}-div-key`;
     const playerKey = `${id}-key`;
-    const colour = htmlDiv(['div__player-colour', playerColour(index, true)], '<p/>');
+    const colour = htmlDiv(['div__player-colour', playerColour(playerIdNumToIndex(idNum), true)], '<p/>');
 
     return htmlDiv('div__player-name-wrapper', 
         `<label for="${id}">${title}:</label>

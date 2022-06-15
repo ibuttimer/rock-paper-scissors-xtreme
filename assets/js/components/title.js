@@ -3,7 +3,7 @@
     @author Ian Buttimer
 */
 import { GAME_NAME } from "../globals.js";
-import { getVariantInfo } from "../utils/index.js";
+import { getVariantInfo, htmlH3 } from "../utils/index.js";
 
 /**
  * Page title component
@@ -21,5 +21,6 @@ export default function titleHeader(gameState) {
  * @returns {string} html for player name component
  */
  export function currentPlayerNameHeader(gameState) {
-    return `<h3 class="h3__sub-title">${gameState.game.currentPlayer.name}</h3>`;
+    const player = gameState.game.currentPlayer;
+    return htmlH3(['h3__sub-title', player.css.color], player.name);
 }

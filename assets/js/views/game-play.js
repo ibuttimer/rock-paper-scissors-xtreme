@@ -3,13 +3,18 @@
     @author Ian Buttimer
 */
 import { ROUND_RESULT_URL, log } from '../globals.js';
-import { ResultCode, GameKey } from "../enums.js";
 import { titleHeader, currentPlayerNameHeader, gameProgress } from '../components/index.js'
-import { generateId, optionsList, accumulator } from '../utils/index.js';
+import { 
+    accumulator, htmlDiv, htmlImg, htmlH4, addElementClass, removeElementClass, replaceElementClass, delay 
+} from '../utils/index.js';
 import { View, setView } from '../routing.js'
-
+import { SELECTION_TILE_DIV_PROP } from './game-params.js'
 
 const currentPlayerHeaderId = 'current-player-header'
+
+const in_animation = 'animate__fade-in';
+const out_animation = 'animate__fade-out';
+const animation_time = 1000;    // animation time in msec
 
 /**
  * Generate the game play view.
@@ -20,41 +25,55 @@ const currentPlayerHeaderId = 'current-player-header'
 
     gameState.selectionHandledCallback = handleSelectionCallback;
 
+    // player-specific css class for tile
+    const tileClass = gameState.game.currentPlayer.css[SELECTION_TILE_DIV_PROP];
+
     return `${titleHeader(gameState)}
             ${gameProgress(gameState.progressMap)}
             <div id="${currentPlayerHeaderId}">
                 ${currentPlayerNameHeader(gameState)}
             </div>
             <section class="section__select-play">
-                ${getSelectable(gameState.selections)}
+                ${getSelectable(gameState.selections, tileClass)}
             </section>`;
 }
 
 /**
  * Generate the selection options
  * @param {Array} selections - array of all possible Selection for game variant
+ * @param {string} tileClass - player-specific css class
  * @returns {string} html for selection options
  */
-function getSelectable(selections) {
+function getSelectable(selections, tileClass) {
     return selections.map(sel => {
         let optionKey = `num-games-option-${sel.selection.name}`;
 
         return `<div class='div__selection-option-wrapper' key=${optionKey}>
-                    ${selectionTile(sel)}            
+                    ${selectionTile(sel, tileClass)}            
                 </div>`;            
     }).reduce(accumulator, '');
 }
 
 /**
  * Class representing a selection tile
- * @param {object} option - parameters object {@link selectionTileParams}
+ * @param {object} params - parameters object {@link selectionTileParams}
+ * @param {string} tileClass - player-specific css class
+ * @returns {string} html for selection tile
  */
- export function selectionTile(params) {
-    return `<div class="div__selection-tile-wrapper" data-selection="${params.selection}" 
-                    aria-label="select ${params.selection.name}.">
-                <img class="img__selection-tile-img" src="${params.src}" alt="${params.alt}" />
-                <h4 class="h4__selection-tile-name">${params.selection.name}</h4>
-            </div>`;
+ export function selectionTile(params, tileClass) {
+    const image = htmlImg('img__selection-tile-img', {
+        src: params.src, alt: params.alt
+    });
+    const name = htmlH4('h4__selection-tile-name', params.selection.name)
+
+'div__selection-tile-wrapper-1'
+
+    return htmlDiv(['div__selection-tile-wrapper', 'debossable-nbi', tileClass], 
+        `${image}
+        ${name}`, {
+            'data-selection': params.selection, 
+            'aria-label': `select ${params.selection.name}.`
+        });
 }
 
 /**
@@ -65,8 +84,7 @@ function getSelectable(selections) {
 export function handleSelectionCallback(gameState, eventResult) {
     if (eventResult.roundInProgress) {
         // round in progress, update display for next player
-        const currentPlayerHeaderElement = document.getElementById(currentPlayerHeaderId);
-        currentPlayerHeaderElement.innerHTML = currentPlayerNameHeader(gameState);
+        nextPlayer(gameState);
     } else  {
         // round finished
         setView(ROUND_RESULT_URL, gameState);
@@ -74,14 +92,48 @@ export function handleSelectionCallback(gameState, eventResult) {
 }
 
 /**
+ * Transition to next player
+ * @param {GameState} gameState - current game state
+ */
+function nextPlayer(gameState) {
+    let time = 0;
+    const tiles = allSelectionTiles();
+
+    addElementClass(tiles, [out_animation]);
+
+    time += animation_time;   
+    delay(time).then(() => {
+        // update player name
+        const currentPlayerHeaderElement = document.getElementById(currentPlayerHeaderId);
+        currentPlayerHeaderElement.innerHTML = currentPlayerNameHeader(gameState);
+
+        // update border colour to player's colour
+        const colour = gameState.game.currentPlayer.colour;
+        for (const tile of tiles) {
+            tile.style.borderColor = colour;
+        }
+
+        replaceElementClass(tiles, out_animation, in_animation);
+    });
+    time += animation_time;
+    delay(time).then(() => {
+        removeElementClass(tiles, [in_animation]);
+    });
+}
+
+/**
  * Set handlers for game play
  * @param {GameState} gameState - game state object
  */
 export function setPlayHandler(gameState) {
-    const tiles = document.getElementsByClassName('div__selection-tile-wrapper');
-    for (const tile of tiles) {
+    for (const tile of allSelectionTiles()) {
         tile.addEventListener('click', (event) => gamePlayHandler(event, gameState), false);
     }
+}
+
+/** All selection tiles */
+const allSelectionTiles = () => { 
+    return document.getElementsByClassName('div__selection-tile-wrapper');
 }
 
 /**
@@ -92,6 +144,6 @@ export function setPlayHandler(gameState) {
  function gamePlayHandler(event, gameState) {
     const selection = event.currentTarget.dataset.selection;
     if (selection) {
-        gameState.handleSelection(selection)
+        gameState.handleSelection(selection);
     }
 }

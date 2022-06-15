@@ -31,6 +31,7 @@
     padding: var(--var-game-tile-padding);
     text-align: center;
     width: var(--var-game-tile-size);
+    background-image: none;
     background: radial-gradient(red, yellow, rgb(30, 144, 255));
 }
 
@@ -45,4 +46,90 @@
 
 .h4__selection-tile-name {
     text-align: center;
+}
+
+
+.animate__horz-360 {
+    animation-name: animate-horz-360;
+    animation-duration: 2s;
+    animation-fill-mode: forwards;
+}
+
+.animate__fade-in {
+    animation-name: animate-fade-in;
+    animation-duration: 1s;
+    animation-fill-mode: forwards;
+}
+
+.animate__fade-out {
+    animation-name: animate-fade-out;
+    animation-duration: 1s;
+    animation-fill-mode: forwards;
+}
+
+/* rotation for the hero image
+https://developer.mozilla.org/en-US/docs/Web/CSS/transform-function */
+@keyframes animate-horz-360 {
+    from {
+        transform: rotateY(0deg);
+    }
+    to {
+        transform: rotateY(360deg);
+    }
+}
+
+
+@keyframes animate-fade-in {
+    from { 
+        opacity: 0;
+    }
+    to {
+        opacity: 1; 
+    }
+}
+
+@keyframes animate-fade-out {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}
+
+.div__selection-tile-wrapper-1 {
+    border-color: red; 
+}
+.div__selection-tile-wrapper-2 {
+    border-color: green;
+}
+.div__selection-tile-wrapper-3 {
+    border-color: blue;
+}
+.div__selection-tile-wrapper-4 {
+    border-color: aqua;
+}
+.div__selection-tile-wrapper-5 {
+    border-color: yellow;
+}
+.div__selection-tile-wrapper-6 {
+    border-color: orange;
+}
+.div__selection-tile-wrapper-7 {
+    border-color: deeppink;
+}
+.div__selection-tile-wrapper-8 {
+    border-color: salmon;
+}
+.div__selection-tile-wrapper-9 {
+    border-color: teal;
+}
+.div__selection-tile-wrapper-10 {
+    border-color: chocolate;
+}
+.div__selection-tile-wrapper-11 {
+    border-color: orchid;
+}
+.div__selection-tile-wrapper-12 {
+    border-color: darkseagreen;
 }
