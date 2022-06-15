@@ -97,6 +97,33 @@ const htmlWrapper = (tag, className, innerHtml, attribs = {}, selfClosing = fals
 };
 
 /**
+ * Generate a table row element.
+ * @returns {string} - html for element
+ * @see {@link htmlWrapper}
+ */
+ export const htmlTr = (className, innerHtml, attribs = {}) => {
+    return htmlWrapper('tr', className, innerHtml, attribs, false);
+};
+
+/**
+ * Generate a table data element.
+ * @returns {string} - html for element
+ * @see {@link htmlWrapper}
+ */
+ export const htmlTd = (className, innerHtml, attribs = {}) => {
+    return htmlWrapper('td', className, innerHtml, attribs, false);
+};
+
+/**
+ * Generate a span element.
+ * @returns {string} - html for element
+ * @see {@link htmlWrapper}
+ */
+ export const htmlSpan = (className, innerHtml, attribs = {}) => {
+    return htmlWrapper('span', className, innerHtml, attribs, false);
+};
+
+/**
  * Generate a div element containing the specified html.
  * @returns {string} - html for element
  * @see {@link htmlWrapper}

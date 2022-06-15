@@ -3,7 +3,8 @@
 /* custom properties */
 :root {
 	/* game progress component */
-	--game-progress-border-colour: #333;
+	--game-progress-border-colour: rgb(204, 204, 204);
+	--game-progress-info-size: 10px;
 
 	/* leader board component */
 	--leader-board-border-colour: #333;
@@ -30,6 +31,21 @@
 .td__game-progress-info,
 .td__game-progress-data {
     border: 1px solid var(--game-progress-border-colour);
+    border-radius: 5px;
+    border-spacing: 4px;
+}
+
+.table__game-progress {
+    margin: auto;
+}
+
+.td__game-progress-data {
+    color: blue;
+}
+
+.td__game-progress-info span,
+.td__game-progress-data span {
+    padding: 0 var(--game-progress-info-size);
 }
 
 /* leader board component */

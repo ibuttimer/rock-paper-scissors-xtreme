@@ -12,6 +12,10 @@
     --var-game-tile-size: calc(var(--var-game-tile-img-size) + (2 * var(--var-game-tile-padding)));
 }
 
+.div__play-player-name {
+    margin: var(--var-game-tile-margin);
+}
+
 /* play view */
 .section__select-play {
     display: grid;

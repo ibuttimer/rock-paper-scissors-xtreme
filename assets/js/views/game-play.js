@@ -30,9 +30,9 @@ const animation_time = 1000;    // animation time in msec
 
     return `${titleHeader(gameState)}
             ${gameProgress(gameState.progressMap)}
-            <div id="${currentPlayerHeaderId}">
-                ${currentPlayerNameHeader(gameState)}
-            </div>
+            ${htmlDiv(['div__play-player-name'], currentPlayerNameHeader(gameState), {
+                id: currentPlayerHeaderId
+            })}
             <section class="section__select-play">
                 ${getSelectable(gameState.selections, tileClass)}
             </section>`;
