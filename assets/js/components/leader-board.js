@@ -34,9 +34,7 @@ import { accumulator } from '../utils/index.js';
 function getPlayerScores(scores) {
 
     return scores.map((playerScore, index) => {
-        let rowKey = `player-score-row-${index}`;
-
-        return `<tr class="tr__player-score-row" key=${rowKey}>
+        return `<tr class="tr__player-score-row">
                     <td class="td__player-name">${playerScore.player.name}</td>
                     <td class="td__player-score">${playerScore.score}</td>
                 </tr>`;

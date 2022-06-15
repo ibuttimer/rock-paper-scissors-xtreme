@@ -75,12 +75,11 @@ function getPlayerSelections(gameState) {
         const player = keyVal[0];
         const selection = keyVal[1];
         const selectionInfo = selections.find(sel => sel.selection === selection);
-        const optionKey = generateId('player-selection-result', player.name);
 
         // player-specific css class for tile
         const tileClass = player.css[SELECTION_TILE_DIV_PROP];
 
-        return `<div class="div__player-selection-wrapper" key=${optionKey}>
+        return `<div class="div__player-selection-wrapper">
                     ${playerSelectionTile(
                         getPlayerSelectionTileParam(
                             player, selectionInfo.src, selectionInfo.alt, selection, 

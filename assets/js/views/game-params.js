@@ -266,14 +266,14 @@ const generateSelectId = (option, id, index) => option.selectId ? option.selectI
                 if (x.selections) {
                     // a radio option with a select
                     let selectId = generateSelectId(x, id, index);
-                    selectElement = `<select id=${selectId} name=${selectId} key=${selectId}>
+                    selectElement = `<select id=${selectId} name=${selectId}>
                                         ${optionsList(selectId, x.selections)}
                                     </select>`;
                 } else {
                     // no select, just a radio option
                     selectElement = '';
                 }
-                const radioInput = `<input type="radio" id=${id} key=${id} name=${group} value=${x.optionDefault} ${checked ? 'checked' : ''}/>
+                const radioInput = `<input type="radio" id=${id} name=${group} value=${x.optionDefault} ${checked ? 'checked' : ''}/>
                                     <label for=${id}>
                                         ${x.title} ${selectElement}
                                     </label>`;
@@ -395,7 +395,7 @@ function playerNames() {
 
     return htmlDiv('div__player-name-wrapper', 
         `<label for="${id}">${title}:</label>
-         <input type="text" id="${id}" key="${id}" name="${id}" value="${defaultValue}" 
+         <input type="text" id="${id}" name="${id}" value="${defaultValue}" 
                     class="input__player-name"/>
         ${colour}`, 
         { key: divKey}

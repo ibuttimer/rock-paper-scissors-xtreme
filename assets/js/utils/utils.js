@@ -161,9 +161,8 @@ export function generateId(identifier, modifier) {
 export function optionsList(id, array, defaultValue, valueModifier = y => y) {
     return array.map(x => {
             let value = valueModifier(x);
-            let optKey = `${id}-${value}`;
             let selected = value === defaultValue ? 'selected' : '';
-            return `<option value=${value} key=${optKey} ${selected}>${value}</option>`;
+            return `<option value=${value} ${selected}>${value}</option>`;
         });
 }
 

@@ -46,9 +46,7 @@ const animation_time = 1000;    // animation time in msec
  */
 function getSelectable(selections, tileClass) {
     return selections.map(sel => {
-        let optionKey = `num-games-option-${sel.selection.name}`;
-
-        return `<div class='div__selection-option-wrapper' key=${optionKey}>
+        return `<div class='div__selection-option-wrapper'>
                     ${selectionTile(sel, tileClass)}            
                 </div>`;            
     }).reduce(accumulator, '');

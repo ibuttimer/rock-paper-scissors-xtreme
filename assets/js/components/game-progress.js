@@ -27,9 +27,7 @@ import { accumulator } from '../utils/index.js';
 function getGameProgress(progress) {
 
     return Array.from(progress).map((entry, index) => {
-        let rowKey = `game-progress-row-${index}`;
-
-        return `<tr class='tr__game-progress-row' key=${rowKey}>
+        return `<tr class='tr__game-progress-row'>
                     <td class='td__game-progress-info'>${entry[0]}</td>
                     <td class='td__game-progress-data'>${entry[1]}</td>
                 </tr>`;
