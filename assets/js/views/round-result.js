@@ -7,9 +7,9 @@ import { ResultCode } from "../enums.js";
 import { 
     titleHeader, gameProgress, leaderBoard, playerSelectionTile, getPlayerSelectionTileParam
 } from '../components/index.js'
-import { generateId, accumulator } from '../utils/index.js';
+import { generateId, accumulator, htmlDiv, htmlButton } from '../utils/index.js';
 import { View, setView } from '../routing.js'
-
+import { SELECTION_TILE_DIV_PROP } from './game-params.js'
 
 const continueButtonId = 'continue-button'
 
@@ -33,7 +33,7 @@ const continueButtonId = 'continue-button'
  * @type {object} value - info params
  */
 const resultTexts = new Map([
-    [ResultCode.MatchOver, resultCodeMapping('Match Over', 'Done', 'button__round-result-next-game')],
+    [ResultCode.MatchOver, resultCodeMapping('Match Over', 'Done', 'button__round-result-done')],
     [ResultCode.Winner, resultCodeMapping('Winner', 'Next game', 'button__round-result-next-game')],
     [ResultCode.Eliminate, resultCodeMapping('Eliminations', 'Next round', 'button__round-result-next-round')],
     [ResultCode.PlayAgain, resultCodeMapping('Play Again', 'Next round', 'button__round-result-next-round')]
@@ -77,10 +77,14 @@ function getPlayerSelections(gameState) {
         const selectionInfo = selections.find(sel => sel.selection === selection);
         const optionKey = generateId('player-selection-result', player.name);
 
+        // player-specific css class for tile
+        const tileClass = player.css[SELECTION_TILE_DIV_PROP];
+
         return `<div class="div__player-selection-wrapper" key=${optionKey}>
                     ${playerSelectionTile(
                         getPlayerSelectionTileParam(
-                            player, selectionInfo.src, selectionInfo.alt, selection, player === winner ? "Winner" : undefined)
+                            player, selectionInfo.src, selectionInfo.alt, selection, 
+                            player === winner ? "Winner" : undefined, tileClass)
                     )}
                 </div>`;
     }).reduce(accumulator, '');
@@ -140,11 +144,13 @@ function getContinueButton(roundResult) {
         throw new Error(`Unknown ResultCode: ${resultCode}`);
     }
 
-    return text ? `<div class="div__round-result-next-button-wrapper">
-                        <button id=${continueButtonId} class=${className} type='button'>
-                            ${text}
-                        </button>
-                   </div>` : null;
+    const button = htmlButton([className, 'button__clickable', 'debossable'], text, {
+        id: continueButtonId,
+        'aria-label': `${text}.`,
+        rel: 'next'
+    });
+
+    return text ? htmlDiv('div__round-result-next-button-wrapper', button) : null;
 }
 
 /**

@@ -2,7 +2,7 @@
 
 /* custom properties */
 :root {
-    --result-selection-grid-auto-flow: column;
+    --result-selection-grid-auto-flow: row;
 }
 
 .section__round-result {
@@ -11,11 +11,9 @@
 	grid-auto-rows: max-content;
 	grid-auto-flow: var(--result-selection-grid-auto-flow);
 	grid-template-rows: auto auto;
-	grid-template-columns: auto auto;
-}
-
-.div__player-selection-wrapper {
-	
+	grid-template-columns: repeat(3, 1fr);
+    justify-items: center;
+	align-items: end;
 }
 
 .h3_round-result-text {
@@ -27,17 +25,24 @@
 }
 
 .div__round-result-next-button-wrapper {
-	
+	text-align: center;
+	margin: var(--var-input-margin) 0 var(--var-input-margin);
 }
 
+.button__round-result-next-round,
+.button__round-result-next-game,
 .button__round-result-done {
-
+    width: 200px;
 }
 
 .button__round-result-next-round {
-	
+    background-color: green;
 }
 
 .button__round-result-next-game {
-	
+    background-color: green;
+}
+
+.button__round-result-done {
+    background-color: blue;
 }

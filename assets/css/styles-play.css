@@ -3,7 +3,7 @@
 /* custom properties */
 :root {
 	/* play view */
-    --play-selection-grid-auto-flow: column;
+    --play-selection-grid-auto-flow: row;
 
 	/* selection tile component */
     --var-game-tile-margin: calc(2 * var(--std-margin-between));
@@ -18,7 +18,7 @@
 	grid-auto-columns: max-content;
 	grid-auto-rows: max-content;
 	grid-auto-flow: var(--play-selection-grid-auto-flow);
-	grid-template-rows: repeat(3, 1fr);
+	grid-template-rows: auto auto;
 	grid-template-columns: repeat(3, 1fr);
     justify-items: center;
 }

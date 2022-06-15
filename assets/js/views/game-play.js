@@ -66,8 +66,6 @@ function getSelectable(selections, tileClass) {
     });
     const name = htmlH4('h4__selection-tile-name', params.selection.name)
 
-'div__selection-tile-wrapper-1'
-
     return htmlDiv(['div__selection-tile-wrapper', 'debossable-nbi', tileClass], 
         `${image}
         ${name}`, {

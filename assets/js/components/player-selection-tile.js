@@ -2,6 +2,7 @@
     Player's selection tile component.
     @author Ian Buttimer
 */
+import { htmlDiv, htmlImg, htmlH3, htmlH4 } from '../utils/index.js'
 
 /**
  * Player's selection tile component
@@ -9,12 +10,21 @@
  * @returns {string} html for component
  */
  export default function playerSelectionTile(params) {
-    return `<div class="div__player-selection-tile-wrapper">
-            ${params.banner ? `<h3 class="h3__player-selection-tile-banner">${params.banner}</h3>` : ''}
-            <h4 class="h4__player-selection-tile-player-name">${params.player.name}</h4>
-            <img class="img__player-selection-tile-img" src=${params.src} alt=${params.alt}/>
-            <h4 class="h4__player-selection-tile-name">${params.selection.name}</h4>
-        </div>`;
+
+    const banner = params.banner ?
+        htmlH3('h3__player-selection-tile-banner', params.banner) : '';
+    const playerName = htmlH4(
+        ['h4__player-selection-tile-player-name', params.player.css.color], params.player.name);
+    const image = htmlImg('img__player-selection-tile-img', {
+        src: params.src, alt: params.alt
+    });
+    const selectionName = htmlH4('h4__player-selection-tile-name', params.selection.name);
+
+    return htmlDiv(['div__player-selection-tile-wrapper', params.tileClass],
+                    `${banner}
+                    ${playerName}
+                    ${image}
+                    ${selectionName}`);
 }
 
 /**
@@ -24,14 +34,16 @@
  * @param {string} alt - image alt text
  * @param {Selection} selection - selection
  * @param {string} banner - banner text
+ * @param {string} tileClass - player-specific css class
  * @returns {object} parameter object
  */
-export function getPlayerSelectionTileParam(player, src, alt, selection, banner) {
+export function getPlayerSelectionTileParam(player, src, alt, selection, banner, tileClass) {
     return {
         player: player, 
         src: src, 
         alt: alt, 
         selection: selection, 
-        banner: banner
+        banner: banner,
+        tileClass: tileClass
     };
 }
