@@ -4,7 +4,7 @@
 */
 
 import { 
-    variableCheck, requiredVariable, gameParticipantsCheck, mapToString, adjustArray
+    variableCheck, requiredVariable, gameParticipantsCheck, mapToString, adjustArray, accumulator
 } from './utils/index.js';
 import { Player, Robot } from './player.js';
 import { Enum, GameKey, Selection, GameMode, GameStatus, GameEvent, ResultCode } from './enums.js';
@@ -425,10 +425,13 @@ export class GameResult {
      * @type {Player} key
      * @type {Selection} value */
     playerSelections;
-    /** Data dependant on round result
-     * @type {*} */
-    data;
-    /** Explanation dependant on round result
+    /** Winning selections/players for round result
+     * @type {Array[Selection|Player]} */
+    winning;
+    /** Losing selections/player for round result
+     * @type {Array[Selection|Player]} */
+    losing;
+     /** Explanation dependant on round result
      * @type {*} */
     explanation;
 
@@ -436,15 +439,17 @@ export class GameResult {
      * @constructor
      * @param {ResultCode} resultCode - result code for round
      * @param {number} roundNumber - round number result applies to
-     * @param {Map} playerSelections - players who participated in round as keys and their selection as value
-     * @param {Array} data - data dependant on round result
-     * @param {Array} explanation - explanation dependant on round result
+     * @param {Map<Player, Selection>} playerSelections - players who participated in round as keys and their selection as value
+     * @param {Array[Player]} winning - winning players
+     * @param {Array[Contest|Player]} losing - contests with result/losing players
+     * @param {Array[string]} explanation - explanation dependant on round result
      */
-    constructor(resultCode, roundNumber, playerSelections = new Map(), data = [], explanation = []) {
+    constructor(resultCode, roundNumber, playerSelections = new Map(), winning = [], losing = [], explanation = []) {
          this.resultCode = resultCode;
          this.roundNumber = roundNumber;
          this.playerSelections = playerSelections;
-         this.data = data;
+         this.winning = winning;
+         this.losing = losing;
          this.explanation = explanation;
     }
 
@@ -465,7 +470,17 @@ export class GameResult {
      * @returns {string}
      */
      toString() {
-         return `resultCode: ${this.resultCode}\n  roundNumber: ${this.roundNumber}\n  playerSelections: ${mapToString(this.playerSelections)}\n  data: ${this.data}\n  explanation: ${this.explanation}` 
+        return [
+            ['resultCode', this.resultCode],
+            ['roundNumber', this.roundNumber],
+            ['playerSelections', mapToString(this.playerSelections)],
+            ['winning', this.winner],
+            ['losing', this.losing],
+            ['explanation', this.explanation]
+        ].reduce(
+            (previousValue, currentValue, currentIndex) => {
+                previousValue + (currentIndex > 0 ? '\n ' : '') + currentValue
+            }, '');
      }
 }
 
@@ -793,7 +808,7 @@ export class GameResult {
      *          data: n/a
      *          explanation: n/a
      *      resultCode: ResultCode.Eliminate
-     *          data: array of selections to eliminate
+     *          losing: array of contests with result
      *          explanation: array of explanations of eliminations
      */
     evaluateRound() {
@@ -825,7 +840,8 @@ export class GameResult {
             // check if all same selection
             if (top.count < this.activePlayerCount) {
 
-                let eliminated = [];    // selections which lose
+                let winners = [];       // selections which win
+                let losers = [];        // contests with result
                 let explanations = [];  // explanation of losses
                 let activated = 0;      // num of winning selections
 
@@ -842,6 +858,7 @@ export class GameResult {
                                 // add explanation
                                 explanations.push(
                                     pick.rule.explanation(otherPick.selection));
+                                winners.push(pick.selection);
                             }
                         }
                     }
@@ -850,14 +867,14 @@ export class GameResult {
                 for (const pick of countEntries) {
                     if (!pick.nullified) {
                         ++activated;
-                        eliminated = eliminated.concat(pick.rule.contests);
+                        losers = losers.concat(pick.rule.contests);
                     }
                 }
 
                 if (activated > 0) {
                     // eliminate losers
                     evaluation.resultCode = ResultCode.Eliminate;
-                    evaluation.data = eliminated;
+                    evaluation.losing = losers;
                     evaluation.explanation = explanations;
                 }
                 // else play again
@@ -880,10 +897,10 @@ export class GameResult {
      *          data: n/a
      *          explanation: n/a
      *      resultCode: ResultCode.Eliminate
-     *          data: array eliminated players
+     *          losing: array eliminated players
      *          explanation: array of explanations of eliminations
      *      resultCode: ResultCode.Winner
-     *          data: winning player
+     *          winning: winning player
      *          explanation: array of explanations of eliminations
      */
     processEvaluation(evaluation) {
@@ -892,9 +909,9 @@ export class GameResult {
         switch (evaluation.resultCode) {
             case ResultCode.Eliminate:
                 let eliminated = [];
-                for (const eliminate of evaluation.data) {
+                for (const contest of evaluation.losing) {
                     this.players.forEach(player => {
-                        if (player.inGame && player.selection === eliminate.loser) {
+                        if (player.inGame && player.selection === contest.loser) {
                             player.inGame = false;  // player eliminated
                             eliminated.push(player);
                         }
@@ -903,11 +920,9 @@ export class GameResult {
                 if (this.activePlayerCount === 1) {
                     // only one player remaining return winner
                     processed.resultCode = ResultCode.Winner;
-                    processed.data = this.players.find(player => player.inGame);
-                } else {
-                    // return eliminated players
-                    processed.data = eliminated;
+                    processed.winning = this.players.find(player => player.inGame);
                 }
+                processed.losing = eliminated;
                 processed.explanation = evaluation.explanation;
                 break;
             default:

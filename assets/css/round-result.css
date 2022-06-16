@@ -30,7 +30,7 @@
 	width: 80%;
 }
 
-.h3_round-result-text {
+.h3__round-result-text {
 	text-align: center;
 }
 
@@ -59,4 +59,20 @@
 
 .button__round-result-done {
     background-color: blue;
+}
+
+
+.animate__fall-back {
+    animation-name: animate-fall-back;
+    animation-duration: 2s;
+    animation-fill-mode: forwards;
+}
+
+@keyframes animate-fall-back {
+    from {
+        transform: rotateX(0deg);
+    }
+    to {
+        transform: rotateX(70deg);
+    }
 }

@@ -7,6 +7,6 @@ export {
 } from './utils.js'
 export { 
     htmlDiv, htmlButton, htmlImg, htmlH1, htmlH2, htmlH3, htmlH4, htmlH5, htmlH6,
-    htmlTable, htmlThead, htmlTbody, htmlTr, htmlTh, htmlTd, htmlSpan, htmlSection, 
-    htmlAside 
+    htmlTable, htmlThead, htmlTbody, htmlTr, htmlTh, htmlTd, htmlSpan, htmlP,
+    htmlSection, htmlAside 
 } from './html.js'

@@ -20,11 +20,12 @@ import { htmlDiv, htmlImg, htmlH3, htmlH4 } from '../utils/index.js'
     });
     const selectionName = htmlH4('h4__player-selection-tile-name', params.selection.name);
 
-    return htmlDiv(['div__player-selection-tile-wrapper', params.tileClass],
-                    `${banner}
-                    ${playerName}
-                    ${image}
-                    ${selectionName}`);
+    let classes = ['div__player-selection-tile-wrapper'];
+    if (params.classes) {
+        classes = classes.concat(Array.isArray(params.classes) ? params.classes : [params.classes]);
+    }
+
+    return htmlDiv(classes, [banner, playerName, image, selectionName].join(' '));
 }
 
 /**
@@ -34,16 +35,16 @@ import { htmlDiv, htmlImg, htmlH3, htmlH4 } from '../utils/index.js'
  * @param {string} alt - image alt text
  * @param {Selection} selection - selection
  * @param {string} banner - banner text
- * @param {string} tileClass - player-specific css class
+ * @param {string} classes - player-specific css class
  * @returns {object} parameter object
  */
-export function getPlayerSelectionTileParam(player, src, alt, selection, banner, tileClass) {
+export function getPlayerSelectionTileParam(player, src, alt, selection, banner, classes) {
     return {
         player: player, 
         src: src, 
         alt: alt, 
         selection: selection, 
         banner: banner,
-        tileClass: tileClass
+        classes: classes
     };
 }

@@ -135,7 +135,7 @@ export default class GameState {
             switch (gameResult.resultCode) {
                 case ResultCode.Winner:
                     // update score
-                    let player = gameResult.data;
+                    let player = gameResult.winning;
                     this.incPlayerScore(player);
 
                     // check if best of winner

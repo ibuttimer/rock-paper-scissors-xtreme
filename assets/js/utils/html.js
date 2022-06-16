@@ -164,6 +164,15 @@ const htmlWrapper = (tag, className, innerHtml, attribs = {}, selfClosing = fals
 };
 
 /**
+ * Generate a paragraph element.
+ * @returns {string} - html for element
+ * @see {@link htmlWrapper}
+ */
+ export const htmlP = (className, innerHtml, attribs = {}) => {
+    return htmlWrapper('p', className, innerHtml, attribs, false);
+};
+
+/**
  * Generate a section element containing the specified html.
  * @returns {string} - html for element
  * @see {@link htmlWrapper}

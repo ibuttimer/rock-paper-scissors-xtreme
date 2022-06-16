@@ -8,7 +8,7 @@ import {
     titleHeader, gameProgress, leaderBoard, playerSelectionTile, getPlayerSelectionTileParam
 } from '../components/index.js'
 import { 
-    generateId, accumulator, htmlDiv, htmlButton, htmlSection, htmlAside 
+    generateId, accumulator, htmlDiv, htmlButton, htmlSection, htmlAside, htmlH3, htmlP 
 } from '../utils/index.js';
 import { SELECTION_TILE_DIV_PROP } from './game-params.js'
 
@@ -80,7 +80,7 @@ function getPlayerSelections(gameState) {
     const selections = gameState.selections;
 
     const winner = (roundResult.resultCode === ResultCode.Winner ||
-                        roundResult.resultCode === ResultCode.MatchOver) ? roundResult.data : undefined;
+                        roundResult.resultCode === ResultCode.MatchOver) ? roundResult.winning : undefined;
 
     return Array.from(roundResult.playerSelections).map(keyVal => {
         const player = keyVal[0];
@@ -88,15 +88,21 @@ function getPlayerSelections(gameState) {
         const selectionInfo = selections.find(sel => sel.selection === selection);
 
         // player-specific css class for tile
-        const tileClass = player.css[SELECTION_TILE_DIV_PROP];
+        let classes = [player.css[SELECTION_TILE_DIV_PROP]];
+        let banner = undefined;
+        if (player === winner) {
+            banner = "Winner";
+        } else if (roundResult.losing.findIndex(loser => loser === player) >= 0) {
+            classes.push('animate__fall-back');
+        }
 
-        return `<div class="div__player-selection-wrapper">
-                    ${playerSelectionTile(
+        return htmlDiv(['div__player-selection-wrapper'],
+                    playerSelectionTile(
                         getPlayerSelectionTileParam(
                             player, selectionInfo.src, selectionInfo.alt, selection, 
-                            player === winner ? "Winner" : undefined, tileClass)
-                    )}
-                </div>`;
+                            banner, classes)
+                    )
+                );
     }).reduce(accumulator, '');
 }
  
@@ -106,10 +112,10 @@ function getPlayerSelections(gameState) {
  * @returns {string} html for component
  */
 function getResultText(roundResult) {
-    return `<h3 class='h3_round-result-text'>
-                ${resultTexts.has(roundResult.resultCode) ? 
-                    resultTexts.get(roundResult.resultCode).resultText : ''}
-           </h3>`;
+    return htmlH3(['h3__round-result-text'],
+                resultTexts.has(roundResult.resultCode) ? 
+                    resultTexts.get(roundResult.resultCode).resultText : ''
+            );
 }
  
 /**
@@ -125,7 +131,7 @@ function getExplanation(roundResult) {
         case ResultCode.Winner:
         case ResultCode.MatchOver:
             explanation = roundResult.explanation.map(reason => {
-                return `<p class='p__elimination-explanation'>${reason}</p>`
+                return htmlP(['p__elimination-explanation'], reason);
             }).reduce(accumulator, '');
             break;
         default:
