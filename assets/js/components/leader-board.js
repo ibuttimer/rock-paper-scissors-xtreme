@@ -2,7 +2,10 @@
     Leader board component.
     @author Ian Buttimer
 */
-import { accumulator } from '../utils/index.js';
+import { 
+    accumulator, htmlDiv, htmlTable, htmlThead, htmlTbody, htmlTr, htmlTh, htmlTd, htmlSpan 
+} from '../utils/index.js';
+import { ORIENTATION_HORZ, ORIENTATION_VERT} from './game-progress.js'
 
 /**
  * Leader board component
@@ -10,18 +13,15 @@ import { accumulator } from '../utils/index.js';
  * @returns {string} html for component
  */
  export default function leaderBoard(scores) {
-    return `<div class="div__leader-board-wrapper">
-                <table class="table__leader-board">
-                    <thead class="thead__leader-board">
-                        <tr>
-                            <th colSpan="2">Scores</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        ${getPlayerScores(scores)}
-                    </tbody>
-                </table>
-            </div>`;
+    return htmlDiv(['div__leader-board-wrapper'],
+        htmlTable(['table__leader-board'], [
+            htmlThead(['thead__leader-board'], 
+                htmlTh([], 'Scores', {
+                    colSpan: 2
+                })),
+            htmlTbody([], getPlayerScores(scores, ORIENTATION_VERT))
+        ])
+    );
 }
 
 /**
@@ -31,12 +31,24 @@ import { accumulator } from '../utils/index.js';
  * @type {number} score - player's score
  * @returns {string} html for component
  */
-function getPlayerScores(scores) {
+function getPlayerScores(scores, orientation = ORIENTATION_HORZ) {
 
-    return scores.map((playerScore, index) => {
-        return `<tr class="tr__player-score-row">
-                    <td class="td__player-name">${playerScore.player.name}</td>
-                    <td class="td__player-score">${playerScore.score}</td>
-                </tr>`;
-    }).reduce(accumulator, '');
+    // default orientation horizontal; just one row
+    let wrapInfo = (info) => { return info };
+    let wrapAll = (info) => { return htmlTr(['tr__player-score-row'], info) };
+    if (orientation === ORIENTATION_VERT) {
+        // orientation vertical; multiple rows
+        const temp = wrapInfo;
+        wrapInfo = wrapAll;
+        wrapAll = temp;
+    }
+
+    return wrapAll(Array.from(scores).map((playerScore, index) => {
+        const player = playerScore.player;
+        const tdInfo = htmlTd(['td__player-name'], 
+                                    htmlSpan([player.css.color], player.name));
+        const tdData = htmlTd(['td__player-score'], 
+                                    htmlSpan([], playerScore.score.toString()));
+        return wrapInfo([tdInfo, tdData].join(' '));
+    }).reduce(accumulator, ''));
 }

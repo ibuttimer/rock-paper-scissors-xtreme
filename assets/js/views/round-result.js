@@ -2,13 +2,14 @@
     Game play view.
     @author Ian Buttimer
 */
-import { ROOT_URL, PLAY_URL, log } from '../globals.js';
+import { log } from '../globals.js';
 import { ResultCode } from "../enums.js";
 import { 
     titleHeader, gameProgress, leaderBoard, playerSelectionTile, getPlayerSelectionTileParam
 } from '../components/index.js'
-import { generateId, accumulator, htmlDiv, htmlButton } from '../utils/index.js';
-import { View, setView } from '../routing.js'
+import { 
+    generateId, accumulator, htmlDiv, htmlButton, htmlSection, htmlAside 
+} from '../utils/index.js';
 import { SELECTION_TILE_DIV_PROP } from './game-params.js'
 
 const continueButtonId = 'continue-button'
@@ -47,14 +48,24 @@ const resultTexts = new Map([
 export default function roundResultView(gameState) {
     const roundResult = gameState.roundResult;
     return `${titleHeader(gameState)}
-            ${getResultText(roundResult)}
             ${gameProgress(gameState.progressMap)}
-            ${leaderBoard(gameState.topDownScores)}
-            <section class="section__round-result">
-                ${getPlayerSelections(gameState)}
-            </section>
+            ${getResultText(roundResult)}
+            ${getRoundResultAndLeaderBoard(gameState)}
             ${getExplanation(roundResult)}
             ${getContinueButton(roundResult)}`;
+}
+
+/**
+ * Generate the round result and leader board component
+ * @param {GameState} gameState - current game state
+ * @returns {string} html for component
+ */
+function getRoundResultAndLeaderBoard(gameState) {
+
+    const roundResultElement = htmlSection(['section__round-result'], getPlayerSelections(gameState));
+    const leaderBoardElement = htmlAside(['aside__leader-board'], leaderBoard(gameState.topDownScores));
+    return htmlDiv(['div__round-result-leader-board'], `${roundResultElement}
+                                                        ${leaderBoardElement}`);
 }
 
 /**

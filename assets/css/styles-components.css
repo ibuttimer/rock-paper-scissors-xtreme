@@ -5,22 +5,27 @@
 	/* game progress component */
 	--game-progress-border-colour: rgb(204, 204, 204);
 	--game-progress-info-size: 10px;
-
-	/* leader board component */
-	--leader-board-border-colour: #333;
-    --leader-board-header-colour: #333;
-    --leader-board-header-text-colour: #fff;
+    --game-progress-background-color: floralwhite;
 
 	/* player selection tile */
     --var-result-selection-tile-margin: calc(2 * var(--std-margin-between));
     --var-result-selection-tile-img-size: 80px;
     --var-result-selection-tile-padding: 12px;
     --var-result-selection-tile-size: calc(var(--var-result-selection-tile-img-size) + (2 * var(--var-result-selection-tile-padding)));
+
+	/* leader board component */
+	--leader-board-border-colour: var(--game-progress-border-colour);
+	--leader-board-info-size: 10px;
+    --leader-board-header-colour: var(--brown);
+    --leader-board-header-text-colour: #fff;
+    --leader-board-background-color: floralwhite;
+    --leader-board-margin: var(--var-result-selection-tile-margin);
 }
 
 
 /* game progress component */
 .div__game-progress-wrapper {
+    margin: var(--var-game-tile-margin);
 }
 
 .tr__game-progress-row {
@@ -37,6 +42,7 @@
 
 .table__game-progress {
     margin: auto;
+    background-color: var(--game-progress-background-color);
 }
 
 .td__game-progress-data {
@@ -60,6 +66,13 @@
 .td__player-name,
 .td__player-score {
     border: 1px solid var(--leader-board-border-colour);
+    border-radius: 5px;
+    border-spacing: 4px;
+}
+
+.table__leader-board {
+    margin: auto;
+    background-color: var(--leader-board-background-color);
 }
 
 .thead__leader-board {
@@ -67,6 +80,10 @@
     color: var(--leader-board-header-text-colour);
 }
 
+.td__player-name span,
+.td__player-score span {
+    padding: 0 var(--game-progress-info-size);
+}
 
 /* player selection tile */
 .div__player-selection-tile-wrapper {

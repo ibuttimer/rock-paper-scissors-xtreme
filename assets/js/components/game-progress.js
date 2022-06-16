@@ -2,7 +2,7 @@
     Game progress component.
     @author Ian Buttimer
 */
-import { accumulator, htmlTr, htmlTd, htmlSpan } from '../utils/index.js';
+import { accumulator, htmlDiv, htmlTable, htmlTbody, htmlTr, htmlTd, htmlSpan } from '../utils/index.js';
 
 export const ORIENTATION_HORZ = 0;
 export const ORIENTATION_VERT = 1;
@@ -13,13 +13,11 @@ export const ORIENTATION_VERT = 1;
  * @returns {string} html for component
  */
  export default function gameProgress(progress) {
-    return `<div class='div__game-progress-wrapper'>
-                <table class='table__game-progress'>
-                    <tbody>
-                        ${getGameProgress(progress, ORIENTATION_HORZ)}
-                    </tbody>
-                </table>
-            </div>`;
+    return htmlDiv(['div__game-progress-wrapper'],
+        htmlTable(['table__game-progress'],
+            htmlTbody([], getGameProgress(progress, ORIENTATION_HORZ))
+        )
+    );
 }
 
 /**
@@ -29,7 +27,6 @@ export const ORIENTATION_VERT = 1;
  */
 function getGameProgress(progress, orientation = ORIENTATION_HORZ) {
 
-    let html;
     // default orientation horizontal; just one row
     let wrapInfo = (info) => { return info };
     let wrapAll = (info) => { return htmlTr(['tr__game-progress-row'], info) };
@@ -42,10 +39,9 @@ function getGameProgress(progress, orientation = ORIENTATION_HORZ) {
 
     return wrapAll(Array.from(progress).map((entry, index) => {
         const tdInfo = htmlTd(['td__game-progress-info'], 
-                                    `${htmlSpan([], entry[0])}`);
+                                    htmlSpan([], entry[0]));
         const tdData = htmlTd(['td__game-progress-data'], 
-                                    `${htmlSpan([], entry[1])}`);
-        return wrapInfo(`${tdInfo}
-                         ${tdData}`);
+                                    htmlSpan([], entry[1]));
+        return wrapInfo([tdInfo, tdData].join(' '));
     }).reduce(accumulator, ''));
 }

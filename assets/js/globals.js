@@ -21,7 +21,7 @@ export const MAX_GAMES = 15;
 export const DEFAULT_GAMES = 3;
 
 export const PLAYER_COLOURS = [
-    'red', 'green', 'blue', 'aqua', 'yellow', 'orange', 
+    'red', 'green', 'blue', 'aqua', 'darkgrey', 'orange', 
     'deeppink', 'salmon', 'teal', 'chocolate', 'orchid', 'darkseagreen'
 ];
 console.assert(

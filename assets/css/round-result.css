@@ -5,6 +5,18 @@
     --result-selection-grid-auto-flow: row;
 }
 
+.div__round-result-leader-board {
+    display: flex;
+    flex-direction: row;
+    align-items: top;
+    justify-content: space-between;
+}
+
+.aside__leader-board {
+	margin-top: var(--leader-board-margin);
+	width: 20%;
+} 
+
 .section__round-result {
     display: grid;
 	grid-auto-columns: max-content;
@@ -14,6 +26,8 @@
 	grid-template-columns: repeat(3, 1fr);
     justify-items: center;
 	align-items: end;
+
+	width: 80%;
 }
 
 .h3_round-result-text {
