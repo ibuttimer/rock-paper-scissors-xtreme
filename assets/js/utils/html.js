@@ -191,6 +191,24 @@ const htmlWrapper = (tag, className, innerHtml, attribs = {}, selfClosing = fals
 };
 
 /**
+ * Generate an input element containing the specified html.
+ * @returns {string} - html for element
+ * @see {@link htmlWrapper}
+ */
+ export const htmlInput = (className, attribs = {}) => {
+    return htmlWrapper('input', className, null, attribs, true);
+};
+
+/**
+ * Generate a label element containing the specified html.
+ * @returns {string} - html for element
+ * @see {@link htmlWrapper}
+ */
+ export const htmlLabel = (className, innerHtml, attribs = {}) => {
+    return htmlWrapper('label', className, innerHtml, attribs, false);
+};
+
+/**
  * Generate a div element containing the specified html.
  * @returns {string} - html for element
  * @see {@link htmlWrapper}

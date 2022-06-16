@@ -86,7 +86,6 @@
 .div__num-games-wrapper input:checked + label {
     background-color: var(--light-blue);
     color: var(--light-blue-text);
-    /* box-shadow: 0 0 10px rgba(102, 179, 251, 0.5); */
     border-color: var(--light-blue);
     z-index: 1;
 }
@@ -144,4 +143,14 @@
 
 .button__play {
     width: 200px;
+}
+
+.div__border-error {
+    border: 2px solid red;
+}
+
+.div__duplicate-error {
+    margin: var(--var-input-margin) 0 var(--var-input-margin);
+    text-align: center;
+    color: red;
 }

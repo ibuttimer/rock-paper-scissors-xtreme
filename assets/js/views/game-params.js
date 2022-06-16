@@ -8,9 +8,9 @@ import {
 } from '../globals.js';
 import { Player, Robot } from '../player.js';
 import { default as titleHeader } from '../components/title.js'
-import { generateId, optionsList, accumulator, adjustArray } from '../utils/index.js';
+import { generateId, optionsList, accumulator, adjustArray, htmlH4 } from '../utils/index.js';
 import { View, setView } from '../routing.js'
-import { htmlDiv, htmlButton } from '../utils/index.js';
+import { htmlDiv, htmlButton, htmlInput, htmlLabel } from '../utils/index.js';
 
 
 // Parameters for game parameters
@@ -84,7 +84,7 @@ export default function gameParamsView(gameState) {
                     ${htmlDiv('div__player-names-title', '<p>Name</p>')}
                     ${htmlDiv('div__player-names-title', '<p>Colour</p>')}`
                 )}
-                ${htmlDiv('div__player-name-group-wrapper', playerNames(), {
+                ${htmlDiv('div__player-name-group-wrapper', playerNames(wip.playerArray), {
                     id: playerNameGroupId
                 })}`
             )}
@@ -97,39 +97,79 @@ export default function gameParamsView(gameState) {
  * @param {GameState} gameState - game state object
  */
 function playGame(event, gameState) {
-    
-    // generate player list
-    const robots = wip.numRobots ? 
-        [...Array(wip.numRobots).keys()].map(index => new Robot(index + 1)) : [];
-    const players = persistPlayerNames().concat(robots);
 
-    // set player specific css
-    players.forEach((player, index) => {
-        player.css = {};
-        PROPS.forEach(prop => player.css[prop] = playerCss(index, prop));
-        player.colour = PLAYER_COLOURS[index];
-    })
+    const playerCheck = persistPlayerNames(wip.playerArray);
+    if (playerCheck.ok) {
+        // generate player list
+        const robots = wip.numRobots ? 
+            [...Array(wip.numRobots).keys()].map(index => new Robot(index + 1)) : [];
+        const players = playerCheck.players.concat(robots);
 
-    gameState.game.init(wip.numPlayers, wip.numRobots, players);
-    gameState.startGame();
+        // set player specific css
+        players.forEach((player, index) => {
+            player.css = {};
+            PROPS.forEach(prop => player.css[prop] = playerCss(index, prop));
+            player.colour = PLAYER_COLOURS[index];
+        })
 
-    setView(PLAY_URL, gameState);
+        gameState.game.init(wip.numPlayers, wip.numRobots, players);
+        gameState.startGame();
+
+        setView(PLAY_URL, gameState);
+    } else {
+        // re-display players with errors
+        displayPlayers(playerCheck.players, playerCheck.duplicates);
+    }
 }
 
 /**
  * Save the entered player names
- * @returns {Array[Player]} player array
+ * @param {Array[Player]} array - array of players
+ * @returns {object} result object with the following properties:
+ * @type {boolean} ok - player names ok flag
+ * @type {Array[Player]} players - array of players
+ * @type {Array[number]} duplicates - array of indices with duplicate names
  */
-function persistPlayerNames() {
+function persistPlayerNames(array) {
     
-    // TODO ensure unique player names
-    
-    wip.playerArray.forEach((player, index) => {
-        let id = generatePlayerInputId(playerIndexToIdNum(index));
-        let name = document.getElementById(id).value;
+    const duplicates = new Map();
+    let areUnique = true;
+
+    array.forEach((player, index) => {
+        const id = generatePlayerInputId(playerIndexToIdNum(index));
+        const element = document.getElementById(id);
+        const name = element ? element.value : undefined;
         player.name = name ? name : defaultPlayerName(index);
-    })
-    return wip.playerArray;
+
+        if (!duplicates.has(player.name)) {
+            duplicates.set(player.name, [index]);
+        } else {
+            areUnique = false;
+            duplicates.get(player.name).push(index);
+        }
+    });
+
+    let indices = [];
+    if (!areUnique) {
+        // remove non duplicate entries
+        let notDuplicate = [];
+        duplicates.forEach(function(value, key) {
+            if (value.length === 1) {
+                notDuplicate.push(key);
+            }
+        });
+        notDuplicate.forEach(key => duplicates.delete(key));
+
+        duplicates.forEach(function(value, key) {
+            indices = indices.concat(value);
+        })
+    }
+
+    return { 
+        ok: areUnique,
+        players: array,
+        duplicates: indices
+    };
 }
 
 /**
@@ -175,13 +215,16 @@ function getNumPlayers(params) {
  * Set the number of players
  * @param {Event} event - HTMLElement: change event
  */
-function setNumPlayers(event) {
+ function setNumPlayers(event) {
     let num = parseInt(event.target.value);
     if (num !== wip.numPlayers) {
+
         let array = adjustArray(
-            persistPlayerNames(), num, (index) => {
+            wip.playerArray, num, (index) => {
                 return new Player(`${defaultPlayerName(index)}`);
             });
+
+        const playerCheck = persistPlayerNames(array);
 
         wip.numPlayers = num;
         wip.playerArray = array;
@@ -189,9 +232,18 @@ function setNumPlayers(event) {
         log(`numPlayers ${num}`);
 
         // update DOM
-        const playerNameGroupElement = document.getElementById(playerNameGroupId);
-        playerNameGroupElement.innerHTML = playerNames();
+        displayPlayers(array, playerCheck.duplicates);
     }
+}
+
+/**
+ * Display the player name inputs 
+ * @param {Array[Player]} array - array of players
+ * @param {Array[number]} errorIndices - array of indices of player with error
+ */
+ function displayPlayers(array, errorIndices) {
+    const playerNameGroupElement = document.getElementById(playerNameGroupId);
+    playerNameGroupElement.innerHTML = playerNames(array, errorIndices);
 }
 
 /**
@@ -336,12 +388,38 @@ const defaultPlayerName = (index) => `Player ${playerIndexToIdNum(index)}`;
 
 /**
  * Generate player name elements 
+ * @param {Array[Player]} playerArray - array of players
+ * @param {Array[number]} errorIndices - array of indices of player with error
  * @returns {string} html for player names inputs
  */
-function playerNames() {
-    return wip.playerArray
-        .map((player, index) => getPlayerName(playerIndexToIdNum(index), player.name))
+function playerNames(playerArray, errorIndices) {
+
+    let showError = false;
+    let classes;
+    if (errorIndices) {
+        classes = (index) => {
+            let playerClasses = undefined;
+            if (errorIndices.findIndex(idx => idx === index) >= 0) {
+                playerClasses = ['div__border-error'];
+                showError = true;
+            }
+            return playerClasses;
+        }
+    } else {
+        classes = (index) => { return undefined; }
+    }
+    let html = playerArray
+        .map((player, index) => getPlayerName(playerIndexToIdNum(index), player.name, classes(index)))
         .reduce(accumulator, '');
+
+    if (showError) {
+        html += htmlDiv(['div__duplicate-error'],
+            htmlH4([], 'Duplicate player names identified! Please specify unique player names.')
+        );
+    }
+
+    return html;
+
 }
 
 /**
@@ -382,24 +460,32 @@ function playerNames() {
  * Player name component.
  * @param {number} idNum - player id number
  * @param {string} defaultValue - default name
+ * @param {Array[string]} classes - additional css classes
  * @returns {string} html for player name input
  */
- function getPlayerName(idNum, defaultValue) {
+ function getPlayerName(idNum, defaultValue, classes) {
 
     const title = `Player ${idNum}`;
 
     let id = generatePlayerInputId(idNum);
-    const divKey = `${id}-div-key`;
-    const playerKey = `${id}-key`;
-    const colour = htmlDiv(['div__player-colour', playerColour(playerIdNumToIndex(idNum), true)], '<p/>');
+    // const colour = htmlDiv(['div__player-colour', playerColour(playerIdNumToIndex(idNum), true)], '<p/>');
 
-    return htmlDiv('div__player-name-wrapper', 
-        `<label for="${id}">${title}:</label>
-         <input type="text" id="${id}" name="${id}" value="${defaultValue}" 
-                    class="input__player-name"/>
-        ${colour}`, 
-        { key: divKey}
-    );
+    let inputClasses = ['input__player-name'];
+    if (classes) {
+        inputClasses = inputClasses.concat(Array.isArray(classes) ? classes : [classes]);
+    }
+
+    return htmlDiv(['div__player-name-wrapper'], [
+        htmlLabel([], title, {
+            for: id
+        }),
+        htmlInput(inputClasses, {
+            type: 'text',
+            id: id,
+            name: id, value: defaultValue
+        }),
+        htmlDiv(['div__player-colour', playerColour(playerIdNumToIndex(idNum), true)], '<p/>')
+    ]);
 }
 
 /**
