@@ -5,6 +5,24 @@
 /* custom properties */
 :root {
     --menu-item-padding: 120px;
+
+    --menu-color: var(--dark-blue);
+
+    --menu-logo-size: 28px;
+
+    --menu-list-font-size: 1.1rem;
+    --menu-dropdown-font-size: 1.0rem;
+
+    /** toggle switch related */
+    --var-toggle-switch-width: 35px;
+    --var-toggle-switch-height: 15px;
+    --var-toggle-switch-border-radius: calc(var(--var-toggle-switch-height) / 2);
+
+    --var-toggle-switch-internal-border: 2px;
+    --var-toggle-switch-dot-width: calc(var(--var-toggle-switch-height) - (2 * var(--var-toggle-switch-internal-border)));
+    --var-toggle-switch-dot-height: var(--var-toggle-switch-dot-width);
+
+    --var-toggle-switch-dot-checked-left: calc(var(--var-toggle-switch-width) - var(--var-toggle-switch-dot-width) - var(--var-toggle-switch-internal-border));
 }
   
 .nav__top {
@@ -19,21 +37,121 @@
     vertical-align: bottom;
 }
 
-.menu__row {
+.ul__menu-row {
     width: 90%;
     list-style-type: none;
     text-align: end;
 }
 
-.menu__list {
+.li__menu-item {
     display: inline-block;
     vertical-align: bottom;
-    font-size: 1.1rem;
+    font-size: var(--menu-list-font-size);
 }
 
-.menu__link {
-display: block;
-text-decoration: none;
-padding: var(--std-padding-vert) var(--std-padding-horz);
+.a__menu-link,
+.div__menu-link {
+    display: block;
+    text-decoration: none;
+    padding: var(--std-padding-vert) var(--std-padding-horz);
+    color: var(--menu-color);
 }
-    
+
+/* dropdown menu for settings based on 
+    https://www.w3schools.com/css/css_dropdowns.asp */
+.button__dropdown {
+    border: none;
+    cursor: pointer;
+    background-color: transparent;
+    font-size: var(--menu-list-font-size);
+    color: var(--menu-color);
+    font-family: var(--paragraph-font);
+    font-weight: var(--paragraph-font-weight);
+}
+  
+/* The container <div> - needed to position the dropdown content */
+.div__dropdown {
+    position: relative;
+    display: inline-block;
+}
+  
+/* Dropdown Content (Hidden by Default) */
+.div__dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 210px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+    right: 0;       /* menu to go from right to left */
+    top: calc(var(--menu-logo-size) + var(--std-margin-vert));
+    border-radius: 5px;
+    font-size: var(--menu-dropdown-font-size);
+}
+  
+/* Show the dropdown menu on hover */
+.div__dropdown:hover .div__dropdown-content {
+    display: block;
+}
+
+.div__setting-option-wrapper {
+    display: block;
+    padding: var(--std-padding-vert) var(--std-padding-horz);
+}
+
+.div__dropdown-content > .div__setting-option-wrapper:not(:first-child) {
+    padding-top: 0;
+}
+
+.div__setting-option {
+    display: flex;
+    justify-content: space-between;
+}
+
+/* toggle switch based on 
+  ANIMATED CSS TOGGLE SWITCH, Garet McKinley, https://freefrontend.com/css-toggle-switches/
+  https://codepen.io/garetmckinley/pen/YmxYZr?editors=1100 */
+.label__toggle-control {
+    display: block;
+    position: relative;
+    padding-left: var(--var-toggle-switch-width);
+    cursor: pointer;
+    -webkit-user-select: none;
+       -moz-user-select: none;
+        -ms-user-select: none;
+            user-select: none;
+}
+.label__toggle-control input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+.label__toggle-control input:checked ~ .span_control {
+    background-color: var(--menu-color);
+}
+.label__toggle-control input:checked ~ .span_control:after {
+    left: var(--var-toggle-switch-dot-checked-left);
+}
+.label__toggle-control .span_control {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: var(--var-toggle-switch-height);
+    width: var(--var-toggle-switch-width);
+    border-radius: var(--var-toggle-switch-border-radius);
+    background-color: darkgray;
+    transition: background-color 0.15s ease-in;
+}
+.label__toggle-control .span_control:after {
+    content: "";
+    position: absolute;
+    left: var(--var-toggle-switch-internal-border);
+    top: var(--var-toggle-switch-internal-border);
+    width: var(--var-toggle-switch-dot-width);
+    height: var(--var-toggle-switch-dot-height);
+    border-radius: var(--var-toggle-switch-border-radius);
+    background: white;
+    transition: left 0.15s ease-in;
+}

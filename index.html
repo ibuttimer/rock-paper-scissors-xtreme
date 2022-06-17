@@ -40,16 +40,37 @@
                         </span>
                     </a>
                 </div>
-                <ul class='menu__row'>
-                    <li class='menu__list'>
-                        <a href="/rules" class='menu__link' aria-label='goto rules page.'>
+                <ul class='ul__menu-row'>
+                    <li class='li__menu-item'>
+                        <a href="/rules" class='a__menu-link' aria-label='goto rules page.'>
                             <i class='lni lni-book'></i>&nbsp;Rules
                         </a>
                     </li>
-                    <li class='menu__list'>
-                        <a href='#' class='menu__link' aria-label='open settings.'>
-                            <i class='lni lni-cog'></i>&nbsp;Settings
-                        </a>
+                    <li class='li__menu-item'>
+                        <div class="div__dropdown div__menu-link">
+                            <button class="button__dropdown"><i class='lni lni-cog'></i>&nbsp;Settings</button>
+                            <div class="div__dropdown-content">
+                                <div class="div__setting-option-wrapper">
+                                    <div class="div__setting-option">
+                                        <p>Enable animation</p>
+                                        <label class="label__toggle-control">
+                                            <input type="checkbox" id="checkbox-animation" value="animation">
+                                            <!-- <input type="checkbox" checked="checked"> -->
+                                            <span class="span_control"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="div__setting-option-wrapper">
+                                    <div class="div__setting-option">
+                                        <p>Enable sound</p>
+                                        <label class="label__toggle-control">
+                                            <input type="checkbox" id="checkbox-sound" value="sound">
+                                            <span class="span_control"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </li>
                 </ul>
             </nav>
