@@ -8,6 +8,7 @@ import {
 import { Game, GameVariant } from './game.js'
 import { GameKey, Selection, ResultCode } from './enums.js';
 import { setView } from './routing.js'
+import { loadPreferences } from './utils/index.js'
 
 /**
  * Generate a selection tile parameters object
@@ -98,8 +99,8 @@ export default class GameState {
         this.scores = new Map();
         this.roundResult = null;
         this.selectionHandledCallback = null;
-        this.soundEnabled = true;
-        this.animationEnabled = true;
+
+        loadPreferences(this);
     }
 
     /** Start the game */

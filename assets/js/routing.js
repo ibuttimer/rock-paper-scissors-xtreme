@@ -11,6 +11,7 @@ import {
     gameSelectMenu, setMenuHandler, gameParamsView, setParamsHandler,
     gamePlayView, setPlayHandler, roundResultView, setRoundResultHandler
 } from './views/index.js'
+import { savePreferences } from './utils/index.js'
 
 /**
  * Enum representing views.
@@ -123,11 +124,13 @@ function addMenuEventHandlers(gameState) {
 
     sound.addEventListener("change", function( event ) {
         gameState.soundEnabled = event.target.checked;
+        savePreferences(gameState);
         log(`Sound enabled ${gameState.soundEnabled}`);
     }, false);
 
     animation.addEventListener("change", function( event ) {
         gameState.animationEnabled = event.target.checked;
+        savePreferences(gameState);
         log(`Animation enabled ${gameState.animationEnabled}`);
     }, false);
 }

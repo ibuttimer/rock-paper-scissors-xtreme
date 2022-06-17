@@ -10,3 +10,4 @@ export {
     htmlTable, htmlThead, htmlTbody, htmlTr, htmlTh, htmlTd, htmlSpan, htmlP,
     htmlSection, htmlAside, htmlInput, htmlLabel 
 } from './html.js'
+export { loadPreferences, savePreferences } from './storage.js'
