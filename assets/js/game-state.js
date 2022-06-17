@@ -76,7 +76,9 @@ export default class GameState {
      * @type {boolean} */
     animationEnabled;
 
-    static #beepAudio = new Audio('assets/audio/beep-10.mp3');
+    static #errorAudio = new Audio('assets/audio/beep-10.mp3');
+    static #beepAudio = new Audio('assets/audio/beep-22.mp3');
+    static #winnerAudio = new Audio('assets/audio/success-fanfare-trumpets-6185.mp3');
 
     /**
      * @constructor
@@ -134,6 +136,8 @@ export default class GameState {
      * @param {Selection|GameKey|string} selection - Selection or key associated with selection
      */
     handleSelection(selection) {
+        this.beep();
+
         // @type {PlayEventResult} event result object
         const eventResult = this.game.makePlayEvent(selection);
 
@@ -153,6 +157,9 @@ export default class GameState {
                     if (bestOfWinner.soleWinner) {
                         // single winner, match over
                         gameResult.resultCode = ResultCode.MatchOver;
+
+                        this.winnerSound();
+
                     } else if (bestOfWinner.multiWinner) {
                         throw new Error(`Unexpected multi-winner: ${bestOfWinner.count}`);
                     }
@@ -201,7 +208,7 @@ export default class GameState {
         }
 
         if (invalid) {
-            this.beep();
+            this.errorBeep();
         }
     }
 
@@ -336,10 +343,24 @@ export default class GameState {
         );
     }
 
+    /** Sound error beep */
+    errorBeep() {
+        if (this.soundEnabled) {
+            GameState.#errorAudio.play();
+        }
+    }
+
     /** Sound beep */
     beep() {
         if (this.soundEnabled) {
             GameState.#beepAudio.play();
+        }
+    }
+
+    /** Sound beep */
+    winnerSound() {
+        if (this.soundEnabled) {
+            GameState.#winnerAudio.play();
         }
     }
 
