@@ -6,7 +6,7 @@ import {
     DEFAULT_PLAYERS, DEFAULT_ROBOTS, DEFAULT_GAMES, IMG_ASSETS_BASE_URL, ROOT_URL, PLAY_URL
 } from './globals.js'
 import { Game, GameVariant } from './game.js'
-import { Enum, GameKey, Selection, GameMode, GameStatus, GameEvent, ResultCode } from './enums.js';
+import { GameKey, Selection, ResultCode } from './enums.js';
 import { setView } from './routing.js'
 
 /**
@@ -67,8 +67,16 @@ export default class GameState {
      * @type {function}
      */
     selectionHandledCallback;
+    /**
+     * Sound enabled flag
+     * @type {boolean} */
+    soundEnabled;
+    /**
+     * Animation enabled flag
+     * @type {boolean} */
+    animationEnabled;
 
-    static beep = new Audio('assets/audio/beep-10.mp3');
+    static #beepAudio = new Audio('assets/audio/beep-10.mp3');
 
     /**
      * @constructor
@@ -88,6 +96,8 @@ export default class GameState {
         this.scores = new Map();
         this.roundResult = null;
         this.selectionHandledCallback = null;
+        this.soundEnabled = true;
+        this.animationEnabled = true;
     }
 
     /** Start the game */
@@ -179,16 +189,19 @@ export default class GameState {
         } else if (this.game.roundInProgress) {
             if (key === GameKey.Random) {
                 key = this.game.variant.randomSelection().key;
-            }
-            if (this.game.variant.isValidKey(key)) {
-                this.handleSelection(key);
+            } else {
+                if (this.game.variant.isValidKey(key)) {
+                    this.handleSelection(key);
+                } else {
+                    invalid = true;
+                }
             }
         } else {
             invalid = true;
         }
 
         if (invalid) {
-            GameState.beep.play();
+            this.beep();
         }
     }
 
@@ -321,6 +334,13 @@ export default class GameState {
         return new Map(
             [['Best of', this.bestOf], ['Game', this.currentGame], ['Round', this.game.roundNumber]]
         );
+    }
+
+    /** Sound beep */
+    beep() {
+        if (this.soundEnabled) {
+            GameState.#beepAudio.play();
+        }
     }
 
     /**

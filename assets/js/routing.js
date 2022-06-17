@@ -3,7 +3,8 @@
     @author Ian Buttimer
 */
 import { 
-    ROOT_URL, BASIC_URL, BIGBANG_URL, XTREME_URL, PLAY_URL, ROUND_RESULT_URL
+    ROOT_URL, BASIC_URL, BIGBANG_URL, XTREME_URL, PLAY_URL, ROUND_RESULT_URL,
+    log
 } from './globals.js';
 import { Enum } from './enums.js'
 import { 
@@ -92,11 +93,41 @@ export function setView(view, gameState) {
     }
 
     // set view html
-    let mainElement = document.getElementById('main');
+    const mainElement = document.getElementById('main');
     mainElement.innerHTML = innerHTML;
 
     // add handlers
     if (setClickHandler) {
         setClickHandler(gameState);
     }
+    addMenuEventHandlers(gameState);
+}
+
+/**
+ * Add menu event handlers
+ * @param {GameState} gameState - current game state
+ */
+function addMenuEventHandlers(gameState) {
+
+    const menu = document.getElementById("menu-list");
+    const sound = document.getElementById("checkbox-sound");
+    const animation = document.getElementById("checkbox-animation");
+
+    // Add handler to set initial state of toggle switches
+    menu.addEventListener("mouseover", function( event ) {
+        if (event.target.id === "menu-settings-dropdown") {
+            sound.checked = gameState.soundEnabled;
+            animation.checked = gameState.animationEnabled;
+        }
+    }, false);
+
+    sound.addEventListener("change", function( event ) {
+        gameState.soundEnabled = event.target.checked;
+        log(`Sound enabled ${gameState.soundEnabled}`);
+    }, false);
+
+    animation.addEventListener("change", function( event ) {
+        gameState.animationEnabled = event.target.checked;
+        log(`Animation enabled ${gameState.animationEnabled}`);
+    }, false);
 }
