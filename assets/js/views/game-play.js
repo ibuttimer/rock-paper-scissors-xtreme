@@ -14,7 +14,7 @@ const currentPlayerHeaderId = 'current-player-header'
 
 const in_animation = 'animate__fade-in';
 const out_animation = 'animate__fade-out';
-const animation_time = 1000;    // animation time in msec
+const animation_time = 500;    // animation time in msec
 
 /**
  * Generate the game play view.
@@ -91,30 +91,45 @@ export function handleSelectionCallback(gameState, eventResult) {
  * Transition to next player
  * @param {GameState} gameState - current game state
  */
-function nextPlayer(gameState) {
+ function nextPlayer(gameState) {
     let time = 0;
     const tiles = allSelectionTiles();
 
-    addElementClass(tiles, [out_animation]);
+    if (gameState.animationEnabled) {
+        addElementClass(tiles, [out_animation]);
 
-    time += animation_time;   
-    delay(time).then(() => {
-        // update player name
-        const currentPlayerHeaderElement = document.getElementById(currentPlayerHeaderId);
-        currentPlayerHeaderElement.innerHTML = currentPlayerNameHeader(gameState);
+        time += animation_time;   
+        delay(time).then(() => {
+            // update player name & selection tiles
+            nextPlayerName(gameState, tiles);
+    
+            replaceElementClass(tiles, out_animation, in_animation);
+        });
+        time += animation_time;
+        delay(time).then(() => {
+            removeElementClass(tiles, [in_animation]);
+        });
+    } else {
+        // update player name & selection tiles
+        nextPlayerName(gameState, tiles);
+    }
+}
 
-        // update border colour to player's colour
-        const colour = gameState.game.currentPlayer.colour;
-        for (const tile of tiles) {
-            tile.style.borderColor = colour;
-        }
+/**
+ * Update player name & selection tiles for next player
+ * @param {GameState} gameState - current game state
+ * @param {Array[Element]} tiles - player selection tiles
+ */
+ function nextPlayerName(gameState, tiles) {
+    // update player name
+    const currentPlayerHeaderElement = document.getElementById(currentPlayerHeaderId);
+    currentPlayerHeaderElement.innerHTML = currentPlayerNameHeader(gameState);
 
-        replaceElementClass(tiles, out_animation, in_animation);
-    });
-    time += animation_time;
-    delay(time).then(() => {
-        removeElementClass(tiles, [in_animation]);
-    });
+    // update border colour to player's colour
+    const colour = gameState.game.currentPlayer.colour;
+    for (const tile of tiles) {
+        tile.style.borderColor = colour;
+    }
 }
 
 /**

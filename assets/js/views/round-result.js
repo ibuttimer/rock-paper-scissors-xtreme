@@ -93,7 +93,10 @@ function getPlayerSelections(gameState) {
         if (player === winner) {
             banner = "Winner";
         } else if (roundResult.losing.findIndex(loser => loser === player) >= 0) {
-            classes.push('animate__fall-back');
+            if (gameState.animationEnabled) {
+                classes.push('animate__fall-back');
+            }
+            classes.push('div__to-left-diagonal');
         }
 
         return htmlDiv(['div__player-selection-wrapper'],

@@ -52,13 +52,6 @@
     text-align: center;
 }
 
-
-.animate__horz-360 {
-    animation-name: animate-horz-360;
-    animation-duration: 2s;
-    animation-fill-mode: forwards;
-}
-
 .animate__fade-in {
     animation-name: animate-fade-in;
     animation-duration: 1s;
@@ -70,18 +63,6 @@
     animation-duration: 1s;
     animation-fill-mode: forwards;
 }
-
-/* rotation for the hero image
-https://developer.mozilla.org/en-US/docs/Web/CSS/transform-function */
-@keyframes animate-horz-360 {
-    from {
-        transform: rotateY(0deg);
-    }
-    to {
-        transform: rotateY(360deg);
-    }
-}
-
 
 @keyframes animate-fade-in {
     from { 
@@ -136,4 +117,18 @@ https://developer.mozilla.org/en-US/docs/Web/CSS/transform-function */
 }
 .div__selection-tile-wrapper-12 {
     border-color: darkseagreen;
+}
+
+/* media queries */
+
+/* https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-motion */
+/* Tone down the animation to avoid vestibular motion triggers like scaling or panning large objects. */
+@media (prefers-reduced-motion) {
+    .animate__fade-in {
+        animation-name: none;
+    }
+    
+    .animate__fade-out {
+        animation-name: none;
+    }
 }

@@ -61,6 +61,13 @@
     background-color: blue;
 }
 
+/* courtesy of https://stackoverflow.com/a/42353985 */
+.div__to-right-diagonal {
+    background: linear-gradient(135deg, transparent calc(50% - 2px), black 50%, transparent calc(50% + 2px) );
+}
+.div__to-left-diagonal {
+    background: linear-gradient(45deg, transparent calc(50% - 2px), black 50%, transparent calc(50% + 2px) );
+}
 
 .animate__fall-back {
     animation-name: animate-fall-back;
@@ -71,8 +78,20 @@
 @keyframes animate-fall-back {
     from {
         transform: rotateX(0deg);
+        opacity: 1;
     }
     to {
-        transform: rotateX(70deg);
+        transform: rotateX(60deg);
+        opacity: 0.5;
+    }
+}
+
+/* media queries */
+
+/* https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-motion */
+/* Tone down the animation to avoid vestibular motion triggers like scaling or panning large objects. */
+@media (prefers-reduced-motion) {
+    .animate__fall-back {
+        animation-name: none;
     }
 }
