@@ -197,12 +197,11 @@ export default class GameState {
         } else if (this.game.roundInProgress) {
             if (key === GameKey.Random) {
                 key = this.game.variant.randomSelection().key;
+            }
+            if (this.game.variant.isValidKey(key)) {
+                this.handleSelection(key);
             } else {
-                if (this.game.variant.isValidKey(key)) {
-                    this.handleSelection(key);
-                } else {
-                    invalid = true;
-                }
+                invalid = true;
             }
         } else {
             invalid = true;
