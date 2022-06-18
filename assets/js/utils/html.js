@@ -173,12 +173,67 @@ const htmlWrapper = (tag, className, innerHtml, attribs = {}, selfClosing = fals
 };
 
 /**
+ * Generate an Emphasis element paragraph element; 
+ * "The <em> element is for words that have a stressed emphasis compared to surrounding text".
+ * @see {@link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/em}
+ * @returns {string} - html for element
+ * @see {@link htmlWrapper}
+ */
+ export const htmlEm = (className, innerHtml, attribs = {}) => {
+    return htmlWrapper('em', className, innerHtml, attribs, false);
+};
+
+/**
+ * Generate an Idiomatic Text element paragraph element;
+ * "The <i> HTML element represents a range of text that is set off from the normal text for some reason, 
+ * such as idiomatic text, technical terms, taxonomical designations, among others."
+ * @see {@link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/i}
+ * @returns {string} - html for element
+ * @see {@link htmlWrapper}
+ */
+ export const htmlI = (className, innerHtml, attribs = {}) => {
+    return htmlWrapper('i', className, innerHtml, attribs, false);
+};
+
+/**
+ * Generate a Bring Attention To element paragraph element;
+ * "The <b> HTML element is used to draw the reader's attention to the element's contents, 
+ * which are not otherwise granted special importance."
+ * @see {@link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/b}
+ * @returns {string} - html for element
+ * @see {@link htmlWrapper}
+ */
+ export const htmlB = (className, innerHtml, attribs = {}) => {
+    return htmlWrapper('b', className, innerHtml, attribs, false);
+};
+
+/**
+ * Generate a Strong Importance element paragraph element;
+ * "The <strong> HTML element indicates that its contents have strong importance, seriousness, or urgency."
+ * @see {@link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/strong}
+ * @returns {string} - html for element
+ * @see {@link htmlWrapper}
+ */
+ export const htmlStrong = (className, innerHtml, attribs = {}) => {
+    return htmlWrapper('strong', className, innerHtml, attribs, false);
+};
+
+/**
  * Generate a section element containing the specified html.
  * @returns {string} - html for element
  * @see {@link htmlWrapper}
  */
  export const htmlSection = (className, innerHtml, attribs = {}) => {
     return htmlWrapper('section', className, innerHtml, attribs, false);
+};
+
+/**
+ * Generate an article element containing the specified html.
+ * @returns {string} - html for element
+ * @see {@link htmlWrapper}
+ */
+ export const htmlArticle = (className, innerHtml, attribs = {}) => {
+    return htmlWrapper('article', className, innerHtml, attribs, false);
 };
 
 /**
@@ -206,6 +261,33 @@ const htmlWrapper = (tag, className, innerHtml, attribs = {}, selfClosing = fals
  */
  export const htmlLabel = (className, innerHtml, attribs = {}) => {
     return htmlWrapper('label', className, innerHtml, attribs, false);
+};
+
+/**
+ * Generate an anchor element containing the specified html.
+ * @returns {string} - html for element
+ * @see {@link htmlWrapper}
+ */
+ export const htmlA = (className, innerHtml, attribs = {}) => {
+    return htmlWrapper('a', className, innerHtml, attribs, false);
+};
+
+/**
+ * Generate an list item element containing the specified html.
+ * @returns {string} - html for element
+ * @see {@link htmlWrapper}
+ */
+ export const htmlLi = (className, innerHtml, attribs = {}) => {
+    return htmlWrapper('li', className, innerHtml, attribs, false);
+};
+
+/**
+ * Generate an unordered list element containing the specified html.
+ * @returns {string} - html for element
+ * @see {@link htmlWrapper}
+ */
+ export const htmlUl = (className, innerHtml, attribs = {}) => {
+    return htmlWrapper('ul', className, innerHtml, attribs, false);
 };
 
 /**

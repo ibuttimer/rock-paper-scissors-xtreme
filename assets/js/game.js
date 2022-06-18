@@ -70,7 +70,7 @@ export class Contest {
      * @returns {string}
      */
      toString() {
-        return `{${this.winner}, ${this.loser}, ${this.explanation}}`;
+        return `${this.winner} ${this.explanation} ${this.loser}`;
     }
 }
 

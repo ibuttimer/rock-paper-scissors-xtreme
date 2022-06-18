@@ -8,6 +8,7 @@ export {
 export { 
     htmlDiv, htmlButton, htmlImg, htmlH1, htmlH2, htmlH3, htmlH4, htmlH5, htmlH6,
     htmlTable, htmlThead, htmlTbody, htmlTr, htmlTh, htmlTd, htmlSpan, htmlP,
-    htmlSection, htmlAside, htmlInput, htmlLabel 
+    htmlEm, htmlI, htmlB, htmlStrong, htmlSection, htmlArticle, htmlAside, 
+    htmlInput, htmlLabel, htmlA, htmlLi, htmlUl 
 } from './html.js'
 export { loadPreferences, savePreferences } from './storage.js'

@@ -1,0 +1,33 @@
+@import 'styles-base.css';
+
+/* custom properties */
+:root {
+    
+}
+
+.h3__rules-heading {
+    line-height: 2;
+}
+
+.ul__common-rules {
+    padding-left: calc(2 * var(--std-padding-horz));
+}
+
+.table__win-matrix {
+    margin: auto;
+}
+
+.table__win-matrix,
+.td__win-matrix {
+    border: 1px solid #333;
+}
+
+.thead__win-matrix {
+    background-color: #333;
+    color: #fff;
+}
+
+.th__win-matrix,
+.td__win-matrix {
+    padding: 0 var(--std-padding-horz);
+}

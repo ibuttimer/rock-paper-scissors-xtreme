@@ -111,7 +111,7 @@ function getGameTile(params) {
  * @param {GameState} gameState - game state object
  */
 export function setMenuHandler(gameState) {
-    const buttons = document.getElementsByTagName('button');
+    const buttons = document.getElementsByClassName('button__variant-select');
     for (const button of buttons) {
         button.addEventListener('click', (event) => gameMenuHandler(event, gameState), false);
     }
@@ -126,7 +126,6 @@ function gameMenuHandler(event, gameState) {
     const url = event.currentTarget.dataset.url;
     const index = gameParams.findIndex(p => p[URL_IDX] === url);
     if (index >= 0)  {
-        gameState.game.variant = gameParams[index][VARIANT_IDX];
 
         log(event, gameState);
 

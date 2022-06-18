@@ -276,4 +276,4 @@ See [Winning at Rock-Paper-Scissors… Lizard-Spock!](https://www.naturphilosoph
 
 Adapted from [How to Play Rock Paper Scissors with More than Two Players](https://wrpsa.com/how-to-play-rock-paper-scissors-with-more-than-two-players/)
 
-[^win_matrix]: To find the result of two selections, find the first selection in the leftmost column and the second element in the top row, where the row and column intersect is the result.
+[^win_matrix]: To find the result of two selections, find the first selection in the leftmost column and the second selection in the top row, where the row and column intersect is the result; &check; if first selection wins, &cross; if first selection loses.

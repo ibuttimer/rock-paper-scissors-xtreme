@@ -22,7 +22,8 @@
     <link rel="stylesheet" type="text/css" href="assets/css/styles-main.css">
     <link rel="stylesheet" type="text/css" href="assets/css/styles-params.css">
     <link rel="stylesheet" type="text/css" href="assets/css/styles-play.css">
-    <link rel="stylesheet" type="text/css" href="assets/css/round-result.css">
+    <link rel="stylesheet" type="text/css" href="assets/css/styles-result.css">
+    <link rel="stylesheet" type="text/css" href="assets/css/styles-rules.css">
 
     <title>Rock, Paper, Scissors Xtreme</title>
 </head>
@@ -42,20 +43,23 @@
                 </div>
                 <ul class='ul__menu-row' id="menu-list">
                     <li class='li__menu-item' id="menu-rules-option">
-                        <a href="/rules" class='a__menu-link' aria-label='goto rules page.'>
-                            <i class='lni lni-book'></i>&nbsp;Rules
-                        </a>
+                        <div class="div__menu-link" id="menu-rules">
+                            <button type="button" class='button__menu' value="/rules" aria-label='goto rules page.'>
+                                <i class='lni lni-book'></i>&nbsp;Rules
+                            </button>
+                        </div>
                     </li>
                     <li class='li__menu-item' id="menu-settings-option">
                         <div class="div__dropdown div__menu-link" id="menu-settings-dropdown">
-                            <button class="button__dropdown"><i class='lni lni-cog'></i>&nbsp;Settings</button>
+                            <button type="button" class="button__menu" aria-label='goto settings menu.'>
+                                <i class='lni lni-cog'></i>&nbsp;Settings
+                            </button>
                             <div class="div__dropdown-content">
                                 <div class="div__setting-option-wrapper">
                                     <div class="div__setting-option">
                                         <p>Enable animation</p>
                                         <label class="label__toggle-control">
                                             <input type="checkbox" id="checkbox-animation" value="animation">
-                                            <!-- <input type="checkbox" checked="checked"> -->
                                             <span class="span_control"></span>
                                         </label>
                                     </div>

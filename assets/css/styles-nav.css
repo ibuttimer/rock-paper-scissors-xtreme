@@ -49,7 +49,6 @@
     font-size: var(--menu-list-font-size);
 }
 
-.a__menu-link,
 .div__menu-link {
     display: block;
     text-decoration: none;
@@ -59,7 +58,7 @@
 
 /* dropdown menu for settings based on 
     https://www.w3schools.com/css/css_dropdowns.asp */
-.button__dropdown {
+.button__menu {
     border: none;
     cursor: pointer;
     background-color: transparent;

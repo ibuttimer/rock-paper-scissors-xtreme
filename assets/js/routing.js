@@ -4,14 +4,16 @@
 */
 import { 
     ROOT_URL, BASIC_URL, BIGBANG_URL, XTREME_URL, PLAY_URL, ROUND_RESULT_URL,
-    log
+    RULES_URL, log
 } from './globals.js';
 import { Enum } from './enums.js'
 import { 
     gameSelectMenu, setMenuHandler, gameParamsView, setParamsHandler,
-    gamePlayView, setPlayHandler, roundResultView, setRoundResultHandler
+    gamePlayView, setPlayHandler, roundResultView, setRoundResultHandler,
+    rulesView, setRulesHandler
 } from './views/index.js'
 import { savePreferences } from './utils/index.js'
+import { GameVariant } from './game.js'
 
 /**
  * Enum representing views.
@@ -25,6 +27,7 @@ import { savePreferences } from './utils/index.js'
     static XtremeGame = Object.freeze(new View('XtremeGame'));
     static Play = Object.freeze(new View('Play'));
     static RoundResult = Object.freeze(new View('RoundResult'));
+    static Rules = Object.freeze(new View('Rules'));
   
     /**
      * @constructor
@@ -39,7 +42,7 @@ import { savePreferences } from './utils/index.js'
      * @returns {string} string of form '<Class name>.<object name>'
      */
     toString() {
-        return super.toString(GameMenu);
+        return super.toString(View);
     }
 }
 
@@ -51,6 +54,7 @@ const routes = new Map([
     [XTREME_URL, View.XtremeGame],
     [PLAY_URL, View.Play],
     [ROUND_RESULT_URL, View.RoundResult],
+    [RULES_URL, View.Rules]
 ]);
 
 /**
@@ -78,6 +82,9 @@ export function setView(view, gameState) {
         case View.BasicGame:
         case View.BigBangGame:
         case View.XtremeGame:
+            gameState.game.variant = (view === View.BasicGame ? GameVariant.Basic :
+                (view === View.BigBangGame ? GameVariant.BigBang : GameVariant.Xtreme));
+
             innerHTML = gameParamsView(gameState);
             setClickHandler = setParamsHandler;
             break;
@@ -88,6 +95,10 @@ export function setView(view, gameState) {
         case View.RoundResult:
             innerHTML = roundResultView(gameState);
             setClickHandler = setRoundResultHandler;
+            break;
+        case View.Rules:
+            innerHTML = rulesView(gameState);
+            setClickHandler = setRulesHandler;
             break;
         default:
             throw new Error(`Unknown view: ${view}`);
@@ -122,6 +133,7 @@ function addMenuEventHandlers(gameState) {
         }
     }, false);
 
+    // Add toggle switches change handlers
     sound.addEventListener("change", function( event ) {
         gameState.soundEnabled = event.target.checked;
         savePreferences(gameState);
@@ -133,4 +145,11 @@ function addMenuEventHandlers(gameState) {
         savePreferences(gameState);
         log(`Animation enabled ${gameState.animationEnabled}`);
     }, false);
+
+    // Add menu item click handler
+    ["menu-rules"].forEach(id => {
+        document.getElementById(id).addEventListener("click", function( event ) {
+            setView(event.target.value, gameState);
+        }, false);
+    })
 }

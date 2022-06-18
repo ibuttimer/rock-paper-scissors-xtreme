@@ -27,13 +27,15 @@ const bestOfSelectId = `${bestOfRadioId}-select`;
 const playButtonId = 'play-button';
 const playerNameGroupId = 'player-name-group';
 
+// odd numbers greater than 1 up to max inclusive
+export const bestOfOptions = [...Array((MAX_GAMES + 2) - MIN_GAMES + 1).keys()].filter(x => x > 1 && x % 2);
 // number of game options
 const numGameOptions = [
     numGamesParams(oneGameTitle, null, 1, oneGameRadioId),
     numGamesParams(
         bestOfTitle, 
         // odd numbers greater than 1 up to max inclusive
-        [...Array((MAX_GAMES + 2) - MIN_GAMES + 1).keys()].filter(x => x > 1 && x % 2), 
+        bestOfOptions, 
         DEFAULT_GAMES !== 1 ? DEFAULT_GAMES : MIN_GAMES,
         bestOfRadioId,
         bestOfSelectId
@@ -67,8 +69,7 @@ export default function gameParamsView(gameState) {
 
     const button = htmlButton(['button__play', 'button__clickable', 'debossable'], 'Play', {
         id: playButtonId,
-        'aria-label': 'play game.',
-        rel: 'next'
+        'aria-label': 'play game.'
     });
     return `${titleHeader(gameState)}
             ${htmlDiv('div__num-of-game-participants', 
