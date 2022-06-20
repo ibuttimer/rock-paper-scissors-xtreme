@@ -4,8 +4,10 @@
 :root {
 	/* game progress component */
 	--game-progress-border-colour: rgb(204, 204, 204);
-	--game-progress-info-size: 10px;
+	--game-progress-info-padding-size: 10px;
     --game-progress-background-color: floralwhite;
+    --game-progress-grid-auto-flow: row;
+    --game-progress-info-size: 80px;
 
 	/* player selection tile */
     --var-result-selection-tile-margin: calc(2 * var(--std-margin-between));
@@ -22,36 +24,50 @@
     --leader-board-margin: var(--var-result-selection-tile-margin);
 }
 
-
 /* game progress component */
 .div__game-progress-wrapper {
     margin: var(--var-game-tile-margin);
+
+    display: grid;
+	grid-auto-columns: max-content;
+	grid-auto-rows: max-content;
+	grid-auto-flow: var(--game-progress-grid-auto-flow);
+	grid-template-rows: auto auto;
+	grid-template-columns: repeat(3, 1fr);
+    justify-items: center;
 }
 
-.tr__game-progress-row {
+.div__game-progress-entry {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
 
+    background-color: var(--game-progress-background-color);
 }
 
-.table__game-progress, 
-.td__game-progress-info,
-.td__game-progress-data {
+.div__game-progress-info,
+.div__game-progress-data {
     border: 1px solid var(--game-progress-border-colour);
     border-radius: 5px;
     border-spacing: 4px;
 }
 
-.table__game-progress {
-    margin: auto;
-    background-color: var(--game-progress-background-color);
-}
-
-.td__game-progress-data {
+.div__game-progress-data {
     color: blue;
 }
 
-.td__game-progress-info span,
-.td__game-progress-data span {
-    padding: 0 var(--game-progress-info-size);
+.div__game-progress-info span,
+.div__game-progress-data span {
+    padding: 0 var(--game-progress-info-padding-size);
+}
+
+.div__game-progress-info {
+    width: var(--game-progress-info-size);
+}
+
+.div__game-progress-data {
+    width: calc(var(--var-game-tile-size) - var(--game-progress-info-size));
 }
 
 /* leader board component */
@@ -82,7 +98,7 @@
 
 .td__player-name span,
 .td__player-score span {
-    padding: 0 var(--game-progress-info-size);
+    padding: 0 var(--game-progress-info-padding-size);
 }
 
 /* player selection tile */
@@ -115,4 +131,19 @@
 
 .h4__player-selection-tile-player-name {
     text-align: center;
+}
+
+/* media queries */
+
+/* tiny-small screens, 450px wide or less */ 
+@media screen and (max-width: 450px) {
+    :root {
+        /* game progress component */
+        --game-progress-grid-auto-flow: none;
+    }
+
+    .div__game-progress-wrapper {
+        grid-template-columns: 1fr;
+    }
+    
 }

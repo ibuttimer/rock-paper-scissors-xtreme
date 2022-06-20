@@ -5,7 +5,9 @@
 import { 
     accumulator, htmlDiv, htmlTable, htmlThead, htmlTbody, htmlTr, htmlTh, htmlTd, htmlSpan 
 } from '../utils/index.js';
-import { ORIENTATION_HORZ, ORIENTATION_VERT} from './game-progress.js'
+
+export const ORIENTATION_HORZ = 0;
+export const ORIENTATION_VERT = 1;
 
 /**
  * Leader board component
