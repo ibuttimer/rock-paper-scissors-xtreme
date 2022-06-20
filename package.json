@@ -22,5 +22,8 @@
   "homepage": "https://github.com/ibuttimer/rock-paper-scissors-xtreme#readme",
   "devDependencies": {
     "jasmine": "^4.1.0"
+  },
+  "dependencies": {
+    "tingle.js": "^0.16.0"
   }
 }

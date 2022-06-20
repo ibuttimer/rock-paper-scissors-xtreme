@@ -17,6 +17,8 @@
     <!-- Lineicons Free CDN -->
     <link rel="stylesheet" href="https://cdn.lineicons.com/3.0/lineicons.css"> 
 
+    <link rel="stylesheet" href="lib/tingle.js/tingle.min.css">
+
     <link rel="stylesheet" type="text/css" href="assets/css/styles.css">
     <link rel="stylesheet" type="text/css" href="assets/css/styles-components.css">
     <link rel="stylesheet" type="text/css" href="assets/css/styles-main.css">
@@ -34,12 +36,11 @@
         <header>
             <nav class='nav__top'>
                 <div class='div__logo'>
-                    <a href="/" aria-label='logo, home page.'>
-                        <span>
-                            <img src='android-chrome-192x192.png' width='28' height='28'
-                                alt='logo, current page, home.'/>
-                        </span>
-                    </a>
+                    <button type="button" class='button__logo'  id="menu-logo" value="/" 
+                            aria-label='logo, current page, home.'>
+                        <img src='android-chrome-192x192.png' width='28' height='28'
+                                class="img_logo" alt='logo, current page, home.'/>
+                    </button>
                 </div>
                 <ul class='ul__menu-row' id="menu-list">
                     <li class='li__menu-item' id="menu-rules-option">
@@ -91,6 +92,7 @@
     </footer>
 
     <script type="module" src="assets/js/script.js"></script>
+    <script src="lib/tingle.js/tingle.min.js" async defer></script>
 </body>
 
 </html>

@@ -245,16 +245,16 @@ describe("check Game class", function() {
      * @param {number} numPlayers - number of players
      * @param {number} numRobots - number of robots
      * @param {number} activeCount - number of active players
-     * @param {boolean} notStarted - not started state
-     * @param {boolean} inProgress - in progress state
+     * @param {boolean} isNotStarted - not started state
+     * @param {boolean} isInProgress - in progress state
      * @param {boolean} isOver - is over state
      * @param {string} context - optional context; default undefined
      */
-    function checkGame(game, numPlayers, numRobots, activeCount, notStarted, inProgress, isOver, context = undefined) {
+    function checkGame(game, numPlayers, numRobots, activeCount, isNotStarted, isInProgress, isOver, context = undefined) {
         expect(game.playerCount).withContext(context).toBe(numPlayers + numRobots);
         expect(game.activePlayerCount).withContext(context).toBe(activeCount);
-        expect(game.notStarted).withContext(context).toBe(notStarted);
-        expect(game.inProgress).withContext(context).toBe(inProgress);
+        expect(game.isNotStarted).withContext(context).toBe(isNotStarted);
+        expect(game.isInProgress).withContext(context).toBe(isInProgress);
         expect(game.isOver).withContext(context).toBe(isOver);
     }
 
@@ -501,7 +501,7 @@ describe("check Game class", function() {
                         case 3:
                             // confirm eliminate 1 player result for round
                             expect(payload.resultCode).toBe(ResultCode.Eliminate);
-                            expect(payload.data).toEqual(params.rule.contests);
+                            expect(payload.losing).toEqual(params.rule.contests);
                             expect(payload.explanation.length).toBe(1);
                             expect(payload.explanation[0])
                                 .toEqual(
@@ -531,7 +531,7 @@ describe("check Game class", function() {
                             debugLog(payload, 'evaluation');
 
                             expect(payload.resultCode).toBe(ResultCode.Eliminate);
-                            expect(payload.data).toEqual(params.rule.contests);
+                            expect(payload.losing).toEqual(params.rule.contests);
                             expect(payload.explanation.length).toBe(explanations.size);
                             for (let index = 0; index < payload.explanation.length; index++) {
                                 const reason = payload.explanation[index];
@@ -565,7 +565,7 @@ describe("check Game class", function() {
                             // confirm eliminated one player
                             --expectedActive;
                             expect(payload.resultCode).toBe(ResultCode.Eliminate);
-                            expect(payload.data).toEqual([
+                            expect(payload.losing).toEqual([
                                 game.getPlayer(params.selectedPlayer)
                             ]);
                             checkGame(game, numPayers, numRobots, expectedActive, false, true, false);
@@ -574,7 +574,7 @@ describe("check Game class", function() {
                             // confirm eliminated all player bar winner
                             expectedActive = 1;
                             expect(payload.resultCode).toBe(ResultCode.Winner);
-                            expect(payload.data).toBe(game.getPlayer(params.selectedPlayer));
+                            expect(payload.winning).toBe(game.getPlayer(params.selectedPlayer));
                             checkGame(game, numPayers, numRobots, expectedActive, false, true, false);
                             break;
                         default:

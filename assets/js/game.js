@@ -513,7 +513,7 @@ export class GameResult {
     constructor(game, gameResult) {
         this.game = game;
         this.gameResult = gameResult;
-        this.gameInProgress = game.inProgress;
+        this.gameInProgress = game.isInProgress;
         this.roundInProgress = game.roundInProgress;
         this.player = game.currentPlayer;
     }
@@ -642,9 +642,7 @@ export class GameResult {
         this.init(this.numPlayers, this.numRobots, playerList);
     }
 
-    /**
-     * Start the game
-     */
+    /** Start the game */
     startGame() {
         this.#status = GameStatus.InProgress;
         this.#currentRound = 0;
@@ -657,15 +655,29 @@ export class GameResult {
         this.#doStageCallback(GameEvent.GameStart);
     }
 
-    /**
-     * End the game
-     */
-    endGame() {
+    /** End the game */
+     endGame() {
         this.#status = GameStatus.Finished;
         this.applyToPlayers(player => player.initState());
 
         this.log('endGame');
         this.#doStageCallback(GameEvent.GameEnd);
+    }
+
+    /** Pause the game */
+     pauseGame() {
+        this.#status = GameStatus.Paused;
+
+        this.log('pauseGame');
+        this.#doStageCallback(GameEvent.Paused);
+    }
+
+    /** Unpause the game */
+     unPauseGame() {
+        this.#status = GameStatus.InProgress;
+
+        this.log('unPauseGame');
+        this.#doStageCallback(GameEvent.UnPaused);
     }
 
     /**
@@ -681,7 +693,7 @@ export class GameResult {
     playGame(callback) {
         let result;
         this.startGame();
-        while (this.inProgress) {
+        while (this.isInProgress || this.isPaused) {
             result = this.playRound(callback);
             if (result.resultCode === ResultCode.Winner) {
                 this.endGame();
@@ -702,7 +714,7 @@ export class GameResult {
      */
     playRound(callback) {
         this.startRound();
-        while (this.roundInProgress) {
+        while (this.roundInProgress || this.isPaused) {
             const player = this.getPlayer(this.#currentIndex);
             const selection = callback(this, this.#currentIndex, this.#currentRound);
             this.makePlay(player, selection);
@@ -972,7 +984,7 @@ export class GameResult {
             }
         });
 
-        this.log(`roundSelections: ${counts}`, false);
+        this.log(`roundSelections: ${counts}`);
         this.#doStageCallback(GameEvent.RoundSelections, counts);
 
         return { counts: counts, playerSelections: playerSelections };
@@ -982,7 +994,7 @@ export class GameResult {
      * Check if game has not started.
      * @returns {boolean} true if not started
      */
-    get notStarted() {
+    get isNotStarted() {
         return this.#status === GameStatus.NotStarted;
     }
 
@@ -990,8 +1002,16 @@ export class GameResult {
      * Check if game is in progress.
      * @returns {boolean} true if in progress
      */
-    get inProgress() {
+     get isInProgress() {
         return this.#status === GameStatus.InProgress;
+    }
+
+    /**
+     * Check if game is paused.
+     * @returns {boolean} true if paused
+     */
+     get isPaused() {
+        return this.#status === GameStatus.Paused;
     }
 
     /**

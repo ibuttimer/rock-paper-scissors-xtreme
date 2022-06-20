@@ -123,6 +123,7 @@ import { requiredVariable } from './utils/index.js';
      * @returns {GameKey} game key
      */
     static keyEvent(event) {
+        // https://developer.mozilla.org/en-US/docs/Web/API/UI_Events/Keyboard_event_key_values
         const keyName = event.key.toLowerCase();
         let gameKey = GameKey.Ignore;
 
@@ -250,6 +251,7 @@ import { requiredVariable } from './utils/index.js';
     // freeze game statuses so can't be modified
     static NotStarted = Object.freeze(new GameStatus('NotStarted'));
     static InProgress = Object.freeze(new GameStatus('InProgress'));
+    static Paused = Object.freeze(new GameStatus('Paused'));
     static Finished = Object.freeze(new GameStatus('Finished'));
   
     /**
@@ -276,6 +278,8 @@ import { requiredVariable } from './utils/index.js';
     // freeze game events so can't be modified
     static GameStart = Object.freeze(new GameEvent('GameStart'));
     static GameEnd = Object.freeze(new GameEvent('GameEnd'));
+    static Paused = Object.freeze(new GameEvent('Paused'));
+    static UnPaused = Object.freeze(new GameEvent('UnPaused'));
     static RoundStart = Object.freeze(new GameEvent('RoundStart'));
     static RoundSelections = Object.freeze(new GameEvent('RoundSelections'));
     static RoundEvaluation = Object.freeze(new GameEvent('RoundEvaluation'));

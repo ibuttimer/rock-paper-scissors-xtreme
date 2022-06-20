@@ -114,7 +114,7 @@ function playGame(event, gameState) {
         })
 
         gameState.game.init(wip.numPlayers, wip.numRobots, players);
-        gameState.startGame();
+        gameState.startMatch();
 
         setView(PLAY_URL, gameState);
     } else {

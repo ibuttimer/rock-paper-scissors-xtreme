@@ -5,3 +5,4 @@ export { default as leaderBoard } from './leader-board.js';
 export { default as playerSelectionTile, getPlayerSelectionTileParam } from './player-selection-tile.js';
 export { default as gamePlayView, setPlayHandler } from '../views/game-play.js';
 export { default as roundResultView, setRoundResultHandler } from '../views/round-result.js';
+export { default as showModal, showYesNoModal, modalButton, MODAL_YES, MODAL_NO } from './modal.js';

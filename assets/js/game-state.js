@@ -3,10 +3,11 @@
     @author Ian Buttimer
 */
 import { 
-    DEFAULT_PLAYERS, DEFAULT_ROBOTS, DEFAULT_GAMES, IMG_ASSETS_BASE_URL, ROOT_URL, PLAY_URL
+    DEFAULT_PLAYERS, DEFAULT_ROBOTS, DEFAULT_GAMES, IMG_ASSETS_BASE_URL, ROOT_URL, PLAY_URL,
+    log
 } from './globals.js'
 import { Game, GameVariant } from './game.js'
-import { GameKey, Selection, ResultCode } from './enums.js';
+import { GameKey, Selection, ResultCode, GameStatus } from './enums.js';
 import { setView } from './routing.js'
 import { loadPreferences } from './utils/index.js'
 
@@ -76,6 +77,11 @@ export default class GameState {
      * Animation enabled flag
      * @type {boolean} */
     animationEnabled;
+    /**
+     * Match status
+     * @type {GameStatus}
+     */
+    #matchStatus;
 
     static #errorAudio = new Audio('assets/audio/beep-10.mp3');
     static #beepAudio = new Audio('assets/audio/beep-22.mp3');
@@ -99,12 +105,13 @@ export default class GameState {
         this.scores = new Map();
         this.roundResult = null;
         this.selectionHandledCallback = null;
+        this.#matchStatus = GameStatus.NotStarted;
 
         loadPreferences(this);
     }
 
-    /** Start the game */
-    startGame() {
+    /** Start the match */
+    startMatch() {
         this.scores.clear();
         this.game.players.forEach(player => this.scores.set(player, 0));
 
@@ -112,13 +119,14 @@ export default class GameState {
 
         // game play using events
         this.game.playGameEvents();
+        this.#matchStatus = GameStatus.InProgress;
 
         // add key listener
         document.addEventListener('keydown', this, false);
     }
 
-    /** Reset the game */
-    resetGame(numPlayers = DEFAULT_PLAYERS, numRobots = DEFAULT_ROBOTS, bestOf = DEFAULT_GAMES) {
+    /** Reset the match */
+    resetMatch(numPlayers = DEFAULT_PLAYERS, numRobots = DEFAULT_ROBOTS, bestOf = DEFAULT_GAMES) {
         this.game.variant = GameVariant.Basic;
         this.game.init(numPlayers, numRobots);
 
@@ -127,9 +135,28 @@ export default class GameState {
         this.scores.clear();
         this.roundResult = null;
         this.selectionHandledCallback = null;
+        this.#matchStatus = GameStatus.NotStarted;
 
         // remove key listener
         document.removeEventListener('keydown', this, false);
+    }
+
+    /** End the match */
+    endMatch() {
+        this.game.endGame();
+        this.#matchStatus = GameStatus.Finished;
+    }
+
+    /** Pause the match */
+    pauseMatch() {
+        this.game.pauseGame();
+        this.#matchStatus = GameStatus.Paused;
+    }
+
+    /** Unpause the match */
+    unPauseMatch() {
+        this.game.unPauseGame();
+        this.#matchStatus = GameStatus.InProgress;
     }
 
     /**
@@ -137,41 +164,47 @@ export default class GameState {
      * @param {Selection|GameKey|string} selection - Selection or key associated with selection
      */
     handleSelection(selection) {
-        this.beep();
+        if (this.game.isPaused) {
+            // silently ignore key as game is paused
+            log(`Game paused, ignoring selection ${selection}`);
+        } else {
+            this.beep();
 
-        // @type {PlayEventResult} event result object
-        const eventResult = this.game.makePlayEvent(selection);
+            // @type {PlayEventResult} event result object
+            const eventResult = this.game.makePlayEvent(selection);
 
-        if (!eventResult.roundInProgress) {
-            // round finished
-            const gameResult = eventResult.gameResult;
-            this.roundResult = gameResult;
+            if (!eventResult.roundInProgress) {
+                // round finished
+                const gameResult = eventResult.gameResult;
+                this.roundResult = gameResult;
 
-            switch (gameResult.resultCode) {
-                case ResultCode.Winner:
-                    // update score
-                    let player = gameResult.winning;
-                    this.incPlayerScore(player);
+                switch (gameResult.resultCode) {
+                    case ResultCode.Winner:
+                        // update score
+                        let player = gameResult.winning;
+                        this.incPlayerScore(player);
 
-                    // check if best of winner
-                    const bestOfWinner = this.haveBestOfWinner();
-                    if (bestOfWinner.soleWinner) {
-                        // single winner, match over
-                        gameResult.resultCode = ResultCode.MatchOver;
+                        // check if best of winner
+                        const bestOfWinner = this.haveBestOfWinner();
+                        if (bestOfWinner.soleWinner) {
+                            // single winner, match over
+                            gameResult.resultCode = ResultCode.MatchOver;
+                            this.#matchStatus = GameStatus.Finished;
 
-                        this.winnerSound();
+                            this.winnerSound();
 
-                    } else if (bestOfWinner.multiWinner) {
-                        throw new Error(`Unexpected multi-winner: ${bestOfWinner.count}`);
-                    }
-                    break;
-                default:
-                    break;
+                        } else if (bestOfWinner.multiWinner) {
+                            throw new Error(`Unexpected multi-winner: ${bestOfWinner.count}`);
+                        }
+                        break;
+                    default:
+                        break;
+                }
             }
-        }
-        // do callback
-        if (this.selectionHandledCallback) {
-            this.selectionHandledCallback(this, eventResult);
+            // do callback
+            if (this.selectionHandledCallback) {
+                this.selectionHandledCallback(this, eventResult);
+            }
         }
     }
 
@@ -180,35 +213,44 @@ export default class GameState {
      * @param {KeyboardEvent} event - @see {@link https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent}
      */
      handleEvent(event) {
-        // https://developer.mozilla.org/en-US/docs/Web/API/UI_Events/Keyboard_event_key_values
-        let key = GameKey.keyEvent(event);
-        let invalid = false;
+        if (this.game.isPaused) {
+            if (event.key === "Escape") {
+                // using esc to dismiss modal dialog, unpause match
+                this.unPauseMatch();
+            } else {
+                // silently ignore key as game is paused
+                log(`Game paused, ignoring key ${event.key}`);
+            }
+        } else {
+            let key = GameKey.keyEvent(event);
+            let invalid = false;
 
-        if (key === GameKey.NewGame) {
-            // abort current game and start again
-            this.resetGame();
-            setView(ROOT_URL, this);
-        } else if (key === GameKey.Next) {
-            // next round/game or finish game, if round not in progress
-            invalid = this.game.roundInProgress;
-            if (!invalid) {
-                this.handleRoundResult();
-            }
-        } else if (this.game.roundInProgress) {
-            if (key === GameKey.Random) {
-                key = this.game.variant.randomSelection().key;
-            }
-            if (this.game.variant.isValidKey(key)) {
-                this.handleSelection(key);
+            if (key === GameKey.NewGame) {
+                // abort current game and start again
+                this.resetMatch();
+                setView(ROOT_URL, this);
+            } else if (key === GameKey.Next) {
+                // next round/game or finish game, if round not in progress
+                invalid = this.game.roundInProgress;
+                if (!invalid) {
+                    this.handleRoundResult();
+                }
+            } else if (this.game.roundInProgress) {
+                if (key === GameKey.Random) {
+                    key = this.game.variant.randomSelection().key;
+                }
+                if (this.game.variant.isValidKey(key)) {
+                    this.handleSelection(key);
+                } else {
+                    invalid = true;
+                }
             } else {
                 invalid = true;
             }
-        } else {
-            invalid = true;
-        }
 
-        if (invalid) {
-            this.errorBeep();
+            if (invalid) {
+                this.errorBeep();
+            }
         }
     }
 
@@ -228,7 +270,7 @@ export default class GameState {
                 this.nextGame();
                 break;
             case ResultCode.MatchOver:
-                this.resetGame();
+                this.resetMatch();
                 url = ROOT_URL;
                 break;
             default:
@@ -342,6 +384,39 @@ export default class GameState {
             [['Best of', this.bestOf], ['Game', this.currentGame], ['Round', this.game.roundNumber]]
         );
     }
+
+    /**
+     * Check if match has not started.
+     * @returns {boolean} true if not started
+     */
+     get isMatchNotStarted() {
+        return this.#matchStatus === GameStatus.NotStarted;
+    }
+
+    /**
+     * Check if game is in progress.
+     * @returns {boolean} true if in progress
+     */
+     get isMatchInProgress() {
+        return this.#matchStatus === GameStatus.InProgress;
+    }
+
+    /**
+     * Check if game is paused.
+     * @returns {boolean} true if paused
+     */
+     get isMatchPaused() {
+        return this.#matchStatus === GameStatus.Paused;
+    }
+
+    /**
+     * Check if game is in finished.
+     * @returns {boolean} true if finished
+     */
+    get isMatchOver() {
+        return this.#matchStatus === GameStatus.Finished;
+    }
+
 
     /** Sound error beep */
     errorBeep() {

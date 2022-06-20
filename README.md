@@ -86,6 +86,7 @@ The following resources were used to build the website.
 - Number of games radio switch based on [Responsive Toggle Switch](https://codepen.io/dsenneff/pen/ZoLVZW) by Darin on [Free Frontend - 88 Radio Buttons CSS](https://freefrontend.com/css-radio-buttons/)
 - Settings dropdown menu based on [CSS Dropdowns](https://www.w3schools.com/css/css_dropdowns.asp)
 - Settings toggle switch based on [Animated CSS Toggle Switch](https://codepen.io/garetmckinley/pen/YmxYZr?editors=1100) by Garet McKinley from [72 CSS Toggle Switches](https://freefrontend.com/css-toggle-switches/)
+- Modal dialogue courtesy of [tingle.js](https://tingle.robinparisi.com/)
 
 ### Media
 - Rock image by <a href="https://pixabay.com/users/publicdomainpictures-14/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=15712">PublicDomainPictures</a> from <a href="https://pixabay.com/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=15712">Pixabay</a>

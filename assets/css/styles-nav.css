@@ -37,6 +37,10 @@
     vertical-align: bottom;
 }
 
+.img_logo {
+    pointer-events: none;
+}
+
 .ul__menu-row {
     width: 90%;
     list-style-type: none;
@@ -54,6 +58,13 @@
     text-decoration: none;
     padding: var(--std-padding-vert) var(--std-padding-horz);
     color: var(--menu-color);
+}
+
+.button__logo {
+    border: none;
+    cursor: pointer;
+    background-color: transparent;
+    z-index: 1;
 }
 
 /* dropdown menu for settings based on 
@@ -153,4 +164,17 @@
     border-radius: var(--var-toggle-switch-border-radius);
     background: white;
     transition: left 0.15s ease-in;
+}
+
+/* tingle modal customisations */
+.btn__tingle {
+    border-radius: 5px;
+}
+
+.btn__tingle-yes {
+    background-color: green;
+}
+
+.btn__tingle-no {
+    background-color: red;
 }

@@ -36,10 +36,10 @@
     text-align: center;
     width: var(--var-game-tile-size);
     background-image: none;
-    background: radial-gradient(red, yellow, rgb(30, 144, 255));
 }
 
 .div__selection-tile-wrapper:hover {
+    background-color: aliceblue;
 }
 
 .img__selection-tile-img {

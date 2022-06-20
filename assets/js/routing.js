@@ -12,8 +12,12 @@ import {
     gamePlayView, setPlayHandler, roundResultView, setRoundResultHandler,
     rulesView, setRulesHandler
 } from './views/index.js'
-import { savePreferences } from './utils/index.js'
+import { htmlP, savePreferences } from './utils/index.js'
+import { showYesNoModal, MODAL_YES } from './components/index.js'
 import { GameVariant } from './game.js'
+
+/** Menu handler event listeners added flag */
+let addedMenuEventHandlers = false;
 
 /**
  * Enum representing views.
@@ -65,6 +69,7 @@ const routes = new Map([
 export function setView(view, gameState) {
     let innerHTML;
     let setClickHandler;
+    let process = true;
 
     if (typeof view === 'string') {
         for (const [url, urlView] of routes.entries()) {
@@ -74,45 +79,82 @@ export function setView(view, gameState) {
             }
         }
     }
+
     switch (view) {
         case View.GameMenu:
-            innerHTML = gameSelectMenu();
-            setClickHandler = setMenuHandler;
-            break;
-        case View.BasicGame:
-        case View.BigBangGame:
-        case View.XtremeGame:
-            gameState.game.variant = (view === View.BasicGame ? GameVariant.Basic :
-                (view === View.BigBangGame ? GameVariant.BigBang : GameVariant.Xtreme));
-
-            innerHTML = gameParamsView(gameState);
-            setClickHandler = setParamsHandler;
-            break;
-        case View.Play:
-            innerHTML = gamePlayView(gameState);
-            setClickHandler = setPlayHandler;
-            break;
-        case View.RoundResult:
-            innerHTML = roundResultView(gameState);
-            setClickHandler = setRoundResultHandler;
-            break;
         case View.Rules:
-            innerHTML = rulesView(gameState);
-            setClickHandler = setRulesHandler;
+            if (gameState.isMatchInProgress) {
+                // confirm abort of current game
+                gameState.pauseMatch();
+                showYesNoModal('confirm new game', 
+                                htmlP([], 'This will end the current game. Do you want to continue?'), 
+                                checkChoice,
+                                { view: view, gameState: gameState });
+                process = false;    // wait for user response
+            }
             break;
         default:
-            throw new Error(`Unknown view: ${view}`);
+            // ok to process
     }
 
-    // set view html
-    const mainElement = document.getElementById('main');
-    mainElement.innerHTML = innerHTML;
+    if (process) {
+        switch (view) {
+            case View.GameMenu:
+                innerHTML = gameSelectMenu();
+                setClickHandler = setMenuHandler;
+                break;
+            case View.BasicGame:
+            case View.BigBangGame:
+            case View.XtremeGame:
+                gameState.game.variant = (view === View.BasicGame ? GameVariant.Basic :
+                    (view === View.BigBangGame ? GameVariant.BigBang : GameVariant.Xtreme));
 
-    // add handlers
-    if (setClickHandler) {
-        setClickHandler(gameState);
+                innerHTML = gameParamsView(gameState);
+                setClickHandler = setParamsHandler;
+                break;
+            case View.Play:
+                innerHTML = gamePlayView(gameState);
+                setClickHandler = setPlayHandler;
+                break;
+            case View.RoundResult:
+                innerHTML = roundResultView(gameState);
+                setClickHandler = setRoundResultHandler;
+                break;
+            case View.Rules:
+                innerHTML = rulesView(gameState);
+                setClickHandler = setRulesHandler;
+                break;
+            default:
+                throw new Error(`Unknown view: ${view}`);
+        }
+
+        // set view html
+        const mainElement = document.getElementById('main');
+        mainElement.innerHTML = innerHTML;
+
+        // add handlers
+        if (setClickHandler) {
+            setClickHandler(gameState);
+        }
+        if (!addedMenuEventHandlers) {
+            addMenuEventHandlers(gameState);
+        }
     }
-    addMenuEventHandlers(gameState);
+}
+
+/**
+ * Handle confirm game abort dialog choice
+ * @param {string} choice - value for button clicked on modal
+ * @param {object} context - current game state 
+ */
+function checkChoice(choice, context) {
+    if (choice === MODAL_YES) {
+        // end game and set required view
+        context.gameState.endMatch();
+        setView(context.view, context.gameState);
+    } else {
+        context.gameState.unPauseMatch();
+    }
 }
 
 /**
@@ -147,9 +189,11 @@ function addMenuEventHandlers(gameState) {
     }, false);
 
     // Add menu item click handler
-    ["menu-rules"].forEach(id => {
+    ["menu-logo", "menu-rules"].forEach(id => {
         document.getElementById(id).addEventListener("click", function( event ) {
             setView(event.target.value, gameState);
         }, false);
     })
+
+    addedMenuEventHandlers = true;
 }
