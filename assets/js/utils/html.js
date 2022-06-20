@@ -20,10 +20,13 @@ const htmlWrapper = (tag, className, innerHtml, attribs = {}, selfClosing = fals
         if (Array.isArray(className)) {
             className = className.join(' ');    // aggregate classes
         }
+        if (className) {
+            className = `class="${className}"`;
+        }
         if (Array.isArray(innerHtml)) {
             innerHtml = innerHtml.join(' ');    // aggregate innerHtml
         }
-        return `<${tag} class="${className}" ${attribString} ${selfClosing ? '/' : ''}>
+        return `<${tag} ${className ? className : ''} ${attribString} ${selfClosing ? '/' : ''}>
                 ${selfClosing ? '' : `${innerHtml ? innerHtml : ''}
             </${tag}>`}`;
 };

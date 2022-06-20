@@ -81,9 +81,7 @@ export default function gameParamsView(gameState) {
             )}
             ${htmlDiv('div__player-names', 
                 `${htmlDiv('div__player-name-wrapper', 
-                    `<p/>
-                    ${htmlDiv('div__player-names-title', '<p>Name</p>')}
-                    ${htmlDiv('div__player-names-title', '<p>Colour</p>')}`
+                    `${htmlDiv('div__player-names-title', '<p>Player Names</p>')}`
                 )}
                 ${htmlDiv('div__player-name-group-wrapper', playerNames(wip.playerArray), {
                     id: playerNameGroupId
@@ -480,12 +478,14 @@ function playerNames(playerArray, errorIndices) {
         htmlLabel([], title, {
             for: id
         }),
-        htmlInput(inputClasses, {
-            type: 'text',
-            id: id,
-            name: id, value: defaultValue
-        }),
-        htmlDiv(['div__player-colour', playerColour(playerIdNumToIndex(idNum), true)], '<p/>')
+        htmlDiv(['div__player-name-input'], [
+            htmlInput(inputClasses, {
+                type: 'text',
+                id: id,
+                name: id, value: defaultValue
+            }),
+            htmlDiv(['div__player-colour', playerColour(playerIdNumToIndex(idNum), true)], '<p/>')
+        ])
     ]);
 }
 

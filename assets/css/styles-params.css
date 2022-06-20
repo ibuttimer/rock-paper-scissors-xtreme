@@ -119,6 +119,10 @@
 }
 
 .div__player-name-input {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
 }
 
 .input__player-name {
@@ -134,6 +138,7 @@
 .div__player-colour {
     width: 25px;
     height: 25px;
+    margin-left: var(--std-margin-between);
 }
 
 .div__play {
@@ -153,4 +158,27 @@
     margin: var(--var-input-margin) 0 var(--var-input-margin);
     text-align: center;
     color: red;
+}
+
+/* media queries */
+
+/* tiny-small screens, 450px wide or less */ 
+@media screen and (max-width: 450px) {
+    .div__num-of-game-participants {
+        flex-direction: column;
+    }
+    .div__num-of-game-participants .div__num-players-wrapper:first-of-type {
+        margin-bottom: 0;
+    }
+}
+
+/* tiny screens, 390px wide or less */ 
+@media screen and (max-width: 390px) {
+    .div__player-name-wrapper {
+        flex-direction: column;
+    }
+
+    .div__player-name-wrapper label {
+        margin-bottom: var(--std-margin-vert);
+    }
 }
