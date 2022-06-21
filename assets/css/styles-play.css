@@ -2,9 +2,6 @@
 
 /* custom properties */
 :root {
-	/* play view */
-    --play-selection-grid-auto-flow: row;
-
 	/* selection tile component */
     --var-game-tile-margin: calc(2 * var(--std-margin-between));
     --var-game-tile-img-size: 80px;
@@ -18,13 +15,9 @@
 
 /* play view */
 .section__select-play {
-    display: grid;
-	grid-auto-columns: max-content;
-	grid-auto-rows: max-content;
-	grid-auto-flow: var(--play-selection-grid-auto-flow);
-	grid-template-rows: auto auto;
-	grid-template-columns: repeat(5, 1fr);
-    justify-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
 }
 
 /* selection tile component */
@@ -130,33 +123,5 @@
     
     .animate__fade-out {
         animation-name: none;
-    }
-}
-
-/* large screens, 1100px wide or less */ 
-@media screen and (max-width: 1100px) {
-    .section__select-play {
-        grid-template-columns: repeat(4, 1fr);
-    }
-}
-
-/* medium screens, 950px wide or less */ 
-@media screen and (max-width: 950px) {
-    .section__select-play {
-        grid-template-columns: repeat(3, 1fr);
-    }
-}
-
-/* small-medium screens, 650px wide or less */ 
-@media screen and (max-width: 650px) {
-    .section__select-play {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
-/* tiny-small screens, 450px wide or less */ 
-@media screen and (max-width: 450px) {
-    .section__select-play {
-        grid-template-columns: 1fr;
     }
 }
