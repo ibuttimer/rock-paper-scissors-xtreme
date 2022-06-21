@@ -245,7 +245,10 @@ export default class GameState {
                     this.handleSelection(key);
                 } else {
                     if (event.ctrlKey) {
-                        showOkModal('key table', selectionKeysTable(this.game.variant));
+                        this.pauseMatch();
+                        showOkModal('key table', selectionKeysTable(this.game.variant), (choice, context) => {
+                            this.unPauseMatch();
+                        });
                     } else {
                         invalid = true;
                     }
