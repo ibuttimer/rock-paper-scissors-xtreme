@@ -3,6 +3,7 @@ import { accumulator } from '../utils/index.js';
 
 export const MODAL_YES = 'yes';
 export const MODAL_NO = 'no';
+export const MODAL_OK = 'ok';
 
 /**
  * Display a modal dialogue
@@ -39,7 +40,9 @@ export default function showModal(label, content, buttons = []) {
     // add buttons
     buttons.forEach(button => {
         modal.addFooterBtn(button.text, button.classes, function() {
-            button.onClick(button.value, button.context);
+            if (button.onClick) {
+                button.onClick(button.value, button.context);
+            }
             modal.close();
         });
     });
@@ -60,12 +63,30 @@ export default function showModal(label, content, buttons = []) {
  * @param {any} context - optional context
  * @returns {Modal} tingle modal instance
  */
-export function showYesNoModal(label, content, callback, context) {
+ export function showYesNoModal(label, content, callback, context) {
     // instantiate new modal
     const buttonBase = 'tingle-btn btn__tingle '
     return showModal(label, content, [
         modalButton('Yes', buttonBase + 'btn__tingle-yes', callback, MODAL_YES, context),
         modalButton('No', buttonBase + 'btn__tingle-no', callback, MODAL_NO, context)
+    ]);
+}
+
+/**
+ * Display an Ok modal dialogue
+ * @param {string} label - modal identifier label
+ * @param {string} content - model html content
+ * @param {function} callback - function with the following signature
+ *                              onClick(value: any, context: any)
+ *                             to call when buttons clicked
+ * @param {any} context - optional context
+ * @returns {Modal} tingle modal instance
+ */
+ export function showOkModal(label, content, callback, context) {
+    // instantiate new modal
+    const buttonBase = 'tingle-btn btn__tingle '
+    return showModal(label, content, [
+        modalButton('Ok', buttonBase + 'btn__tingle-yes', callback, MODAL_OK, context)
     ]);
 }
 

@@ -10,6 +10,8 @@ import { Game, GameVariant } from './game.js'
 import { GameKey, Selection, ResultCode, GameStatus } from './enums.js';
 import { setView } from './routing.js'
 import { loadPreferences } from './utils/index.js'
+import { showOkModal } from './components/index.js'
+import { selectionKeysTable } from './views/game-rules.js'
 
 /**
  * Generate a selection tile parameters object
@@ -242,7 +244,11 @@ export default class GameState {
                 if (this.game.variant.isValidKey(key)) {
                     this.handleSelection(key);
                 } else {
-                    invalid = true;
+                    if (event.ctrlKey) {
+                        showOkModal('key table', selectionKeysTable(this.game.variant));
+                    } else {
+                        invalid = true;
+                    }
                 }
             } else {
                 invalid = true;

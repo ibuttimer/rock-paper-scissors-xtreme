@@ -171,7 +171,8 @@
     border-radius: 5px;
 }
 
-.btn__tingle-yes {
+.btn__tingle-yes,
+.btn__tingle-ok {
     background-color: green;
 }
 

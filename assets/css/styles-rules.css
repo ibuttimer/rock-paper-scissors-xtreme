@@ -9,7 +9,8 @@
     line-height: 2;
 }
 
-.ul__common-rules {
+.ul__common-rules,
+.ul__keys-info {
     padding-left: calc(2 * var(--std-padding-horz));
 }
 

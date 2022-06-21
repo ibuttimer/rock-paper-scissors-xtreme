@@ -12,11 +12,20 @@ import {
     htmlTable, htmlThead, htmlTbody, htmlTh, htmlTr, htmlTd, 
     htmlArticle, htmlH3, htmlI
 } from '../utils/index.js'
-import { GameVariant } from '../game.js'
+import { GameVariant, Rule } from '../game.js'
+import { Selection } from '../enums.js'
 import { setView } from '../routing.js'
 import { GameKey } from '../enums.js';
 import { bestOfOptions } from './game-params.js'
 
+
+const basicHeadingId = 'basic-game-info';
+const bigbangHeadingId = 'bigbang-game-info';
+const xtremeHeadingId = 'xtreme-game-info';
+
+htmlA([], BASIC_VARIANT_NAME, {
+    id: basicHeadingId
+})
 
 const intro = htmlP([], 
 `${GAME_NAME} is a ${htmlA([], 'zero sum game' , {
@@ -25,7 +34,14 @@ const intro = htmlP([],
     rel: "noopener",
     'aria-label': "visit collins dictionary in another tab"
 })} that is usually played by two people using their hands.
-On this site, there are three different variations of the game available for play by multiple players, namely; ${BASIC_VARIANT_NAME}, ${BIGBANG_VARIANT_NAME} and ${XTREME_VARIANT_NAME}.`);
+On this site, there are three different variations of the game available for play by multiple players, namely; 
+${htmlA([], BASIC_VARIANT_NAME, {
+    href: `#${basicHeadingId}`
+})}, ${htmlA([], BIGBANG_VARIANT_NAME, {
+    href: `#${bigbangHeadingId}`
+})} and ${htmlA([], XTREME_VARIANT_NAME, {
+    href: `#${xtremeHeadingId}`
+})}.`);
 
 /** 'Best of' options as a string */
 const bestOfPossibilities = () => {
@@ -121,6 +137,42 @@ const winMatrix = (variant) => htmlTable(['table__win-matrix'],
     ${winMatrixRows(variant)}`
 );
 
+/** Selection keys header */
+const selectionKeysHeader = () => {
+    return htmlThead(['thead__win-matrix'], htmlTr([], 
+        ['Selection', 'Key']
+            .map(hdr => `${htmlTh(['th__win-matrix'], hdr)}`)
+            .reduce(accumulator, '')
+        )
+    )
+};
+
+/**
+ * Generate the selection keys for the specified game variant
+ * @param {GameVariant} variant 
+ * @returns {string} html for component
+ */
+ const selectionKeysRows = (variant) => {
+    const rules = variant.rules.concat([new Rule(Selection.Random)]);   // random key plus variant keys
+    return htmlTbody([], rules.map(rule => {
+        return htmlTr([], 
+                `${htmlTd(tdClasses, rule.selection.name)}
+                ${htmlTd(tdClasses, rule.selection.key.key.toUpperCase())}`
+            );
+        })
+    );
+};
+
+/**
+ * Generate the selection keys table for the specified game variant
+ * @param {GameVariant} variant 
+ * @returns {string} html for component
+ */
+export const selectionKeysTable = (variant) => htmlTable(['table__win-matrix'],
+ `${selectionKeysHeader()}
+ ${selectionKeysRows(variant)}`
+);
+
 // basic variant win matrix
 const basicWinMatrix = () => winMatrix(GameVariant.Basic);
 // big bang variant win matrix
@@ -156,6 +208,18 @@ const playXtreme = htmlDiv('div__play',
             })
     );
 
+const keysItems = () => {
+    return [
+        'Round selections may be made by pressing the key corresponding to the selection, as specified in the game tables.',
+        `If a player presses the '${htmlI([], GameKey.Random.key)}' key, a random selection is made for the round.`,
+        `Pressing the '${htmlI([], 'Control')}' key on the Gesture Selection screen, displays the keys for the possible selections.`,
+        `Pressing the '${htmlI([], GameKey.Next.key.toUpperCase())}' key on the Round Results screen, continues the match.`
+    ].map(rule => htmlLi([], rule))
+    .reduce(accumulator, '');
+};
+const keysInfo = htmlP([], 
+`Once a match has started, the following key may be used to play:
+${htmlUl(['ul__keys-info'], keysItems())}`);
 
 const h3Heading = (innerHtml, attribs = {}) => htmlH3(['h3__rules-heading'], innerHtml, attribs)
 
@@ -170,19 +234,26 @@ const h3Heading = (innerHtml, attribs = {}) => htmlH3(['h3__rules-heading'], inn
         ${intro}
         ${h3Heading('Common Rules')}
         ${commonRules}
-        ${h3Heading(`${BASIC_VARIANT_NAME}`)}
+        ${h3Heading(`${BASIC_VARIANT_NAME}`, {
+            id: basicHeadingId
+        })}
         ${basicRules}
         ${htmlDiv(['div__win-matrix'], basicWinMatrix())}
         ${playBasic}
-        ${h3Heading(`${BIGBANG_VARIANT_NAME}`)}
+        ${h3Heading(`${BIGBANG_VARIANT_NAME}`, {
+            id: bigbangHeadingId
+        })}
         ${bigBangRules}
         ${htmlDiv(['div__win-matrix'], bigBangWinMatrix())}
         ${playBigBang}
-        ${h3Heading(`${XTREME_VARIANT_NAME}`)}
+        ${h3Heading(`${XTREME_VARIANT_NAME}`, {
+            id: xtremeHeadingId
+        })}
         ${xtremeRules}
         ${htmlDiv(['div__win-matrix'], xtremeWinMatrix())}
         ${playXtreme}
-        `
+        ${h3Heading(`Using the keyboard`)}
+        ${keysInfo}`
     );
 }
 
