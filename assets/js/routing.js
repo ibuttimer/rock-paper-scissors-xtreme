@@ -149,8 +149,8 @@ export function setView(view, gameState) {
  */
 function checkChoice(choice, context) {
     if (choice === MODAL_YES) {
-        // end game and set required view
-        context.gameState.endMatch();
+        // reset game and set required view
+        context.gameState.resetMatch();
         setView(context.view, context.gameState);
     } else {
         context.gameState.unPauseMatch();
