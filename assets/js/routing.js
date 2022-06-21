@@ -191,7 +191,8 @@ function addMenuEventHandlers(gameState) {
     // Add menu item click handler
     ["menu-logo", "menu-rules"].forEach(id => {
         document.getElementById(id).addEventListener("click", function( event ) {
-            setView(event.target.value, gameState);
+            const value = event.target.value ? event.target.value : event.currentTarget.value;
+            setView(value, gameState);
         }, false);
     })
 
