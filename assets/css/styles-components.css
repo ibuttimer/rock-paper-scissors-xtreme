@@ -4,24 +4,31 @@
 :root {
 	/* game progress component */
 	--game-progress-border-colour: rgb(204, 204, 204);
-	--game-progress-info-padding-size: 10px;
+	--game-progress-span-padding: 10px;
     --game-progress-background-color: floralwhite;
     --game-progress-grid-auto-flow: row;
-    --game-progress-info-size: 80px;
+    --game-progress-title-size: 90px;
+    --game-progress-entry-size: 130px;
+
+	/* leader board component */
+	--leader-board-border-colour: var(--game-progress-border-colour);
+	--leader-board-span-padding: 10px;
+    --leader-board-header-colour: var(--brown);
+    --leader-board-header-text-colour: #fff;
+    --leader-board-background-color: floralwhite;
+    --leader-board-margin: var(--var-result-selection-tile-margin);
+    --leader-board-player-name-size: 100px;
+    --leader-board-entry-size: 120px;
 
 	/* player selection tile */
     --var-result-selection-tile-margin: calc(2 * var(--std-margin-between));
     --var-result-selection-tile-img-size: 80px;
     --var-result-selection-tile-padding: 12px;
+    --var-result-selection-tile-border: calc(var(--var-result-selection-tile-padding) / 2);
     --var-result-selection-tile-size: calc(var(--var-result-selection-tile-img-size) + (2 * var(--var-result-selection-tile-padding)));
 
-	/* leader board component */
-	--leader-board-border-colour: var(--game-progress-border-colour);
-	--leader-board-info-size: 10px;
-    --leader-board-header-colour: var(--brown);
-    --leader-board-header-text-colour: #fff;
-    --leader-board-background-color: floralwhite;
-    --leader-board-margin: var(--var-result-selection-tile-margin);
+    --var-result-selection-tile-column: calc(var(--var-result-selection-tile-size) + (2 * var(--var-result-selection-tile-margin)) + (2 * var(--var-result-selection-tile-border)) + (2 * var(--var-result-selection-tile-padding)) + 10px)
+
 }
 
 /* game progress component */
@@ -46,7 +53,7 @@
     background-color: var(--game-progress-background-color);
 }
 
-.div__game-progress-info,
+.div__game-progress-title,
 .div__game-progress-data {
     border: 1px solid var(--game-progress-border-colour);
     border-radius: 5px;
@@ -57,17 +64,18 @@
     color: blue;
 }
 
-.div__game-progress-info span,
+.div__game-progress-title span,
 .div__game-progress-data span {
-    padding: 0 var(--game-progress-info-padding-size);
+    padding: 0 var(--game-progress-span-padding);
 }
 
-.div__game-progress-info {
-    width: var(--game-progress-info-size);
+.div__game-progress-title {
+    width: var(--game-progress-title-size);
 }
 
 .div__game-progress-data {
-    width: calc(var(--var-game-tile-size) - var(--game-progress-info-size));
+    width: calc(var(--game-progress-entry-size) - var(--game-progress-title-size));
+    text-align: center;
 }
 
 /* leader board component */
@@ -98,13 +106,13 @@
 
 .td__player-name span,
 .td__player-score span {
-    padding: 0 var(--game-progress-info-padding-size);
+    padding: 0 var(--leader-board-span-padding);
 }
 
 /* player selection tile */
 .div__player-selection-tile-wrapper {
     margin: var(--var-result-selection-tile-margin);
-    border: calc(var(--var-result-selection-tile-padding) / 2) solid var(--dark-blue);
+    border: var(--var-result-selection-tile-border) solid var(--dark-blue);
     border-radius: calc(var(--var-result-selection-tile-img-size) * 0.2);
     padding: var(--var-result-selection-tile-padding);
     text-align: center;
@@ -135,8 +143,8 @@
 
 /* media queries */
 
-/* tiny-small screens, 450px wide or less */ 
-@media screen and (max-width: 450px) {
+/* small screens, 580px wide or less */ 
+@media screen and (max-width: 580px) {
     :root {
         /* game progress component */
         --game-progress-grid-auto-flow: none;

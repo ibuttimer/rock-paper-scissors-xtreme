@@ -62,7 +62,12 @@ export default function roundResultView(gameState) {
  */
 function getRoundResultAndLeaderBoard(gameState) {
 
-    const roundResultElement = htmlSection(['section__round-result'], getPlayerSelections(gameState));
+    const roundResultElement = htmlDiv(['div__round-result'],
+            htmlSection(['section__round-result'], 
+                    getPlayerSelections(gameState), {
+                                            id: 'round-result'
+            })
+        );
     const leaderBoardElement = htmlAside(['aside__leader-board'], leaderBoard(gameState.topDownScores));
     return htmlDiv(['div__round-result-leader-board'], `${roundResultElement}
                                                         ${leaderBoardElement}`);
