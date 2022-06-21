@@ -179,3 +179,7 @@
 .btn__tingle-no {
     background-color: red;
 }
+
+.tingle-modal {
+    background: rgba(0, 0, 0, .1);
+}
