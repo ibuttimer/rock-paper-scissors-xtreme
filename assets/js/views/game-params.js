@@ -43,6 +43,7 @@ const numGameOptions = [
 ];
 
 export const COLOR_PROP = 'color';
+export const TEXT_COLOR_PROP = 'text-color';
 export const BACKGROUND_COLOR_PROP = 'background-color';
 export const SELECTION_TILE_DIV_PROP = 'div__selection-tile-wrapper';
 const PROPS = [COLOR_PROP, BACKGROUND_COLOR_PROP, SELECTION_TILE_DIV_PROP];
@@ -434,6 +435,9 @@ function playerNames(playerArray, errorIndices) {
         case COLOR_PROP:
             cssClass = `color_${idNum}`;
             break;
+        case TEXT_COLOR_PROP:
+            cssClass = `color_${idNum}_text`;
+            break;
         case BACKGROUND_COLOR_PROP:
             cssClass = `background-color_${idNum}`;
             break;
@@ -447,15 +451,6 @@ function playerNames(playerArray, errorIndices) {
 }
 
 /**
- * Generate the css colour class for the specified index
- * @param {number} index - player index 
- * @returns {string} css class
- */
- const playerColour = (index, background = false) => {
-    return `${background ? 'background-' : ''}color_${playerIndexToIdNum(index)}`;
-}
-
-/**
  * Player name component.
  * @param {number} idNum - player id number
  * @param {string} defaultValue - default name
@@ -466,10 +461,12 @@ function playerNames(playerArray, errorIndices) {
 
     const title = `Player ${idNum}`;
 
-    let id = generatePlayerInputId(idNum);
-    // const colour = htmlDiv(['div__player-colour', playerColour(playerIdNumToIndex(idNum), true)], '<p/>');
+    const id = generatePlayerInputId(idNum);
+    const playerIndex = playerIdNumToIndex(idNum);
+    const colorCss = playerCss(playerIndex, TEXT_COLOR_PROP);
+    const backgroundCss = playerCss(playerIndex, BACKGROUND_COLOR_PROP);
 
-    let inputClasses = ['input__player-name'];
+    let inputClasses = ['input__player-name', backgroundCss, colorCss];
     if (classes) {
         inputClasses = inputClasses.concat(Array.isArray(classes) ? classes : [classes]);
     }
@@ -483,8 +480,7 @@ function playerNames(playerArray, errorIndices) {
                 type: 'text',
                 id: id,
                 name: id, value: defaultValue
-            }),
-            htmlDiv(['div__player-colour', playerColour(playerIdNumToIndex(idNum), true)], '<p/>')
+            })
         ])
     ]);
 }

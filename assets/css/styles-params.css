@@ -9,6 +9,11 @@
     --var-player-input-margin: 0.5rem;
 
     --var-border-colour: #213140;
+
+    --var-select-colour: var(--dark-blue);
+
+    --var-radio-active-colour: var(--light-blue-tone-2);
+    --var-radio-active-text-colour: var(--light-blue-text);
 }
 
 
@@ -32,6 +37,7 @@
     font-size: 1rem;
     font-family: var(--paragraph-font);
     font-weight: var(--paragraph-font-weight);
+    color: var(--var-select-colour);
 }
 
 /* number of games component */
@@ -52,6 +58,10 @@
     height: 0;
     position: absolute;
     left: -9999px;
+}
+
+.div__num-games-wrapper select {
+    color: var(--var-select-colour);
 }
 
 .div__num-games-wrapper input + label {
@@ -84,9 +94,9 @@
     border-color: var(--var-border-colour);
 }
 .div__num-games-wrapper input:checked + label {
-    background-color: var(--light-blue);
-    color: var(--light-blue-text);
-    border-color: var(--light-blue);
+    color: var(--var-radio-active-text-colour);
+    background-color: var(--var-radio-active-colour);
+    border-color: var(--var-radio-active-colour);
     z-index: 1;
 }
 .div__num-games-wrapper input:focus + label {
@@ -98,6 +108,7 @@
     font-size: 1rem;
     font-family: var(--paragraph-font);
     font-weight: var(--paragraph-font-weight);
+    color: var(--dark-blue);
 }
 
 /* player name component */
