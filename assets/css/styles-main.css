@@ -10,7 +10,7 @@
     --var-variant-button-active-shadow-size: 2px;
 }
   
-.section__select-variant {
+.div__variant-options {
     display: grid;
 	grid-auto-columns: max-content;
 	grid-auto-rows: max-content;
@@ -33,11 +33,15 @@
     width: var(--var-variant-tile-size);
 }
 
-.h3__variant-tile-name {
+.span__variant-tile-name {
+    display: block;
+    font-family: var(--heading-font);
+    font-weight: var(--heading-font-weight);
+    font-size: var(--default-h3-height);
     text-align: center;
 }
 
-.article__variant-select {
+.div__variant-select {
     text-align: center;
 }
 
@@ -50,7 +54,7 @@
 /* small-medium screens, 750px wide or less */ 
 @media screen and (max-width: 750px) {
 
-    .section__select-variant {
+    .div__variant-options {
         grid-template-rows: auto auto;
         grid-template-columns: 1fr;
     }

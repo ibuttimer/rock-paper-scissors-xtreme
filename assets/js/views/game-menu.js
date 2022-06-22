@@ -7,8 +7,10 @@ import {
     XTREME_URL, XTREME_VARIANT_NAME, IMG_ASSETS_BASE_URL, log 
 } from '../globals.js';
 import { GameVariant } from '../game.js';
-import { View, setView } from '../routing.js'
-import { getVariantInfo } from '../utils/index.js'
+import { setView } from '../routing.js'
+import { 
+    getVariantInfo, htmlDiv, htmlButton, htmlImg, htmlSpan, htmlH1, htmlH2, htmlSection 
+} from '../utils/index.js'
 
 
 // Parameters for game select menu options
@@ -38,14 +40,15 @@ const gameSelects = gameParams.map(params => {
  * @returns {string} html for menu
  */
 export default function gameSelectMenu() {
-    return `<h1 class="h1__main-title">${GAME_NAME}</h1>
-            <h2 class="h2__sub-title">Select game</h2>
-            <section class="section__select-variant">
-                ${gameSelects.reduce(
-                    (innerHtml, params) => innerHtml + getGameSelect(params),
-                    ''
-                  )}
-            </section>`;
+    return htmlH1(['h1__main-title'], GAME_NAME) +
+            htmlSection([],
+                htmlH2(['h2__sub-title'], 'Select game') +
+                htmlDiv(['div__variant-options'], 
+                    gameSelects.reduce(
+                        (innerHtml, params) => innerHtml + getGameSelect(params),
+                        '')
+                )
+            );
 }
 
 /**
@@ -63,18 +66,27 @@ function gameSelectParams(url, variant, tile) {
     }
 }
 
+/** Basic css classes for all game select tiles */
+const gameSelectTileClasses = [
+    'button__variant-select', 'div__variant-tile-wrapper', 'debossable'
+];
+
 /**
  * Generate a game select option.
  * @param {*} params - parameters object {@link gameSelectParams}
  * @returns {string} html for game select option
  */
 function getGameSelect(params) {
-    return `<article class="article__variant-select">
-                <button type="button" class="button__variant-select" data-url="${params.url}" 
-                        aria-label="select ${params.variant.name} game." rel="next">
-                    ${getGameTile(params.tile)}
-                </button>
-            </article>`
+    return htmlDiv(['div__variant-select'],
+        htmlButton(
+            gameSelectTileClasses.concat([params.tile.css.background_color]), 
+            getGameTile(params.tile), {
+                type: 'button',
+                'data-url': params.url,
+                'aria-label': `select ${params.variant.name} game.`,
+                rel: 'next'
+            })
+    );
 }
 
 /**
@@ -100,10 +112,11 @@ function gameTileParams(name, src, alt, css) {
  * @returns {string} html for game select option
  */
 function getGameTile(params) {
-    return `<div class="div__variant-tile-wrapper debossable ${params.css.background_color}">
-                <img class="img__variant-tile-img" src="${params.src}" alt="${params.alt}" />
-                <h3 class="h3__variant-tile-name">${params.name}</h3>
-            </div>`
+    return htmlImg(['img__variant-tile-img'], {
+        src: params.src,
+        alt: params.alt
+    }) + 
+    htmlSpan(['span__variant-tile-name'], params.name);
 }
 
 /**
