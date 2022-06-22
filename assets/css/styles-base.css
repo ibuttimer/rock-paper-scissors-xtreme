@@ -85,6 +85,10 @@ select {
     font-size: var(--element-font-size);
 }
 
+.std-line-height {
+    line-height: var(--default-line-height);
+}
+
 .div__content {
     /* sticky footer */
     flex: 1 0 auto;

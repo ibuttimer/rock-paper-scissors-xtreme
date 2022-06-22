@@ -27,8 +27,11 @@
     --var-result-selection-tile-border: calc(var(--var-result-selection-tile-padding) / 2);
     --var-result-selection-tile-size: calc(var(--var-result-selection-tile-img-size) + (2 * var(--var-result-selection-tile-padding)));
 
-    --var-result-selection-tile-column: calc(var(--var-result-selection-tile-size) + (2 * var(--var-result-selection-tile-margin)) + (2 * var(--var-result-selection-tile-border)) + (2 * var(--var-result-selection-tile-padding)) + 10px)
+    --var-result-selection-tile-column: calc(var(--var-result-selection-tile-size) + (2 * var(--var-result-selection-tile-margin)) + (2 * var(--var-result-selection-tile-border)) + (2 * var(--var-result-selection-tile-padding)) + 10px);
 
+    --font-size-factor: 1;
+    --h3-selection-tile-font-size: calc(var(--default-h3-height) * var(--font-size-factor));
+    --h4-selection-tile-font-size: calc(var(--default-h4-height) * var(--font-size-factor));
 }
 
 /* game progress component */
@@ -106,11 +109,11 @@
 
 .td__player-name p,
 .td__player-score p {
-    padding: 0 var(--leader-board-span-padding);
+    padding: calc(var(--std-padding-vert) / 4) var(--leader-board-span-padding);
 }
 
 /* player selection tile */
-.div__player-selection-tile-wrapper {
+.div__play-sel-tile-wrapper {
     margin: var(--var-result-selection-tile-margin);
     border: var(--var-result-selection-tile-border) solid var(--dark-blue);
     border-radius: calc(var(--var-result-selection-tile-img-size) * 0.2);
@@ -120,25 +123,30 @@
     background-image: none;
 }
 
-.div__player-selection-tile-wrapper:hover {
+.div__play-sel-tile-wrapper:hover {
 }
 
-.img__player-selection-tile-img {
+.img__play-sel-tile-img {
     height: var(--var-result-selection-tile-img-size);
     width: var(--var-result-selection-tile-img-size);
     border-radius: 50%;
 }
 
-.h3__player-selection-tile-banner {
+.h3__play-sel-tile-banner {
     text-align: center;
+    font-size: var(--h3-selection-tile-font-size);
+    color: goldenrod;
 }
 
-.h4__player-selection-tile-name {
+.h4__play-sel-tile-name {
     text-align: center;
+    font-size: var(--h4-selection-tile-font-size);
 }
 
-.h4__player-selection-tile-player-name {
+.h4__play-sel-tile-player-name {
     text-align: center;
+    font-size: var(--h4-selection-tile-font-size);
+    overflow: hidden;
 }
 
 /* media queries */
@@ -153,5 +161,65 @@
     .div__game-progress-wrapper {
         grid-template-columns: 1fr;
     }
-    
+}
+
+/* small-medium screens, 650px wide or less */ 
+@media screen and (max-width: 650px) {
+    :root {
+        --var-result-selection-tile-img-size: 60px;
+
+        --var-result-selection-tile-padding: 9px;
+
+        --font-size-factor: 0.9;
+    }
+
+    .h4__play-sel-tile-long {
+        font-size: calc(var(--default-h4-height) * 0.7);   /* 70% std size 1em */
+        line-height: 1.6;   /* to keep tiles same height */
+    }
+    .h3__play-sel-tile-long {
+        font-size: calc(var(--default-h3-height) * 0.7);   /* 70% std size 1em */
+    }
+}
+
+/* tiny-small screens, 450px wide or less */ 
+@media screen and (max-width: 450px) {
+    :root {
+        --var-result-selection-tile-img-size: 40px;
+
+        --var-result-selection-tile-padding: 6px;
+
+        --font-size-factor: 0.8;
+        /* --h3-selection-tile-font-size: 0.93em;  80% std size 1.17em */
+        /* --h4-selection-tile-font-size: 0.8em;   80% std size 1em */
+    }
+
+    .h4__play-sel-tile-med {
+        font-size: calc(var(--default-h4-height) * 0.7);   /* 70% std size 1em */
+        line-height: 1.6;   /* to keep tiles same height */
+    }
+    .h4__play-sel-tile-long {
+        font-size: calc(var(--default-h4-height) * 0.6);   /* 60% std size 1em */
+        line-height: 2.4;   /* to keep tiles same height */
+    }
+
+    .h3__play-sel-tile-med {
+        font-size: calc(var(--default-h3-height) * 0.6);   /* 70% std size 1em */
+    }
+    .h3__play-sel-tile-long {
+        font-size: calc(var(--default-h3-height) * 0.5);   /* 60% std size 1em */
+    }
+}
+
+/* tiny screens, 280px wide or less */ 
+@media screen and (max-width: 280px) {
+    :root {
+        --var-result-selection-tile-img-size: 30px;
+
+        --var-result-selection-tile-padding: 10px;
+    }
+
+    .h4__play-sel-tile-name {
+        display: none;
+    }
 }

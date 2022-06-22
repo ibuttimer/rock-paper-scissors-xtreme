@@ -3,7 +3,7 @@
     @author Ian Buttimer
 */
 import { 
-    accumulator, htmlDiv, htmlTable, htmlThead, htmlTbody, htmlTr, htmlTh, htmlTd, htmlSpan 
+    accumulator, htmlDiv, htmlTable, htmlThead, htmlTbody, htmlTr, htmlTh, htmlTd, htmlP 
 } from '../utils/index.js';
 
 export const ORIENTATION_HORZ = 0;
@@ -48,9 +48,9 @@ function getPlayerScores(scores, orientation = ORIENTATION_HORZ) {
     return wrapAll(Array.from(scores).map((playerScore, index) => {
         const player = playerScore.player;
         const tdInfo = htmlTd(['td__player-name'], 
-                                    htmlSpan([player.css.color], player.name));
+                                    htmlP([player.css.color], player.name));
         const tdData = htmlTd(['td__player-score'], 
-                                    htmlSpan([], playerScore.score.toString()));
+                                    htmlP([], playerScore.score.toString()));
         return wrapInfo([tdInfo, tdData].join(' '));
     }).reduce(accumulator, ''));
 }

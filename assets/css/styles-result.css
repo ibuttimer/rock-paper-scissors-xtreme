@@ -106,3 +106,30 @@
         width: 100%;
     }  
 }
+
+/* small-medium screens, 650px wide or less */ 
+@media screen and (max-width: 650px) {
+    .button__round-result-next-round,
+    .button__round-result-next-game,
+    .button__round-result-done {
+        width: 180px;
+    }
+}
+
+/* tiny-small screens, 450px wide or less */ 
+@media screen and (max-width: 450px) {
+    .button__round-result-next-round,
+    .button__round-result-next-game,
+    .button__round-result-done {
+        width: 160px;
+    }
+}
+
+/* tiny-small screens, 280px wide or less */ 
+@media screen and (max-width: 280px) {
+    .button__round-result-next-round,
+    .button__round-result-next-game,
+    .button__round-result-done {
+        width: 140px;
+    }
+}

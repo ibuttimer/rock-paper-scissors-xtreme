@@ -12,21 +12,43 @@ import { htmlDiv, htmlImg, htmlH3, htmlH4 } from '../utils/index.js'
  export default function playerSelectionTile(params) {
 
     const banner = params.banner ?
-        htmlH3('h3__player-selection-tile-banner', params.banner) : '';
-    const playerName = htmlH4(
-        ['h4__player-selection-tile-player-name', params.player.css.color], params.player.name);
-    const image = htmlImg('img__player-selection-tile-img', {
+        htmlH3([
+            'h3__play-sel-tile-banner', h3SizeModifier(params.banner)
+        ], params.banner) : '';
+    const playerName = htmlH4([
+        'h4__play-sel-tile-player-name', params.player.css.color, h4SizeModifier(params.player.name),
+        'std-line-height'
+    ], params.player.name);
+    const image = htmlImg('img__play-sel-tile-img', {
         src: params.src, alt: params.alt
     });
-    const selectionName = htmlH4('h4__player-selection-tile-name', params.selection.name);
+    const selectionName = htmlH4([
+        'h4__play-sel-tile-name', h4SizeModifier(params.selection.name)
+    ], params.selection.name);
 
-    let classes = ['div__player-selection-tile-wrapper'];
+    let classes = ['div__play-sel-tile-wrapper'];
     if (params.classes) {
         classes = classes.concat(Array.isArray(params.classes) ? params.classes : [params.classes]);
     }
 
     return htmlDiv(classes, [banner, playerName, image, selectionName].join(' '));
 }
+
+/**
+ * Get H4 font size css class based on length of text to display.
+ * @param {string} text - text to display 
+ * @returns {string} css class
+ */
+ const h4SizeModifier = (text) => text.length > 7 ? 'h4__play-sel-tile-long' : 
+                                    text.length > 5 ? 'h4__play-sel-tile-med' : '';
+
+/**
+ * Get H3 font size css class based on length of text to display.
+ * @param {string} text - text to display 
+ * @returns {string} css class
+ */
+ const h3SizeModifier = (text) => text.length > 7 ? 'h3__play-sel-tile-long' : 
+                                    text.length > 5 ? 'h3__play-sel-tile-med' : '';
 
 /**
  * Generate a player selection tile parameter object
