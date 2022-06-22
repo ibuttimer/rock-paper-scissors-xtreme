@@ -81,7 +81,9 @@ body {
 
 p,
 label,
-select {
+select,
+li,
+table {
     font-size: var(--element-font-size);
 }
 
