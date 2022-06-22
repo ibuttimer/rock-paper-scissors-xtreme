@@ -8,6 +8,8 @@
     
     --var-player-input-margin: 0.5rem;
 
+    --var-params-font-size: 1em;
+    
     --var-border-colour: #213140;
 
     --var-select-colour: var(--dark-blue);
@@ -105,7 +107,7 @@
 }
 
 .div__num-games-wrapper select {
-    font-size: 1rem;
+    font-size: var(--var-params-font-size);
     font-family: var(--paragraph-font);
     font-weight: var(--paragraph-font-weight);
     color: var(--dark-blue);
@@ -137,7 +139,7 @@
 }
 
 .input__player-name {
-    font-size: 1rem;
+    font-size: var(--var-params-font-size);
     font-family: var(--paragraph-font);
     font-weight: var(--paragraph-font-weight);
 
@@ -183,6 +185,40 @@
     }
 }
 
+/* small-medium screens, 650px wide or less */ 
+@media screen and (max-width: 650px) {
+    :root {
+        --var-params-font-size: 0.9em;
+    }
+    .div__num-games-wrapper input + label {
+        padding: 0.65rem 1.8rem;
+    }
+    .div__num-players-wrapper select,
+    .div__num-games-wrapper input + label {
+        font-size: 0.9rem;
+    }
+    .button__play {
+        width: 180px;
+    }
+}
+
+/* tiny-small screens, 450px wide or less */ 
+@media screen and (max-width: 450px) {
+    :root {
+        --var-params-font-size: 0.8em;
+    }
+    .div__num-games-wrapper input + label {
+        padding: 0.55rem 1.6rem;
+    }
+    .div__num-players-wrapper select,
+    .div__num-games-wrapper input + label {
+        font-size: 0.8rem;
+    }
+    .button__play {
+        width: 160px;
+    }
+}
+
 /* tiny screens, 390px wide or less */ 
 @media screen and (max-width: 390px) {
     .div__player-name-wrapper {
@@ -191,5 +227,22 @@
 
     .div__player-name-wrapper label {
         margin-bottom: var(--std-margin-vert);
+    }
+}
+
+/* tiny-small screens, 280px wide or less */ 
+@media screen and (max-width: 280px) {
+    :root {
+        --var-params-font-size: 0.7em;
+    }
+    .div__num-games-wrapper input + label {
+        padding: 0.45rem 1.5rem;
+    }
+    .div__num-players-wrapper select,
+    .div__num-games-wrapper input + label {
+        font-size: 0.7rem;
+    }
+    .button__play {
+        width: 140px;
     }
 }

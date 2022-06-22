@@ -54,6 +54,8 @@
     /* Desktop browsers use a default value of roughly 1.2, depending on the element's font-family.
         https://developer.mozilla.org/en-US/docs/Web/CSS/line-height */
     --default-line-height: 1.2;
+
+    --element-font-size: 1.0em;   /* 100% std size 1em */
 }
 
 * {
@@ -75,6 +77,12 @@ body {
     /* sticky footer */
     display: flex;
     flex-direction: column;
+}
+
+p,
+label,
+select {
+    font-size: var(--element-font-size);
 }
 
 .div__content {
@@ -116,7 +124,7 @@ body {
     border: 0;
     line-height: 2.5;
     padding: 0 20px;
-    font-size: 1rem;
+    font-size: var(--element-font-size);
     text-align: center;
     color: #fff;
     text-shadow: 1px 1px 1px #000;
@@ -267,6 +275,8 @@ body {
 @media screen and (max-width: 650px) {
     :root {
         --std-margin-between: 8px;
+
+        --element-font-size: 0.9em;   /* 90% std size 1em */
     }
 
     .h1__main-title {
@@ -278,15 +288,14 @@ body {
     .h3__sub-title {
         font-size: 1.05em;  /* 90% std size 1.17em */
     }
-    p {
-        font-size: 0.9em;   /* 90% std size 1em */
-    }
 }
 
 /* tiny-small screens, 450px wide or less */ 
 @media screen and (max-width: 450px) {
     :root {
         --std-margin-between: 6px;
+
+        --element-font-size: 0.8em;   /* 80% std size 1em */
     }
 
     .h1__main-title {
@@ -298,15 +307,14 @@ body {
     .h3__sub-title {
         font-size: 0.93em;  /* 80% std size 1.17em */
     }
-    p {
-        font-size: 0.8em;   /* 80% std size 1em */
-    }
 }
 
 /* tiny-small screens, 280px wide or less */ 
 @media screen and (max-width: 280px) {
     :root {
         --std-margin-between: 5px;
+
+        --element-font-size: 0.7em;   /* 70% std size 1em */
     }
 
     .h1__main-title {
@@ -317,9 +325,6 @@ body {
     }
     .h3__sub-title {
         font-size: 0.82em;  /* 70% std size 1.17em */
-    }
-    p {
-        font-size: 0.7em;   /* 70% std size 1em */
     }
 }
 
