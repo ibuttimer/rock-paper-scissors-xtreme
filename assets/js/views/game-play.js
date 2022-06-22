@@ -7,7 +7,7 @@ import { titleHeader, currentPlayerNameHeader, gameProgress } from '../component
 import { 
     accumulator, htmlDiv, htmlImg, htmlH4, addElementClass, removeElementClass, replaceElementClass, delay 
 } from '../utils/index.js';
-import { View, setView } from '../routing.js'
+import { setView } from '../routing.js'
 import { SELECTION_TILE_DIV_PROP } from './game-params.js'
 
 const currentPlayerHeaderId = 'current-player-header'
@@ -62,7 +62,11 @@ function getSelectable(selections, tileClass) {
     const image = htmlImg('img__selection-tile-img', {
         src: params.src, alt: params.alt
     });
-    const name = htmlH4('h4__selection-tile-name', params.selection.name)
+    const name = htmlH4(
+        // reduce font size on longer names
+        params.selection.name.length > 7 ? 'h4__selection-tile-name-long' : 
+            params.selection.name.length > 5 ? 'h4__selection-tile-name-med' : 'h4__selection-tile-name', 
+        params.selection.name);
 
     return htmlDiv(['div__selection-tile-wrapper', 'debossable-nbi', tileClass], 
         `${image}

@@ -64,8 +64,8 @@
     color: blue;
 }
 
-.div__game-progress-title span,
-.div__game-progress-data span {
+.div__game-progress-title p,
+.div__game-progress-data p {
     padding: 0 var(--game-progress-span-padding);
 }
 
@@ -104,8 +104,8 @@
     color: var(--leader-board-header-text-colour);
 }
 
-.td__player-name span,
-.td__player-score span {
+.td__player-name p,
+.td__player-score p {
     padding: 0 var(--leader-board-span-padding);
 }
 

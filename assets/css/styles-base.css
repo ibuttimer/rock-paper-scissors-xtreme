@@ -47,6 +47,17 @@
     --footer-height: 50px;
 
     --footer-height-padded: calc(var(--footer-height) + (2 * var(--std-padding-vert)))
+
+    /* default heading heights; https://www.w3schools.com/tags/tag_hn.asp */
+    --default-h1-height: 2em;
+    --default-h2-height: 1.5em;
+    --default-h3-height: 1.17em;
+    --default-h4-height: 1em;
+    --default-h5-height: 0.83em;
+    --default-h6-height: 0.67em;
+    /* Desktop browsers use a default value of roughly 1.2, depending on the element's font-family.
+        https://developer.mozilla.org/en-US/docs/Web/CSS/line-height */
+    --default-line-height: 1.2;
 }
 
 * {
@@ -78,7 +89,9 @@ body {
     margin-right: var(--std-margin-horz);
 }
 
-.h1__main-title, .h2__sub-title, .h3__sub-title {
+.h1__main-title, 
+.h2__sub-title, 
+.h3__sub-title {
     text-align: center;
 }
 
@@ -250,4 +263,66 @@ body {
 }
 .color_12_text {
     color: black; 
+}
+
+/* media queries */
+
+/* tiny-small screens, 650px wide or less */ 
+@media screen and (max-width: 650px) {
+    :root {
+        --std-margin-between: 8px;
+    }
+
+    .h1__main-title {
+        font-size: 1.8em;   /* 90% std size 2em */
+    }
+    .h2__sub-title {
+        font-size: 1.35em;  /* 90% std size 1.5em */
+    }
+    .h3__sub-title {
+        font-size: 1.05em;  /* 90% std size 1.17em */
+    }
+    p {
+        font-size: 0.9em;   /* 90% std size 1em */
+    }
+}
+
+/* tiny-small screens, 450px wide or less */ 
+@media screen and (max-width: 450px) {
+    :root {
+        --std-margin-between: 6px;
+    }
+
+    .h1__main-title {
+        font-size: 1.6em;   /* 80% std size 2em */
+    }
+    .h2__sub-title {
+        font-size: 1.2em;   /* 80% std size 1.5em */
+    }
+    .h3__sub-title {
+        font-size: 0.93em;  /* 80% std size 1.17em */
+    }
+    p {
+        font-size: 0.8em;   /* 80% std size 1em */
+    }
+}
+
+/* tiny-small screens, 280px wide or less */ 
+@media screen and (max-width: 280px) {
+    :root {
+        --std-margin-between: 5px;
+    }
+
+    .h1__main-title {
+        font-size: 1.4em;   /* 70% std size 2em */
+    }
+    .h2__sub-title {
+        font-size: 1.05em;  /* 70% std size 1.5em */
+    }
+    .h3__sub-title {
+        font-size: 0.82em;  /* 70% std size 1.17em */
+    }
+    p {
+        font-size: 0.7em;   /* 70% std size 1em */
+    }
 }

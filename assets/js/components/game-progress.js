@@ -2,7 +2,7 @@
     Game progress component.
     @author Ian Buttimer
 */
-import { accumulator, htmlDiv, htmlSpan } from '../utils/index.js';
+import { accumulator, htmlDiv, htmlP } from '../utils/index.js';
 
 /**
  * Get game play progress component
@@ -22,9 +22,9 @@ function getGameProgress(progress) {
 
     return Array.from(progress).map((entry) => {
         const tdInfo = htmlDiv(['div__game-progress-title'], 
-                                    htmlSpan([], entry[0]));
+                                    htmlP([], entry[0]));
         const tdData = htmlDiv(['div__game-progress-data'], 
-                                    htmlSpan([], entry[1]));
+                                    htmlP([], entry[1]));
         return htmlDiv(['div__game-progress-entry'], [tdInfo, tdData].join(' '));
     }).reduce(accumulator, '');
 }

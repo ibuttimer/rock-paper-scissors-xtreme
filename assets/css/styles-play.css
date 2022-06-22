@@ -10,7 +10,7 @@
 }
 
 .div__play-player-name {
-    margin: var(--var-game-tile-margin);
+    margin: var(--var-game-tile-margin) var(--var-game-tile-margin) 0 var(--var-game-tile-margin);
 }
 
 /* play view */
@@ -123,5 +123,58 @@
     
     .animate__fade-out {
         animation-name: none;
+    }
+}
+
+/* small-medium screens, 650px wide or less */ 
+@media screen and (max-width: 650px) {
+    :root {
+        --var-game-tile-img-size: 60px;
+
+        --var-game-tile-padding: 9px;
+    }
+
+    .h4__selection-tile-name {
+        font-size: 0.9em;   /* 90% std size 1em */
+    }
+    .h4__selection-tile-name-long {
+        font-size: 0.7em;   /* 70% std size 1em */
+        line-height: 1.6;   /* to keep tiles same height */
+    }
+}
+
+/* tiny-small screens, 450px wide or less */ 
+@media screen and (max-width: 450px) {
+    :root {
+        --var-game-tile-img-size: 40px;
+
+        --var-game-tile-padding: 6px;
+    }
+
+    .h4__selection-tile-name {
+        font-size: 0.8em;   /* 80% std size 1em */
+    }
+    .h4__selection-tile-name-med {
+        font-size: 0.7em;   /* 70% std size 1em */
+        line-height: 1.6;   /* to keep tiles same height */
+    }
+    .h4__selection-tile-name-long {
+        font-size: 0.45em;   /* 60% std size 1em */
+        line-height: 2.4;   /* to keep tiles same height */
+    }
+}
+
+/* tiny screens, 280px wide or less */ 
+@media screen and (max-width: 280px) {
+    :root {
+        --var-game-tile-img-size: 30px;
+
+        --var-game-tile-padding: 4px;
+    }
+
+    .h4__selection-tile-name,
+    .h4__selection-tile-name-med,
+    .h4__selection-tile-name-long {
+        display: none;
     }
 }
