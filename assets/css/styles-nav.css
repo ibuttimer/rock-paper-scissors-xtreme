@@ -183,3 +183,27 @@
 .tingle-modal {
     background: rgba(0, 0, 0, .1);
 }
+
+/* small-medium screens, 650px wide or less */ 
+@media screen and (max-width: 650px) {
+    :root {
+        --menu-list-font-size: 1.0rem;
+        --menu-dropdown-font-size: 0.9rem;
+    }
+}
+
+/* tiny-small screens, 450px wide or less */ 
+@media screen and (max-width: 450px) {
+    :root {
+        --menu-list-font-size: 0.9rem;
+        --menu-dropdown-font-size: 0.8rem;
+    }
+}
+
+/* tiny-small screens, 280px wide or less */ 
+@media screen and (max-width: 280px) {
+    :root {
+        --menu-list-font-size: 0.8rem;
+        --menu-dropdown-font-size: 0.7rem;
+    }
+}

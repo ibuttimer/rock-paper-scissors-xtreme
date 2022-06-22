@@ -55,3 +55,26 @@
         grid-template-columns: 1fr;
     }
 }
+
+/* media queries */
+
+/* small-medium screens, 650px wide or less */ 
+@media screen and (max-width: 650px) {
+    :root {
+        --var-variant-tile-size: 130px;
+    }
+}
+
+/* tiny-small screens, 450px wide or less */ 
+@media screen and (max-width: 450px) {
+    :root {
+        --var-variant-tile-size: 100px;
+    }
+}
+
+/* tiny-small screens, 280px wide or less */ 
+@media screen and (max-width: 280px) {
+    :root {
+        --var-variant-tile-size: 80px;
+    }
+}

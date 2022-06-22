@@ -44,10 +44,6 @@
     --std-padding-horz: 10px;
     --std-padding-vert: 10px;
 
-    --footer-height: 50px;
-
-    --footer-height-padded: calc(var(--footer-height) + (2 * var(--std-padding-vert)))
-
     /* default heading heights; https://www.w3schools.com/tags/tag_hn.asp */
     --default-h1-height: 2em;
     --default-h2-height: 1.5em;
@@ -267,7 +263,7 @@ body {
 
 /* media queries */
 
-/* tiny-small screens, 650px wide or less */ 
+/* small-medium screens, 650px wide or less */ 
 @media screen and (max-width: 650px) {
     :root {
         --std-margin-between: 8px;
@@ -324,5 +320,26 @@ body {
     }
     p {
         font-size: 0.7em;   /* 70% std size 1em */
+    }
+}
+
+/* small-medium screens, 700px high or less */ 
+@media screen and (max-height: 700px) {
+    :root {
+        --std-padding-vert: 8px;
+    }
+}
+
+/* tiny-small screens, 500px high or less */ 
+@media screen and (max-height: 500px) {
+    :root {
+        --std-padding-vert: 6px;
+    }
+}
+
+/* tiny-small screens, 300px high or less */ 
+@media screen and (max-height: 300px) {
+    :root {
+        --std-padding-vert: 4px;
     }
 }

@@ -3,6 +3,7 @@
 /* custom properties */
 :root {
     --footer-height: 50px;
+    --footer-height-padded: calc(var(--footer-height) + (2 * var(--std-padding-vert)))
 }
 
 
@@ -20,4 +21,27 @@
 
 .div__copyright {
     float: left;
+}
+
+/* media queries */
+
+/* small-medium screens, 700px high or less */ 
+@media screen and (max-height: 700px) {
+    :root {
+        --footer-height: 40px;
+    }
+}
+
+/* tiny-small screens, 500px high or less */ 
+@media screen and (max-height: 500px) {
+    :root {
+        --footer-height: 35px;
+    }
+}
+
+/* tiny-small screens, 300px high or less */ 
+@media screen and (max-height: 300px) {
+    :root {
+        --footer-height: 30px;
+    }
 }
