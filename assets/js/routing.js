@@ -22,6 +22,7 @@ let addedMenuEventHandlers = false;
 // html ids of elements
 const mainElementId = 'main';
 const logoElementId = 'menu-logo';
+const rulesElementId = 'menu-rules';
 const animationSettingElementId = 'animation-toggle-control';
 const soundSettingElementId = 'sound-toggle-control';
 
@@ -152,13 +153,16 @@ export function setView(view, gameState) {
         }
 
         // set view html
-        const mainElement = document.getElementById(mainElementId);
-        mainElement.innerHTML = innerHTML;
+        let element = document.getElementById(mainElementId);
+        element.innerHTML = innerHTML;
 
-        // set aria-label for logo
-        const logoElement = document.getElementById(logoElementId);
-        logoElement.setAttribute('aria-label', `logo, ${page} page, ${toHome} home.`);
-
+        // set aria-label for menu items
+        element = document.getElementById(logoElementId);
+        element.setAttribute('aria-label', `logo, ${page} page, ${toHome} home.`);
+        element = document.getElementById(rulesElementId);
+        element.setAttribute('aria-label', 
+            view === View.Rules ? `current page, rules.` : `goto rules page.`);
+    
         // add handlers
         if (setClickHandler) {
             setClickHandler(gameState);
@@ -212,7 +216,7 @@ function addMenuEventHandlers(gameState) {
     }, false);
 
     // Add menu item click handler
-    ["menu-logo", "menu-rules"].forEach(id => {
+    [logoElementId, rulesElementId].forEach(id => {
         document.getElementById(id).addEventListener("click", function( event ) {
             const value = event.target.value ? event.target.value : event.currentTarget.value;
             setView(value, gameState);

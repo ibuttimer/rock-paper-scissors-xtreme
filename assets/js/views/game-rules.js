@@ -32,7 +32,7 @@ const intro = htmlP([],
     href: "https://www.collinsdictionary.com/dictionary/english/zero-sum-game",
     target: "_blank",
     rel: "noopener",
-    'aria-label': "visit collins dictionary in another tab"
+    'aria-label': "visit zero sum game on collins dictionary site in another tab"
 })} that is usually played by two people using their hands.
 On this site, there are three different variations of the game available for play by multiple players, namely; 
 ${htmlA([], BASIC_VARIANT_NAME, {
@@ -194,7 +194,7 @@ const playBigBangButtonId = 'play-bigbang-button';
 const playBigBang = htmlDiv('div__play', 
     htmlButton(['button__play', 'button__clickable', 'background-color__variant_bigbang', 'debossable'], 'Play Big Bang', {
                 id: playBigBangButtonId,
-                'aria-label': 'play basic game.',
+                'aria-label': 'play big bang game.',
                 value: BIGBANG_URL
             })
     );
@@ -203,7 +203,7 @@ const playXtremeButtonId = 'play-xtreme-button';
 const playXtreme = htmlDiv('div__play', 
     htmlButton(['button__play', 'button__clickable', 'background-color__variant_xtreme', 'debossable'], 'Play Xtreme', {
                 id: playXtremeButtonId,
-                'aria-label': 'play basic game.',
+                'aria-label': 'play extreme game.',
                 value: XTREME_URL
             })
     );
@@ -212,13 +212,13 @@ const keysItems = () => {
     return [
         'Round selections may be made by pressing the key corresponding to the selection, as specified in the game tables.',
         `If a player presses the '${htmlI([], GameKey.Random.key)}' key, a random selection is made for the round.`,
-        `Pressing the '${htmlI([], 'Control')}' key on the Gesture Selection screen, displays the keys for the possible selections.`,
+        `Pressing the '${htmlI([], 'Control')}' key on the Play screen, displays the keys for the possible selections.`,
         `Pressing the '${htmlI([], GameKey.Next.key.toUpperCase())}' key on the Round Results screen, continues the match.`
     ].map(rule => htmlLi([], rule))
     .reduce(accumulator, '');
 };
 const keysInfo = htmlP([], 
-`Once a match has started, the following key may be used to play:
+`Once a match has started, the following keys may be used to play:
 ${htmlUl(['ul__keys-info'], keysItems())}`);
 
 const h3Heading = (innerHtml, attribs = {}) => htmlH3(['h3__rules-heading'], innerHtml, attribs)
@@ -234,19 +234,19 @@ const h3Heading = (innerHtml, attribs = {}) => htmlH3(['h3__rules-heading'], inn
         ${intro}
         ${h3Heading('Common Rules')}
         ${commonRules}
-        ${h3Heading(`${BASIC_VARIANT_NAME}`, {
+        ${h3Heading(`${BASIC_VARIANT_NAME} variant`, {
             id: basicHeadingId
         })}
         ${basicRules}
         ${htmlDiv(['div__win-matrix'], basicWinMatrix())}
         ${playBasic}
-        ${h3Heading(`${BIGBANG_VARIANT_NAME}`, {
+        ${h3Heading(`${BIGBANG_VARIANT_NAME} variant`, {
             id: bigbangHeadingId
         })}
         ${bigBangRules}
         ${htmlDiv(['div__win-matrix'], bigBangWinMatrix())}
         ${playBigBang}
-        ${h3Heading(`${XTREME_VARIANT_NAME}`, {
+        ${h3Heading(`${XTREME_VARIANT_NAME} variant`, {
             id: xtremeHeadingId
         })}
         ${xtremeRules}
