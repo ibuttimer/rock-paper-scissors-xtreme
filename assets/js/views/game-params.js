@@ -8,22 +8,40 @@ import {
 } from '../globals.js';
 import { Player, Robot } from '../player.js';
 import { default as titleHeader } from '../components/title.js'
-import { generateId, optionsList, accumulator, adjustArray, htmlH4 } from '../utils/index.js';
-import { View, setView } from '../routing.js'
-import { htmlDiv, htmlButton, htmlInput, htmlLabel } from '../utils/index.js';
+import { 
+    generateId, optionsList, accumulator, adjustArray, htmlH4, htmlSelect, htmlDiv, 
+    htmlButton, htmlInput, htmlLabel
+} from '../utils/index.js';
+import { setView } from '../routing.js'
 
 
 // Parameters for game parameters
 const numPlayersInfo = numPlayersParams('Number of players', MIN_PLAYERS, MAX_PLAYERS, DEFAULT_PLAYERS);
 const numRobotsInfo = numPlayersParams('Number of robots', MIN_ROBOTS, MAX_ROBOTS, DEFAULT_ROBOTS);
 
+/**
+ * Generate a number of games radio input id
+ * @param {object} option - parameters object {@link numGamesParams}
+ * @return {string} id
+ */
+ const generateRadioId = (option) => option.id ? option.id : `${generateId(option.title)}-radio`;
+
+ /**
+  * Generate a number of games select input id
+  * @param {object} option - parameters object {@link numGamesParams}
+  * @param {string} id - radio input id
+  * @param {number} index - index of number of games option
+  * @return {string} id
+  */
+ const generateSelectId = (option, id, index) => option.selectId ? option.selectId : `${id}-select-${index}`;
+
 const numPlayersId = generateId(numPlayersInfo.title);
 const numRobotsId = generateId(numRobotsInfo.title);
 const oneGameTitle = 'One game shoot-out';
-const oneGameRadioId = generateId(oneGameTitle);
+const oneGameRadioId = generateRadioId({ title: oneGameTitle });
 const bestOfTitle = 'Best of';
-const bestOfRadioId = generateId(bestOfTitle);
-const bestOfSelectId = `${bestOfRadioId}-select`;
+const bestOfRadioId = generateRadioId({ title: bestOfTitle});
+const bestOfSelectId = generateSelectId({}, bestOfRadioId, 1);  // index 1 corresponds to 'best of' index in numGameOptions 
 const playButtonId = 'play-button';
 const playerNameGroupId = 'player-name-group';
 
@@ -197,18 +215,20 @@ function persistPlayerNames(array) {
 function getNumPlayers(params) {
     const id = generateId(params.title);
 
-    return `<div class="div__num-players-wrapper">
-                <label for=${id}>${params.title}:</label>
-                <select id=${id} name=${id}>
-                    ${optionsList(
-                            id,
-                            [...Array(params.max - params.min + 1).keys()],
-                            params.defaultValue,
-                            x => x + params.min
-                        )
-                    }
-                </select>
-            </div>`
+    return htmlDiv(['div__num-players-wrapper'],
+            htmlLabel(['style__param-input', 'style__param-input-left'], `${params.title}:`, {
+                for: id
+            }) +
+            htmlSelect(['style__param-input', 'style__param-input-right'], optionsList(
+                id,
+                [...Array(params.max - params.min + 1).keys()],
+                params.defaultValue,
+                x => x + params.min
+            ), {
+                id: id,
+                name: id
+            })
+        );
 }
 
 /**
@@ -280,22 +300,6 @@ const selectedBestOf = (gameState) => gameState.bestOf = parseInt(
 }
 
 /**
- * Generate a number of games radio input id
- * @param {object} option - parameters object {@link numGamesParams}
- * @return {string} id
- */
-const generateRadioId = (option) => option.id ? option.id : generateId(option.title);
-
-/**
- * Generate a number of games select input id
- * @param {object} option - parameters object {@link numGamesParams}
- * @param {string} id - radio input id
- * @param {number} index - index of number of games option
- * @return {string} id
- */
-const generateSelectId = (option, id, index) => option.selectId ? option.selectId : `${id}-select-${index}`;
-
-/**
  * Number of games component.
  * @param {string} group - group name
  * @param defaultValue - default number
@@ -309,28 +313,37 @@ const generateSelectId = (option, id, index) => option.selectId ? option.selectI
      * @returns {string} html for selections list
      */
     function selectionsList() {
-        return options.map((x, index) => {
-                const id = generateRadioId(x);
+        return options.map((opt, index) => {
+                const radioId = generateRadioId(opt);
                 // check if default value is option's default
-                const checked = defaultValue === x.optionDefault;
+                const checked = defaultValue === opt.optionDefault;
 
+                let selectId = generateSelectId(opt, radioId, index);
                 let selectElement;
-                if (x.selections) {
+                if (opt.selections) {
                     // a radio option with a select
-                    let selectId = generateSelectId(x, id, index);
-                    selectElement = `<select id=${selectId} name=${selectId}>
-                                        ${optionsList(selectId, x.selections)}
-                                    </select>`;
+                    selectId = generateSelectId(opt, radioId, index);
+
+                    selectElement = htmlSelect(['style__param-input'], optionsList(selectId, opt.selections), {
+                        id: selectId,
+                        name: selectId
+                    });
                 } else {
                     // no select, just a radio option
+                    selectId = radioId;
                     selectElement = '';
                 }
-                const radioInput = `<input type="radio" id=${id} name=${group} value=${x.optionDefault} ${checked ? 'checked' : ''}/>
-                                    <label for=${id}>
-                                        ${x.title} ${selectElement}
-                                    </label>`;
+                const radioInput = htmlInput([], {
+                                    type: 'radio',
+                                    id: radioId,
+                                    name: group,
+                                    value: opt.optionDefault,
+                                    checked: checked
+                                });
 
-                return `${radioInput}`;
+                return radioInput +
+                        htmlLabel(['style__param-input'], opt.title, { for: radioId }) + 
+                        selectElement;
             }).reduce(accumulator, '');
     }
  

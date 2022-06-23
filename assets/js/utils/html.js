@@ -15,8 +15,16 @@ import { accumulator } from './utils.js';
  */
 const htmlWrapper = (tag, className, innerHtml, attribs = {}, selfClosing = false) => {
     const attribString = Object.entries(attribs)
-        .map(([key, value]) => `${key}="${value}" `)
-        .reduce(accumulator, '');
+            .map(([key, value]) => {
+                let attrib;
+                if (key.toLowerCase() === 'checked') {
+                    attrib = value ? 'checked': '';     // special case for radio input checked
+                } else {
+                    attrib = `${key}="${value}"`;
+                }
+                return `${attrib} `;
+            })
+            .reduce(accumulator, '');
         if (Array.isArray(className)) {
             className = className.join(' ');    // aggregate classes
         }
@@ -255,6 +263,15 @@ const htmlWrapper = (tag, className, innerHtml, attribs = {}, selfClosing = fals
  */
  export const htmlInput = (className, attribs = {}) => {
     return htmlWrapper('input', className, null, attribs, true);
+};
+
+/**
+ * Generate a select element containing the specified html.
+ * @returns {string} - html for element
+ * @see {@link htmlWrapper}
+ */
+ export const htmlSelect = (className, innerHtml, attribs = {}) => {
+    return htmlWrapper('select', className, innerHtml, attribs, false);
 };
 
 /**

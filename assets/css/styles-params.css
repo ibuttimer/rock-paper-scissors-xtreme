@@ -19,15 +19,46 @@
 }
 
 
+/* 'style__param-input' based on radio switch from 'RESPONSIVE TOGGLE SWITCH' (https://codepen.io/dsenneff/pen/ZoLVZW) 
+    by Darin on [Free Frontend - 88 Radio Buttons CSS](https://freefrontend.com/css-radio-buttons/) */
+.style__param-input {
+    margin: 0;
+    padding: 0.5rem 1rem;
+    box-sizing: border-box;
+    position: relative;
+    display: inline-block;
+    border: solid 1px #DDD;
+    background-color: #FFF;
+    font-size: var(--var-params-font-size);
+    line-height: 120%;
+    font-weight: var(--paragraph-bold-font-weight);
+    text-align: center;
+    box-shadow: 0 0 0 rgba(255, 255, 255, 0);
+}
+
+.style__param-input-left {
+    border-radius: var(--var-num-games-input-border-radius) 0 0 var(--var-num-games-input-border-radius);
+    border-right: none;
+}
+
+.style__param-input-right {
+    border-radius: 0 var(--var-num-games-input-border-radius) var(--var-num-games-input-border-radius) 0;
+    border-left: none;
+}
+
 /* number of players component */
 .div__num-of-game-participants {
     display: flex;
     flex-direction: row;
-    align-items: center;
+    align-items: stretch;
     justify-content: space-around;
 }
 
 .div__num-players-wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    justify-content: center;
     margin: var(--var-input-margin) 0 var(--var-input-margin);
 }
 
@@ -36,7 +67,7 @@
 }
 
 .div__num-players-wrapper select {
-    font-size: 1rem;
+    font-size: var(--var-params-font-size);
     font-family: var(--paragraph-font);
     font-weight: var(--paragraph-font-weight);
     color: var(--var-select-colour);
@@ -48,7 +79,6 @@
 .div__num-games-wrapper {
     margin: var(--var-input-margin) 0 var(--var-input-margin);
     box-sizing: border-box;
-    font-size: 0;
     display: flex;
     flex-flow: row nowrap;
     justify-content: center;
@@ -67,28 +97,21 @@
 }
 
 .div__num-games-wrapper input + label {
-    margin: 0;
-    padding: 0.75rem 2rem;
-    box-sizing: border-box;
-    position: relative;
-    display: inline-block;
-    border: solid 1px #DDD;
-    background-color: #FFF;
-    font-size: 1rem;
-    line-height: 140%;
-    font-weight: var(--paragraph-bold-font-weight);
-    text-align: center;
-    box-shadow: 0 0 0 rgba(255, 255, 255, 0);
     transition: border-color 0.15s ease-out, color 0.25s ease-out, background-color 0.15s ease-out, box-shadow 0.15s ease-out;
     /* ADD THESE PROPERTIES TO SWITCH FROM AUTO WIDTH TO FULL WIDTH */
     /*flex: 0 0 50%; display: flex; justify-content: center; align-items: center;*/
     /* ----- */
 }
 .div__num-games-wrapper input + label:first-of-type {
+    /* same as style__param-input-left */
     border-radius: var(--var-num-games-input-border-radius) 0 0 var(--var-num-games-input-border-radius);
     border-right: none;
 }
 .div__num-games-wrapper input + label:last-of-type {
+    border-left: none;
+}
+.div__num-games-wrapper select {
+    /* same as style__param-input-right */
     border-radius: 0 var(--var-num-games-input-border-radius) var(--var-num-games-input-border-radius) 0;
     border-left: none;
 }
@@ -103,7 +126,7 @@
 }
 .div__num-games-wrapper input:focus + label {
     outline: dotted 1px #CCC;
-    outline-offset: 0.45rem;
+    outline-offset: 0.35rem;
 }
 
 .div__num-games-wrapper select {
@@ -114,6 +137,16 @@
 }
 
 /* player name component */
+.div__player-names {
+    /* to handle margin collapse 
+    https://www.joshwcomeau.com/css/rules-of-margin-collapse/ */
+    margin-bottom: calc(2 * var(--var-input-margin));
+}
+
+.div__player-names-title {
+    margin-top: var(--var-input-margin);
+}
+
 .div__player-name-group-wrapper {
 }
 
@@ -175,28 +208,15 @@
 
 /* media queries */
 
-/* tiny-small screens, 450px wide or less */ 
-@media screen and (max-width: 450px) {
-    .div__num-of-game-participants {
-        flex-direction: column;
-    }
-    .div__num-of-game-participants .div__num-players-wrapper:first-of-type {
-        margin-bottom: 0;
-    }
-}
-
 /* small-medium screens, 650px wide or less */ 
 @media screen and (max-width: 650px) {
     :root {
         --var-params-font-size: 0.9em;
     }
-    .div__num-games-wrapper input + label {
+    .style__param-input {
         padding: 0.65rem 1.8rem;
     }
-    .div__num-players-wrapper select,
-    .div__num-games-wrapper input + label {
-        font-size: 0.9rem;
-    }
+
     .button__play {
         width: 180px;
     }
@@ -207,13 +227,18 @@
     :root {
         --var-params-font-size: 0.8em;
     }
-    .div__num-games-wrapper input + label {
+
+    .div__num-of-game-participants {
+        flex-direction: column;
+    }
+    .div__num-of-game-participants .div__num-players-wrapper:first-of-type {
+        margin-bottom: 0;
+    }
+
+    .style__param-input {
         padding: 0.55rem 1.6rem;
     }
-    .div__num-players-wrapper select,
-    .div__num-games-wrapper input + label {
-        font-size: 0.8rem;
-    }
+
     .button__play {
         width: 160px;
     }
@@ -235,14 +260,11 @@
     :root {
         --var-params-font-size: 0.7em;
     }
-    .div__num-games-wrapper input + label {
-        padding: 0.45rem 1.5rem;
+    .style__param-input {
+        padding: 0.25rem 0.5rem;
     }
-    .div__num-players-wrapper select,
-    .div__num-games-wrapper input + label {
-        font-size: 0.7rem;
-    }
+
     .button__play {
-        width: 140px;
+        width: 60%;
     }
 }
