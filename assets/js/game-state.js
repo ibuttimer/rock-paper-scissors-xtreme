@@ -8,7 +8,7 @@ import {
 } from './globals.js'
 import { Game, GameVariant } from './game.js'
 import { GameKey, Selection, ResultCode, GameStatus } from './enums.js';
-import { setView } from './routing.js'
+import { setView, setSettingsAriaLabel } from './routing.js'
 import { loadPreferences } from './utils/index.js'
 import { showOkModal } from './components/index.js'
 import { selectionKeysTable } from './views/game-rules.js'
@@ -110,6 +110,7 @@ export default class GameState {
         this.#matchStatus = GameStatus.NotStarted;
 
         loadPreferences(this);
+        setSettingsAriaLabel(this);
     }
 
     /** Start the match */

@@ -31,7 +31,7 @@
 </head>
 
 <body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <noscript aria-hidden="true">You need to enable JavaScript to run this app.</noscript>
     <div class="div__content">
         <header>
             <nav class='nav__top'>
@@ -39,7 +39,7 @@
                     <button type="button" class='button__logo'  id="menu-logo" value="/" 
                             aria-label='logo, current page, home.'>
                         <img src='android-chrome-192x192.png' width='28' height='28'
-                                class="img_logo" alt='logo, current page, home.'/>
+                                class="img_logo" alt='logo'/>
                     </button>
                 </div>
                 <ul class='ul__menu-row' id="menu-list">
@@ -61,7 +61,7 @@
                                         <p>Enable animation</p>
                                         <label class="label__toggle-control">
                                             <input type="checkbox" id="checkbox-animation" value="animation">
-                                            <span class="span_control"></span>
+                                            <span id="animation-toggle-control" class="span_control" aria-label="animation setting"></span>
                                         </label>
                                     </div>
                                 </div>
@@ -70,7 +70,7 @@
                                         <p>Enable sound</p>
                                         <label class="label__toggle-control">
                                             <input type="checkbox" id="checkbox-sound" value="sound">
-                                            <span class="span_control"></span>
+                                            <span id="sound-toggle-control" class="span_control" aria-label="animation setting"></span>
                                         </label>
                                     </div>
                                 </div>

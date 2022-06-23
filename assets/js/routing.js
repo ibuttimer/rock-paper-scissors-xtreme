@@ -19,6 +19,12 @@ import { GameVariant } from './game.js'
 /** Menu handler event listeners added flag */
 let addedMenuEventHandlers = false;
 
+// html ids of elements
+const mainElementId = 'main';
+const logoElementId = 'menu-logo';
+const animationSettingElementId = 'animation-toggle-control';
+const soundSettingElementId = 'sound-toggle-control';
+
 /**
  * Enum representing views.
  */
@@ -98,10 +104,13 @@ export function setView(view, gameState) {
     }
 
     if (process) {
+        let logoAriaLabel = 'logo goto home page.';
+
         switch (view) {
             case View.GameMenu:
                 innerHTML = gameSelectMenu();
                 setClickHandler = setMenuHandler;
+                logoAriaLabel = 'logo, current page, home.';
                 break;
             case View.BasicGame:
             case View.BigBangGame:
@@ -129,8 +138,12 @@ export function setView(view, gameState) {
         }
 
         // set view html
-        const mainElement = document.getElementById('main');
+        const mainElement = document.getElementById(mainElementId);
         mainElement.innerHTML = innerHTML;
+
+        // set aria-label for logo
+        const logoElement = document.getElementById(logoElementId);
+        logoElement.setAttribute('aria-label', logoAriaLabel);
 
         // add handlers
         if (setClickHandler) {
@@ -177,15 +190,11 @@ function addMenuEventHandlers(gameState) {
 
     // Add toggle switches change handlers
     sound.addEventListener("change", function( event ) {
-        gameState.soundEnabled = event.target.checked;
-        savePreferences(gameState);
-        log(`Sound enabled ${gameState.soundEnabled}`);
+        handleSettingChange(gameState, 'soundEnabled', event.target.checked);
     }, false);
 
     animation.addEventListener("change", function( event ) {
-        gameState.animationEnabled = event.target.checked;
-        savePreferences(gameState);
-        log(`Animation enabled ${gameState.animationEnabled}`);
+        handleSettingChange(gameState, 'animationEnabled', event.target.checked);
     }, false);
 
     // Add menu item click handler
@@ -197,4 +206,44 @@ function addMenuEventHandlers(gameState) {
     })
 
     addedMenuEventHandlers = true;
+}
+
+/**
+ * Handle a setting change
+ * @param {GameState} gameState - current game state
+ * @param {string} setting - setting attribute
+ * @param {boolean} enabled - new setting value
+ */
+function handleSettingChange(gameState, setting, enabled) {
+    gameState[setting] = enabled;
+    savePreferences(gameState);
+    setSettingsAriaLabel(gameState);
+    log(`${setting}: ${gameState[setting]}`);
+}
+
+/**
+ * Set the aria labels for the settings menu
+ * @param {GameState} gameState - current game state
+ */
+export function setSettingsAriaLabel(gameState) {
+    [animationSettingElementId, soundSettingElementId].forEach(id => {
+        const element = document.getElementById(id);
+        if (element) {
+            let value;
+            let setting;
+            switch (id) {
+                case animationSettingElementId:
+                    value = gameState.animationEnabled;
+                    setting = 'animation';
+                    break;
+                case soundSettingElementId:
+                    value = gameState.soundEnabled;
+                    setting = 'sound';
+                    break;
+                default:
+                    throw new Error(`Unknown setting id: ${id}`);
+            }
+            element.setAttribute('aria-label', `${setting} ${value ? 'enabled' : 'disabled'}`);
+        }
+    });
 }
