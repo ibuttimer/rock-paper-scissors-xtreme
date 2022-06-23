@@ -69,7 +69,8 @@ function getSelectable(selections, tileClass) {
     return htmlDiv(['div__selection-tile-wrapper', 'debossable-nbi', tileClass], 
         `${image}
         ${name}`, {
-            'data-selection': params.selection
+            'data-selection': params.selection,
+            'aria-label': `Click to select ${params.selection.name} or, press ${params.selection.key.key}.`
         });
 }
 
