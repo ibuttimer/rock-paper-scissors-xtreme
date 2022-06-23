@@ -26,6 +26,13 @@ const numRobotsInfo = numPlayersParams('Number of robots', MIN_ROBOTS, MAX_ROBOT
  */
  const generateRadioId = (option) => option.id ? option.id : `${generateId(option.title)}-radio`;
 
+/**
+ * Generate a number of games radio input label id
+ * @param {string} radioId - radio input id
+ * @return {string} id
+ */
+ const generateRadioLabelId = (radioId) => `${radioId}-label`;
+
  /**
   * Generate a number of games select input id
   * @param {object} option - parameters object {@link numGamesParams}
@@ -39,8 +46,10 @@ const numPlayersId = generateId(numPlayersInfo.title);
 const numRobotsId = generateId(numRobotsInfo.title);
 const oneGameTitle = 'One game shoot-out';
 const oneGameRadioId = generateRadioId({ title: oneGameTitle });
+const oneGameRadioLabelId = generateRadioLabelId(oneGameRadioId);
 const bestOfTitle = 'Best of';
 const bestOfRadioId = generateRadioId({ title: bestOfTitle});
+const bestOfRadioLabelId = generateRadioLabelId(bestOfRadioId);
 const bestOfSelectId = generateSelectId({}, bestOfRadioId, 1);  // index 1 corresponds to 'best of' index in numGameOptions 
 const playButtonId = 'play-button';
 const playerNameGroupId = 'player-name-group';
@@ -96,7 +105,7 @@ export default function gameParamsView(gameState) {
                 ${getNumPlayers(numRobotsInfo)}`
             )}
             ${htmlDiv('div__num-games-wrapper', 
-                getNumOfGames('num-of-games', DEFAULT_GAMES, numGameOptions)
+                getNumOfGames(gameState, 'num-of-games', DEFAULT_GAMES, numGameOptions)
             )}
             ${htmlDiv('div__player-names', 
                 `${htmlDiv('div__player-name-wrapper', 
@@ -301,11 +310,12 @@ const selectedBestOf = (gameState) => gameState.bestOf = parseInt(
 
 /**
  * Number of games component.
+ * @param {GameState} gameState - game state object
  * @param {string} group - group name
  * @param defaultValue - default number
  * @param {Array[object]} params - parameters object {@link numGamesParams}
  */
- function getNumOfGames(group, defaultValue, options) {
+ function getNumOfGames(gameState, group, defaultValue, options) {
 
     /**
      * Generate selections list
@@ -326,7 +336,8 @@ const selectedBestOf = (gameState) => gameState.bestOf = parseInt(
 
                     selectElement = htmlSelect(['style__param-input'], optionsList(selectId, opt.selections), {
                         id: selectId,
-                        name: selectId
+                        name: selectId,
+                        'aria-label': getNumOfGamesAriaLabel(gameState, selectId)
                     });
                 } else {
                     // no select, just a radio option
@@ -340,9 +351,14 @@ const selectedBestOf = (gameState) => gameState.bestOf = parseInt(
                                     value: opt.optionDefault,
                                     checked: checked
                                 });
+                const labelId = generateRadioLabelId(radioId);
 
                 return radioInput +
-                        htmlLabel(['style__param-input'], opt.title, { for: radioId }) + 
+                        htmlLabel(['style__param-input'], opt.title, { 
+                            for: radioId,
+                            id: labelId,
+                            'aria-label': getNumOfGamesAriaLabel(gameState, labelId)
+                        }) + 
                         selectElement;
             }).reduce(accumulator, '');
     }
@@ -368,7 +384,37 @@ function setNumGames(event, gameState) {
         document.getElementById(bestOfRadioId).checked = true;
         selectedBestOf(gameState);
     }
+
+    [oneGameRadioLabelId, bestOfRadioLabelId, bestOfSelectId].forEach(id => {
+        const element = document.getElementById(id);
+        if (element) {
+            element.setAttribute('aria-label', getNumOfGamesAriaLabel(gameState, id));
+        }
+    });
+
     log(gameState);
+}
+
+/**
+ * Get aria label for number of games input label
+ * @param {GameState} gameState - current game state
+ * @param {string} id - id of label
+ * @returns 
+ */
+function getNumOfGamesAriaLabel(gameState, id) {
+    let title;
+    let selected;
+    if (id == oneGameRadioLabelId) {
+        title = 'One game shoot-out option';
+        selected = gameState.bestOf === 1;
+    } else if (id === bestOfRadioLabelId) {
+        title = 'Best of multiple games option';
+        selected = gameState.bestOf > 1;
+    } else {
+        title = 'Best of multiple games setter';
+        selected = gameState.bestOf > 1;
+    }
+    return `${title}, ${selected ? 'selected' : 'not selected'}, number of games ${gameState.bestOf}.`;
 }
 
 /**
