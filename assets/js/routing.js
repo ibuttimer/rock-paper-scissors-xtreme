@@ -104,34 +104,48 @@ export function setView(view, gameState) {
     }
 
     if (process) {
-        let logoAriaLabel = 'logo goto home page.';
+        let page;
+        let toHome = 'goto';    // default navigate to home
 
         switch (view) {
             case View.GameMenu:
                 innerHTML = gameSelectMenu();
                 setClickHandler = setMenuHandler;
-                logoAriaLabel = 'logo, current page, home.';
+                page = 'current';
+                toHome = '';
                 break;
             case View.BasicGame:
             case View.BigBangGame:
             case View.XtremeGame:
-                gameState.game.variant = (view === View.BasicGame ? GameVariant.Basic :
-                    (view === View.BigBangGame ? GameVariant.BigBang : GameVariant.Xtreme));
+                if (view === View.BasicGame) {
+                    gameState.game.variant = GameVariant.Basic;        
+                    page = 'basic';
+                } else if (view === View.BigBangGame) {
+                    gameState.game.variant = GameVariant.BigBang;        
+                    page = 'big bang';
+                } else {
+                    gameState.game.variant = GameVariant.Xtreme;        
+                    page = 'extreme';
+                }
 
                 innerHTML = gameParamsView(gameState);
                 setClickHandler = setParamsHandler;
+                page = `${page} game parameters`;
                 break;
             case View.Play:
                 innerHTML = gamePlayView(gameState);
                 setClickHandler = setPlayHandler;
+                page = 'play';
                 break;
             case View.RoundResult:
                 innerHTML = roundResultView(gameState);
                 setClickHandler = setRoundResultHandler;
+                page = 'results';
                 break;
             case View.Rules:
                 innerHTML = rulesView(gameState);
                 setClickHandler = setRulesHandler;
+                page = 'rules';
                 break;
             default:
                 throw new Error(`Unknown view: ${view}`);
@@ -143,7 +157,7 @@ export function setView(view, gameState) {
 
         // set aria-label for logo
         const logoElement = document.getElementById(logoElementId);
-        logoElement.setAttribute('aria-label', logoAriaLabel);
+        logoElement.setAttribute('aria-label', `logo, ${page} page, ${toHome} home.`);
 
         // add handlers
         if (setClickHandler) {
