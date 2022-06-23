@@ -5,7 +5,8 @@
 import { ROUND_RESULT_URL, log } from '../globals.js';
 import { titleHeader, currentPlayerNameHeader, gameProgress } from '../components/index.js'
 import { 
-    accumulator, htmlDiv, htmlImg, htmlH4, addElementClass, removeElementClass, replaceElementClass, delay 
+    accumulator, htmlDiv, htmlImg, htmlH4, htmlSection, 
+    addElementClass, removeElementClass, replaceElementClass, delay 
 } from '../utils/index.js';
 import { setView } from '../routing.js'
 import { SELECTION_TILE_DIV_PROP } from './game-params.js'
@@ -33,10 +34,9 @@ const animation_time = 500;    // animation time in msec
             ${htmlDiv(['div__play-player-name'], currentPlayerNameHeader(gameState), {
                 id: currentPlayerHeaderId
             })}
-            <section class="section__select-play">
-                ${getSelectable(gameState.selections, tileClass)}
-            </section>`;
-}
+            ${htmlSection(['section__select-play'], 
+                getSelectable(gameState.selections, tileClass))}`;
+        }
 
 /**
  * Generate the selection options
@@ -46,9 +46,7 @@ const animation_time = 500;    // animation time in msec
  */
 function getSelectable(selections, tileClass) {
     return selections.map(sel => {
-        return `<div class='div__selection-option-wrapper'>
-                    ${selectionTile(sel, tileClass)}            
-                </div>`;            
+        return htmlDiv(['div__selection-option-wrapper'], selectionTile(sel, tileClass));
     }).reduce(accumulator, '');
 }
 
@@ -71,8 +69,7 @@ function getSelectable(selections, tileClass) {
     return htmlDiv(['div__selection-tile-wrapper', 'debossable-nbi', tileClass], 
         `${image}
         ${name}`, {
-            'data-selection': params.selection, 
-            'aria-label': `select ${params.selection.name}.`
+            'data-selection': params.selection
         });
 }
 
