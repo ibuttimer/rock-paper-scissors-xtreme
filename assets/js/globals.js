@@ -2,6 +2,8 @@
     Application global constants.
     @author Ian Buttimer
 */
+import { default as config } from '../../env.js'
+
 export const GAME_NAME = 'Rock Paper Scissors';
 export const BASIC_VARIANT_NAME = 'Basic';
 export const BIGBANG_VARIANT_NAME = 'Big Bang';
@@ -33,7 +35,8 @@ console.assert(
 
 export const ENABLE_LOG = true;
 
-export const IMG_ASSETS_BASE_URL = 'assets/img/';
+export const IMG_ASSETS_BASE_URL = `${config.ASSETS_BASE_URL}img/`
+export const AUDIO_ASSETS_BASE_URL = `${config.ASSETS_BASE_URL}audio/`
 
 /**
  * Make a url.

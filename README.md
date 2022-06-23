@@ -43,6 +43,7 @@ The application structure is based on [React Architecture: How to Structure and 
 ```
 ├─ README.md            - this file
 ├─ index.html           - landing page
+├─ env.js               - environment configuration
 ├─ design               - design documentation
 │  └─ design.md         - design document
 ├─ assets               - app assets

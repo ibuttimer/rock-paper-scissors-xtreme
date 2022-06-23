@@ -479,7 +479,7 @@ export class GameResult {
             ['explanation', this.explanation]
         ].reduce(
             (previousValue, currentValue, currentIndex) => {
-                previousValue + (currentIndex > 0 ? '\n ' : '') + currentValue
+                return previousValue + (currentIndex > 0 ? '\n ' : '') + `${currentValue[0]}: ${currentValue[1]}`;
             }, '');
      }
 }
@@ -894,7 +894,7 @@ export class GameResult {
             // else all same selection, so play again
         }
 
-        this.log(`evaluateRound: ${evaluation}`);
+        this.log(`evaluateRound: ${evaluation.toString()}`);
         this.#doStageCallback(GameEvent.RoundEvaluation, evaluation);
 
         return evaluation;
@@ -941,7 +941,7 @@ export class GameResult {
                 break;
         }
 
-        this.log(`processEvaluation: ${processed}`);
+        this.log(`processEvaluation: ${processed.toString()}`);
         this.#doStageCallback(GameEvent.RoundProcessed, processed);
 
         return processed;
