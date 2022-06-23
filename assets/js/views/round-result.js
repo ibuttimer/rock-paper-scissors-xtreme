@@ -8,7 +8,7 @@ import {
     titleHeader, gameProgress, leaderBoard, playerSelectionTile, getPlayerSelectionTileParam
 } from '../components/index.js'
 import { 
-    generateId, accumulator, htmlDiv, htmlButton, htmlSection, htmlAside, htmlH3, htmlP 
+    accumulator, htmlDiv, htmlButton, htmlSection, htmlAside, htmlH3, htmlP 
 } from '../utils/index.js';
 import { SELECTION_TILE_DIV_PROP } from './game-params.js'
 
@@ -168,9 +168,15 @@ function getContinueButton(roundResult) {
         throw new Error(`Unknown ResultCode: ${resultCode}`);
     }
 
+    let ariaLabel;
+    if (resultCode === ResultCode.MatchOver) {
+        ariaLabel = `Match over, click to finish.`;
+    } else {
+        ariaLabel = `Click for ${text}.`;
+    }
     const button = htmlButton([className, 'button__clickable', 'debossable'], text, {
         id: continueButtonId,
-        'aria-label': `${text}.`,
+        'aria-label': ariaLabel,
         rel: 'next'
     });
 

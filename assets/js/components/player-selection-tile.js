@@ -20,7 +20,8 @@ import { htmlDiv, htmlImg, htmlH3, htmlH4 } from '../utils/index.js'
         'std-line-height'
     ], params.player.name);
     const image = htmlImg('img__play-sel-tile-img', {
-        src: params.src, alt: params.alt
+        src: params.src, 
+        alt: `${params.alt} ${`Selected by ${params.player.name}.`}`
     });
     const selectionName = htmlH4([
         'h4__play-sel-tile-name', h4SizeModifier(params.selection.name)
@@ -31,7 +32,9 @@ import { htmlDiv, htmlImg, htmlH3, htmlH4 } from '../utils/index.js'
         classes = classes.concat(Array.isArray(params.classes) ? params.classes : [params.classes]);
     }
 
-    return htmlDiv(classes, [banner, playerName, image, selectionName].join(' '));
+    return htmlDiv(classes, [banner, playerName, image, selectionName].join(' '), {
+        'aria-label': `${params.player.name} selected ${params.selection.name}.`
+    });
 }
 
 /**

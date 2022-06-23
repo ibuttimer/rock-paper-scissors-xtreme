@@ -57,8 +57,10 @@ function getSelectable(selections, tileClass) {
  * @returns {string} html for selection tile
  */
  export function selectionTile(params, tileClass) {
+    const clickToSelect = `Click to select ${params.selection.name} or, press ${params.selection.key.key}.`;
     const image = htmlImg('img__selection-tile-img', {
-        src: params.src, alt: params.alt
+        src: params.src, 
+        alt: `${params.alt} ${clickToSelect}`
     });
     const name = htmlH4(
         // reduce font size on longer names
@@ -70,7 +72,7 @@ function getSelectable(selections, tileClass) {
         `${image}
         ${name}`, {
             'data-selection': params.selection,
-            'aria-label': `Click to select ${params.selection.name} or, press ${params.selection.key.key}.`
+            'aria-label': clickToSelect
         });
 }
 
