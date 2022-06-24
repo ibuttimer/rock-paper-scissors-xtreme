@@ -21,7 +21,7 @@ The site was manually tested in the following browsers:
 | 1 | Google Chrome, Version 101.0.4951.64 | Windows 11 Pro Version 21H2 |
 | 2 | Mozilla Firefox, Version 100.0 (64-bit) | Windows 11 Pro Version 21H2 |
 | 3 | Opera, Version:86.0.4363.59 | Windows 11 Pro Version 21H2 |
-| 4 | Google Chrome, Version 101.0.4951.41 (protrait and landscape mode)| Android 10 |
+| 4 | Google Chrome, Version 101.0.4951.41 (portrait and landscape mode)| Android 10 |
 
 Testing undertaken:
 
@@ -31,7 +31,7 @@ Testing undertaken:
 
 ## Responsiveness Testing
 
-Responsiveness testing was done using [Screenfly](https://screenfly.org/#u=https%3A//ibuttimer.github.io/rock-paper-scissors-xtreme/&w=1024&h=600&s=1) and Google Chrome Developer Tools Device Mode.
+Responsiveness testing was done using Google Chrome Developer Tools Device Mode.
 
 Testing undertaken:
 
@@ -41,12 +41,13 @@ Testing undertaken:
 
 ## Lighthouse
 
-Lighthouse testing was carried out in an Incognito window using Lighthouse (Version 9.5.0) from Chrome Developer Tools.
+Lighthouse testing was carried out in an Incognito window using Lighthouse (Version 9.6.1) from Chrome Developer Tools.
 
 
 | Page | Test | Result |  |  |  | Report |
 |-|-|-|-|-|-|-|
-| | | | | | | |
+| Main | Mobile | ![Performance 87](https://img.shields.io/badge/Performance-87-orange) | ![Accessibility 100](https://img.shields.io/badge/Accessibility-100-brightgreen) | ![Best Practises 100](https://img.shields.io/badge/Best%20Practises-100-brightgreen) |![SEO 100](https://img.shields.io/badge/SEO-100-brightgreen) | [home-mobile](https://ibuttimer.github.io/rock-paper-scissors-xtreme/test/lighthouse/main-mobile.html) |
+|     | Desktop | ![Performance 99](https://img.shields.io/badge/Performance-99-brightgreen) | ![Accessibility 100](https://img.shields.io/badge/Accessibility-100-brightgreen) | ![Best Practises 100](https://img.shields.io/badge/Best%20Practises-100-brightgreen) |![SEO 100](https://img.shields.io/badge/SEO-100-brightgreen) | [home-desktop](https://ibuttimer.github.io/rock-paper-scissors-xtreme/test/lighthouse/main-desktop.html) |
 
 The report JSON files in [test/lighthouse](https://github.com/ibuttimer/rock-paper-scissors-xtreme/tree/main/test/lighthouse) may be viewed in [Lighthouse Report Viewer](https://googlechrome.github.io/lighthouse/viewer/).
 
@@ -67,6 +68,33 @@ User testing was carried out and feedback was captured vis a Google Forms survey
 ## Validator Testing 
 
 The [W3C Nu Html Checker](https://validator.w3.org/nu/) was utilised to check the HTML validity, while the [W3C CSS Validation Service](https://jigsaw.w3.org/css-validator/) was utilised to check the CSS validity with respect to [CSS level 3 + SVG](https://www.w3.org/Style/CSS/current-work.html.)
+
+As the `main` content of the site is generated via JavaScript, it was not possible to simply use the site url to perform the validator testing.
+The following procedure was utilised to validate the JavaScript-generated content:
+- Load the desired view in an Incognito window in Google Chrome.
+- Open Developer Tools (Ctrl+Shift+I).
+- In the `Elements` tab, select the `<html lang="en"` line.
+- Right-click and select `Copy -> Copy outerHTML`.
+  > __Note:__ The copied text does not contain the required `<!DOCTYPE html>` from the first line of [index.html](../index.html).
+
+- The copied text may be validated, using one of the following methods:
+  1. Paste the copied text into the [Check by text input](https://validator.w3.org/nu/#textarea) option of the [W3C Nu Html Checker](https://validator.w3.org/nu/), adding `<!DOCTYPE html>` as the first line..
+  2. Save the copied text to a new file, e.g. [main-raw.html](generated/main-raw.html), and add `<!DOCTYPE html>` as the first line. Validate the file using the [Check by file upload](https://validator.w3.org/nu/#file) option of the [W3C Nu Html Checker](https://validator.w3.org/nu/).
+  3. Host the file created in step 2, in an appropriate location and validate using the [Check by address](https://validator.w3.org/nu/) option of the [W3C Nu Html Checker](https://validator.w3.org/nu/).
+
+        In order to utilise this method, the following additional steps are required:
+        - Create a configuration override script as detailed in [Local storage override](../README.md#local-storage-override). See [test-config.js](generated/test-config.js).
+        - Run the [Node.js](https://nodejs.org/) script [adjust.cjs](generated/adjust.cjs) using the command `node adjust.cjs <input.html> <output.html>`. This will adjust the relative paths in _input.html_ and inject the required configuration override script prior to script.js being loaded. The resultant file is saved as _output.html_. This will ensure that the hosted _output.html_ will display correctly.
+
+The [W3C Nu Html Checker](https://validator.w3.org/nu/) was utilised to check the HTML validity, while the [W3C CSS Validation Service](https://jigsaw.w3.org/css-validator/) was utilised to check the CSS validity with respect to [CSS level 3 + SVG](https://www.w3.org/Style/CSS/current-work.html.)
+
+| Page | Main |
+|------|------|
+| HTML | [W3C validator](https://validator.w3.org/nu/?showsource=yes&doc=https%3A%2F%2Fibuttimer.github.io%2Frock-paper-scissors-xtreme%2Ftest%2Fgenerated%2Fmain.html) |
+| Result | ![pass](https://badgen.net/badge/checks/Pass/green) |
+| CSS | [(Jigsaw) validator](https://jigsaw.w3.org/css-validator/validator?uri=https%3A%2F%2Fibuttimer.github.io%2Frock-paper-scissors-xtreme%2Ftest%2Fgenerated%2Fmain.html&profile=css3svg&usermedium=all&warning=1&vextwarning=&lang=en) |
+| Result | ![pass](https://badgen.net/badge/checks/Pass/green) |
+
 
 
 ## Issues

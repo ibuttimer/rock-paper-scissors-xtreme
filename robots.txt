@@ -1,3 +1,10 @@
 # https://www.robotstxt.org/robotstxt.html
-User-agent: *
-Disallow:
+Disallow: /design/
+Disallow: /spec/
+Disallow: /test/
+Allow: /test/lighthouse/*.html
+Disallow: /test/generated/*raw.html
+Allow: /test/generated/*.html
+
+Disallow: /*.md$
+Disallow: /.gitignore
