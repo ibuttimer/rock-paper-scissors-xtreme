@@ -3,7 +3,7 @@ export {
     variableCheck, requiredVariable, gameParticipantsCheck, mapToString, 
     getVariantInfo as getVariantInfo, generateId, optionsList, accumulator,
     addElementClass, removeElementClass, replaceElementClass, delay,
-    adjustArray 
+    adjustArray, loadStorageBoolean, loadStorageInteger 
 } from './utils.js'
 export { 
     htmlDiv, htmlButton, htmlImg, htmlH1, htmlH2, htmlH3, htmlH4, htmlH5, htmlH6,

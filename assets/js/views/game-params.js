@@ -16,8 +16,8 @@ import { setView } from '../routing.js'
 
 
 // Parameters for game parameters
-const numPlayersInfo = numPlayersParams('Number of players', MIN_PLAYERS, MAX_PLAYERS, DEFAULT_PLAYERS);
-const numRobotsInfo = numPlayersParams('Number of robots', MIN_ROBOTS, MAX_ROBOTS, DEFAULT_ROBOTS);
+const numPlayersInfo = (value) => numPlayersParams('Number of players', MIN_PLAYERS, MAX_PLAYERS, value);
+const numRobotsInfo = (value) => numPlayersParams('Number of robots', MIN_ROBOTS, MAX_ROBOTS, value);
 
 /**
  * Generate a number of games radio input id
@@ -42,8 +42,8 @@ const numRobotsInfo = numPlayersParams('Number of robots', MIN_ROBOTS, MAX_ROBOT
   */
  const generateSelectId = (option, id, index) => option.selectId ? option.selectId : `${id}-select-${index}`;
 
-const numPlayersId = generateId(numPlayersInfo.title);
-const numRobotsId = generateId(numRobotsInfo.title);
+const numPlayersId = generateId(numPlayersInfo(DEFAULT_PLAYERS).title);
+const numRobotsId = generateId(numRobotsInfo(DEFAULT_ROBOTS).title);
 const oneGameTitle = 'One game shoot-out';
 const oneGameRadioId = generateRadioId({ title: oneGameTitle });
 const oneGameRadioLabelId = generateRadioLabelId(oneGameRadioId);
@@ -101,11 +101,11 @@ export default function gameParamsView(gameState) {
     });
     return `${titleHeader(gameState)}
             ${htmlDiv('div__num-of-game-participants', 
-                `${getNumPlayers(numPlayersInfo)}
-                ${getNumPlayers(numRobotsInfo)}`
+                `${getNumPlayers(numPlayersInfo(wip.numPlayers))}
+                ${getNumPlayers(numRobotsInfo(wip.numRobots))}`
             )}
             ${htmlDiv('div__num-games-wrapper', 
-                getNumOfGames(gameState, 'num-of-games', DEFAULT_GAMES, numGameOptions)
+                getNumOfGames(gameState, 'num-of-games', gameState.bestOf, numGameOptions)
             )}
             ${htmlDiv('div__player-names', 
                 `${htmlDiv('div__player-name-wrapper', 
@@ -312,21 +312,30 @@ const selectedBestOf = (gameState) => gameState.bestOf = parseInt(
  * Number of games component.
  * @param {GameState} gameState - game state object
  * @param {string} group - group name
- * @param defaultValue - default number
- * @param {Array[object]} params - parameters object {@link numGamesParams}
+ * @param {number} defaultValue - default number
+ * @param {Array[object]} options - parameters object {@link numGamesParams}
  */
  function getNumOfGames(gameState, group, defaultValue, options) {
 
     /**
      * Generate selections list
-     * @param {*Array} options - option parameter objects {@link numGamesParams}
+     * @param {Array[object]} options - option parameter objects {@link numGamesParams}
      * @returns {string} html for selections list
      */
     function selectionsList() {
         return options.map((opt, index) => {
                 const radioId = generateRadioId(opt);
                 // check if default value is option's default
-                const checked = defaultValue === opt.optionDefault;
+                let checked = defaultValue === opt.optionDefault;
+
+                if (!checked && opt.selections) {
+                    // check if defaultValue is one of the options
+                    opt.selections.forEach(sel => {
+                        if (sel === defaultValue) {
+                            checked = true;
+                        }
+                    });
+                }
 
                 let selectId = generateSelectId(opt, radioId, index);
                 let selectElement;
@@ -334,7 +343,7 @@ const selectedBestOf = (gameState) => gameState.bestOf = parseInt(
                     // a radio option with a select
                     selectId = generateSelectId(opt, radioId, index);
 
-                    selectElement = htmlSelect(['style__param-input'], optionsList(selectId, opt.selections), {
+                    selectElement = htmlSelect(['style__param-input'], optionsList(selectId, opt.selections, defaultValue), {
                         id: selectId,
                         name: selectId,
                         'aria-label': getNumOfGamesAriaLabel(gameState, selectId)

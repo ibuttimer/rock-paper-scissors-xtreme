@@ -256,5 +256,26 @@ export function adjustArray(array, requiredNum, newEntry) {
     return array;
 }
 
+/**
+ * Read a boolean value from localStorage.
+ * Note: storage values are 0 or non-zero number. 
+ * @param {string} key - storage key
+ * @returns {boolean} true/false or false if not available or error
+ */
+ export function loadStorageBoolean(key) {
+    const value = loadStorageInteger(key);
+    return Number.isNaN(value) ? false : new Boolean(parseInt(enableLog)).valueOf();
+}
+
+/**
+ * Read an integer value from localStorage
+ * @param {string} key - storage key
+ * @returns {number|Nan} number or NaN if not available or error
+ */
+export function loadStorageInteger(key) {
+    const value = localStorage.getItem(key);
+    return value ? parseInt(value) : NaN;
+}
+
 /* Jasmine requires a default export */
 export default 'utils.js'
