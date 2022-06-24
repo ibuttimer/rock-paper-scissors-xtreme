@@ -37,6 +37,21 @@ In an appropriate folder, run the following commands:
 > npm install
 ```
 
+#### Environment
+The [env.js](env.js) file provides configuration information to the application.
+This configuration may be temporarily modified during development/testing using either of the following methods:
+##### Git
+Update the file as required and run `git update-index --assume-unchanged env.js`. This will cause Git to temporarily ignore the changed file. Run `git update-index --no-assume-unchanged env.js` to revert to normal. This reduces the possibility of inadvertently committing changes to the repository. 
+
+See [git-update-index](https://git-scm.com/docs/git-update-index#Documentation/git-update-index.txt---no-assume-unchanged).
+
+##### Local storage override
+Load a script, prior to `script.js` being loaded, which sets the following values in Window.localStorage:
+- `ASSETS_BASE_URL`: the relative url to the assets folder
+- `ENABLE_LOG`: enable console logging flag; set '0' to disable and '1' to enable
+
+See [test-config.js](test/generated/test-config.js) and [main.html](test/generated/main.html).
+
 ### Application structure
 The application structure is based on [React Architecture: How to Structure and Organize a React Application](https://www.taniarascia.com/react-architecture-directory-structure/).
 
