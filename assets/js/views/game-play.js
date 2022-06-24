@@ -105,8 +105,9 @@ export function handleSelectionCallback(gameState, eventResult) {
         time += animation_time;   
         delay(time).then(() => {
             // update player name & selection tiles
-            nextPlayerName(gameState, tiles);
-    
+            if (gameState.game.roundInProgress) {
+                nextPlayerName(gameState, tiles);
+            }
             replaceElementClass(tiles, out_animation, in_animation);
         });
         time += animation_time;
@@ -127,12 +128,15 @@ export function handleSelectionCallback(gameState, eventResult) {
  function nextPlayerName(gameState, tiles) {
     // update player name
     const currentPlayerHeaderElement = document.getElementById(currentPlayerHeaderId);
-    currentPlayerHeaderElement.innerHTML = currentPlayerNameHeader(gameState);
+    const html = currentPlayerNameHeader(gameState);
+    if (currentPlayerHeaderElement && html) {
+        currentPlayerHeaderElement.innerHTML = html;
 
-    // update border colour to player's colour
-    const colour = gameState.game.currentPlayer.colour;
-    for (const tile of tiles) {
-        tile.style.borderColor = colour;
+        // update border colour to player's colour
+        const colour = gameState.game.currentPlayer.colour;
+        for (const tile of tiles) {
+            tile.style.borderColor = colour;
+        }
     }
 }
 
