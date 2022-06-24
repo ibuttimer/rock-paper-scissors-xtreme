@@ -11,6 +11,7 @@ import { accumulator } from './utils.js';
  * @param {string|Array[string]} innerHTML - html to wrap.
  *                 Note: To display a value that evaluates to falsy, e.g. 0, first convert it to a string.
  * @param {object} attribs - object of attributes; keys and values
+ * @param {boolean} selfClosing - self closing element, @see {@link https://developer.mozilla.org/en-US/docs/Glossary/Empty_element}
  * @returns {string} html for wrapped entity
  */
 const htmlWrapper = (tag, className, innerHtml, attribs = {}, selfClosing = false) => {
@@ -100,6 +101,24 @@ const htmlWrapper = (tag, className, innerHtml, attribs = {}, selfClosing = fals
  */
  export const htmlImg = (className, attribs = {}) => {
     return htmlWrapper('img', className, null, attribs, true);
+};
+
+/**
+ * Generate a source element.
+ * @returns {string} - html for element
+ * @see {@link htmlWrapper}
+ */
+ export const htmlSource = (className, attribs = {}) => {
+    return htmlWrapper('source', className, null, attribs, true);
+};
+
+/**
+ * Generate a picture element.
+ * @returns {string} - html for element
+ * @see {@link htmlWrapper}
+ */
+ export const htmlPicture = (className, innerHtml, attribs = {}) => {
+    return htmlWrapper('picture', className, innerHtml, attribs, false);
 };
 
 /**

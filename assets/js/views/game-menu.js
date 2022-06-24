@@ -9,27 +9,51 @@ import {
 import { GameVariant } from '../game.js';
 import { setView } from '../routing.js'
 import { 
-    getVariantInfo, htmlDiv, htmlButton, htmlImg, htmlSpan, htmlH1, htmlH2, htmlSection 
+    getVariantInfo, htmlDiv, htmlButton, htmlImg, htmlSource, htmlPicture, 
+    htmlSpan, htmlH1, htmlH2, htmlSection 
 } from '../utils/index.js'
 
 
+/** Image info object */
+const ImgInfo = (type, file) => { return { type: type, file: file }; };
+
 // Parameters for game select menu options
-const URL_IDX = 0;
+/** Index of variant url, values are @type {string} */
+const URL_IDX = 0;              
+/** Index of variant, values are @type {GameVariant} */
 const VARIANT_IDX = 1;
+/** Index of variant name, values are @type {string} */
 const VARIANT_NAME_IDX = 2;
+/** Index of variant image(s) 
+ * Array of values of @type {ImgInfo}
+ * Note: last entry will get 'img' tag, others 'source' tag.
+ */
 const VARIANT_IMG_IDX = 3;
 const gameParams = [
-    [BASIC_URL, GameVariant.Basic, BASIC_VARIANT_NAME, 'basic.png'],
-    [BIGBANG_URL, GameVariant.BigBang, BIGBANG_VARIANT_NAME, 'big-bang.png'],
-    [XTREME_URL, GameVariant.Xtreme, XTREME_VARIANT_NAME, 'xtreme.png'],
-]
+    [BASIC_URL, GameVariant.Basic, BASIC_VARIANT_NAME, [
+        ImgInfo('webp', 'basic.webp'),
+        ImgInfo('png', 'basic.png'),
+    ]],
+    [BIGBANG_URL, GameVariant.BigBang, BIGBANG_VARIANT_NAME, [
+        ImgInfo('webp', 'big-bang.webp'),
+        ImgInfo('png', 'big-bang.png'),
+    ]],
+    [XTREME_URL, GameVariant.Xtreme, XTREME_VARIANT_NAME, [
+        ImgInfo('webp', 'xtreme.webp'),
+        ImgInfo('png', 'xtreme.png'),
+    ]],
+];
 const gameSelects = gameParams.map(params => {
     const info = getVariantInfo(params[VARIANT_IDX]);
     return gameSelectParams(
                 params[URL_IDX], 
                 params[VARIANT_IDX], 
                 gameTileParams(params[VARIANT_NAME_IDX], 
-                                `${IMG_ASSETS_BASE_URL}${params[VARIANT_IMG_IDX]}`, 
+                                params[VARIANT_IMG_IDX].map(
+                                    element => {
+                                        element.file = `${IMG_ASSETS_BASE_URL}${element.file}`;
+                                        return element;
+                                    }), 
                                 `${params[VARIANT_IDX].name} game image`, 
                                 info.css)
             );
@@ -92,7 +116,7 @@ function getGameSelect(params) {
 /**
  * Generate a game tile parameters object
  * @param {string} name - name of game variant
- * @param {string} src - image source
+ * @param {Array[ImgInfo]} src - image source
  * @param {string} alt - image alt text
  * @param {object} css - object with variant specific css class names; key is property and value is class
  * @returns {object}
@@ -112,11 +136,44 @@ function gameTileParams(name, src, alt, css) {
  * @returns {string} html for game select option
  */
 function getGameTile(params) {
-    return htmlImg(['img__variant-tile-img'], {
-        src: params.src,
-        alt: params.alt
-    }) + 
-    htmlSpan(['span__variant-tile-name'], params.name);
+    let imgSrc = params.src;
+    const isArray = Array.isArray(imgSrc);
+    let singleSrc = typeof imgSrc === 'string';
+
+    if (isArray && imgSrc.length === 1) {
+        imgSrc = imgSrc[0];
+        singleSrc = true;
+    }
+
+    let visual;
+    if (singleSrc) {
+        // single source, use img
+        visual = htmlImg(['img__variant-tile-img'], {
+            src: imgSrc.file,
+            alt: params.alt
+        });
+    } else {
+        // multiple sources, use picture
+        const sources = imgSrc.reduce((previous, current, index, array) => {
+            let src;
+            if (index < array.length - 1) {
+                src = htmlSource([], {
+                    srcset: current.file,
+                    type: `image/${current.type}`
+                });
+            } else {
+                src = htmlImg(['img__variant-tile-img'], {
+                    src: current.file,
+                    alt: params.alt
+                });
+            }
+            return `${previous} ${src}`;
+        }, '')
+
+        visual = htmlPicture([], sources);
+    }
+
+    return visual + htmlSpan(['span__variant-tile-name'], params.name);
 }
 
 /**
