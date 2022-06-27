@@ -72,6 +72,7 @@ function getSelectable(selections, tileClass) {
         `${image}
         ${name}`, {
             'data-selection': params.selection,
+            role: 'button',
             'aria-label': clickToSelect
         });
 }
