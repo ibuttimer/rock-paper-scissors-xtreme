@@ -261,7 +261,8 @@ export function setSettingsAriaLabel(gameState) {
                 default:
                     throw new Error(`Unknown setting id: ${id}`);
             }
-            element.setAttribute('aria-label', `${setting} ${value ? 'enabled' : 'disabled'}`);
+            element.setAttribute('aria-label', `${setting}`);
+            element.setAttribute('aria-checked', `${value ? 'true' : 'false'}`);
         }
     });
 }
