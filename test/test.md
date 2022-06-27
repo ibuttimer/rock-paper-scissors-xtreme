@@ -84,14 +84,20 @@ The following procedure was utilised to validate the JavaScript-generated conten
 
         In order to utilise this method, the following additional steps are required:
         - Create a configuration override script as detailed in [Local storage override](../README.md#local-storage-override). See [test-config.js](generated/test-config.js).
-        - Run the [Node.js](https://nodejs.org/) script [adjust.cjs](generated/adjust.cjs) using the command `node adjust.cjs <input.html> <output.html>`. This will adjust the relative paths in _input.html_ and inject the required configuration override script prior to script.js being loaded. The resultant file is saved as _output.html_. This will ensure that the hosted _output.html_ will display correctly.
+        - Run the [Node.js](https://nodejs.org/) script [adjust.cjs](generated/adjust.cjs) using the command `node adjust.cjs <project root path> <input.html> <output.html> <config.js>`. This will adjust the relative paths in _input.html_ and inject the required configuration override script prior to script.js being loaded. The resultant file is saved as _output.html_. This will ensure that the hosted _output.html_ will display correctly. 
+
+          E.g. run the following command from the [test\generated\main](test\generated\main) folder to generate `main.html`
+
+          ```bash
+          node ../adjust.cjs ../../../ main-raw.html main.html test-main-config.js
+          ```
 
 The [W3C Nu Html Checker](https://validator.w3.org/nu/) was utilised to check the HTML validity, while the [W3C CSS Validation Service](https://jigsaw.w3.org/css-validator/) was utilised to check the CSS validity with respect to [CSS level 3 + SVG](https://www.w3.org/Style/CSS/current-work.html.)
 
 | Page | HTML | HTML Result | CSS | CSS Result |
 |------|------|-------------|-----|------------|
-| Main | [W3C validator](https://validator.w3.org/nu/?showsource=yes&doc=https%3A%2F%2Fibuttimer.github.io%2Frock-paper-scissors-xtreme%2Ftest%2Fgenerated%2Fmain.html) | ![pass](https://badgen.net/badge/checks/Pass/green) | [(Jigsaw) validator](https://jigsaw.w3.org/css-validator/validator?uri=https%3A%2F%2Fibuttimer.github.io%2Frock-paper-scissors-xtreme%2Ftest%2Fgenerated%2Fmain.html&profile=css3svg&usermedium=all&warning=1&vextwarning=&lang=en) | ![pass](https://badgen.net/badge/checks/Pass/green) |
-| Basic Params | [W3C validator](https://validator.w3.org/nu/?showsource=yes&doc=https%3A%2F%2Fibuttimer.github.io%2Frock-paper-scissors-xtreme%2Ftest%2Fgenerated%2Fbasic-param.html) | ![pass](https://badgen.net/badge/checks/Pass/green) | [(Jigsaw) validator](https://jigsaw.w3.org/css-validator/validator?uri=https%3A%2F%2Fibuttimer.github.io%2Frock-paper-scissors-xtreme%2Ftest%2Fgenerated%2Fbasic-param.html&profile=css3svg&usermedium=all&warning=1&vextwarning=&lang=en) | ![pass](https://badgen.net/badge/checks/Pass/green) |
+| Main | [W3C validator](https://validator.w3.org/nu/?showsource=yes&doc=https%3A%2F%2Fibuttimer.github.io%2Frock-paper-scissors-xtreme%2Ftest%2Fgenerated%2Fmain%2Fmain.html) | ![pass](https://badgen.net/badge/checks/Pass/green) | [(Jigsaw) validator](https://jigsaw.w3.org/css-validator/validator?uri=https%3A%2F%2Fibuttimer.github.io%2Frock-paper-scissors-xtreme%2Ftest%2Fgenerated%2Fmain%2Fmain.html&profile=css3svg&usermedium=all&warning=1&vextwarning=&lang=en) | ![pass](https://badgen.net/badge/checks/Pass/green) |
+| Basic Params | [W3C validator](https://validator.w3.org/nu/?showsource=yes&doc=https%3A%2F%2Fibuttimer.github.io%2Frock-paper-scissors-xtreme%2Ftest%2Fgenerated%2Fparam%2Fbasic-param.html) | ![pass](https://badgen.net/badge/checks/Pass/green) | [(Jigsaw) validator](https://jigsaw.w3.org/css-validator/validator?uri=https%3A%2F%2Fibuttimer.github.io%2Frock-paper-scissors-xtreme%2Ftest%2Fgenerated%2Fparam%2Fbasic-param.html&profile=css3svg&usermedium=all&warning=1&vextwarning=&lang=en) | ![pass](https://badgen.net/badge/checks/Pass/green) |
 
 
 ## Issues

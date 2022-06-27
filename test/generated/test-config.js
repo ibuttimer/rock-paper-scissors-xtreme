@@ -1,9 +1,9 @@
 /**
-    Configuration override
+    Configuration override example
     @author Ian Buttimer
 */
 
-// set assets base relative to current folder
+// Set assets base relative to current folder
 localStorage.setItem('ASSETS_BASE_URL', '../../assets/');
 
 /* Use '0' to disable and '1' to enable.
@@ -12,3 +12,22 @@ localStorage.setItem('ASSETS_BASE_URL', '../../assets/');
    an empty array ([]), or the string "false", create an object with an initial value of true.
    https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean */
 localStorage.setItem('ENABLE_LOG', '0');
+
+/* Set the game variant parameter, possible values are:
+    'Basic' - basic variant
+    'BigBang' - big bang variant
+    'Xtreme' - xtreme variant
+*/
+localStorage.setItem('VARIANT', 'Basic');
+/** Set the number of players parameter, @see {@link globals.js} MIN_PLAYERS/MAX_PLAYERS */
+localStorage.setItem('NUM_PLAYERS', '3');
+/** Set the number of players parameter, @see {@link globals.js} MIN_ROBOTS/MAX_ROBOTS */
+localStorage.setItem('NUM_ROBOTS', '1');
+/** Set the number of players parameter, @see {@link globals.js} MIN_GAMES/MAX_GAMES */
+localStorage.setItem('NUM_GAMES', '5');
+
+/* Set the initial view, possible values are:
+    'params' - params view
+*/
+localStorage.setItem('VIEW', 'params');
+

@@ -1,7 +1,11 @@
 /**
  * Node.js script to modify html file relative paths for non-project root hosting.
  * 
- * Usage: node adjust.cjs <input.html> <output.html>
+ * Usage: node adjust.cjs <project root path> <input.html> <output.html> <config.js>
+ *      <project root path> - relative path from folder containing <output.html> to project root
+ *      <input.html> - raw input file copied from DOM
+ *      <output.html> - name of output file to generate
+ *      <config.js> - name of JavaScript config file to load to give required view
  */
 
 // https://nodejs.dev/learn/accept-input-from-the-command-line-in-nodejs
@@ -12,8 +16,8 @@ const readline = require('readline').createInterface({
 
 const fs = require('fs');
 
-const rootPath = '../../';
-
+/** Path to project root */
+let rootPath;
 /** Path to source file */
 let source;
 /** Path to output file */
@@ -25,30 +29,35 @@ let html;
 
 
 // https://nodejs.dev/learn/nodejs-accept-arguments-from-the-command-line
-if (process.argv.length < 5) {
+if (process.argv.length < 6) {
     // get files vis user input
-    readline.question(`Source file name: `, name => {
-        source = name;
-    
-        readline.question(`Output file name: `, name => {
-            output = name;
+    readline.question(`Project root path: `, name => {
+        rootPath = name;
 
-            readline.question(`Config file name: `, name => {
-                config = name;
+        readline.question(`Source file name: `, name => {
+            source = name;
+        
+            readline.question(`Output file name: `, name => {
+                output = name;
     
-                readline.close();
-       
-                processFile();
-            });
-            });
+                readline.question(`Config file name: `, name => {
+                    config = name;
+        
+                    readline.close();
+           
+                    processFile();
+                });
+                });
+        });
     });
 } else {
     // get user arguments by creating a new array that excludes the first 2 params
     const args = process.argv.slice(2);
 
-    source = args[0];
-    output = args[1];
-    config = args[2];
+    rootPath = args[0];
+    source = args[1];
+    output = args[2];
+    config = args[3];
 
     processFile();
 }

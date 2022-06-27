@@ -4,7 +4,7 @@
 */
 
 // Set assets base relative to current folder
-localStorage.setItem('ASSETS_BASE_URL', '../../assets/');
+localStorage.setItem('ASSETS_BASE_URL', '../../../assets/');
 
 /* Console logging, use '0' to disable and '1' to enable.
    Note: If the value passed as the first parameter is omitted or is 0, -0, null, false, NaN, undefined, 
