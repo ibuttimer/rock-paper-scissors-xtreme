@@ -35,7 +35,7 @@
         <header>
             <nav class="nav__top">
                 <div class="div__logo">
-                    <button type="button" class="button__logo" id="menu-logo" value="/" aria-label="logo, current page,  home.">
+                    <button type="button" class="button__logo" id="menu-logo" value="/" aria-label="logo, basic game parameters page, goto home.">
                         <img src="android-chrome-192x192.png" width="28" height="28" class="img_logo" alt="logo">
                     </button>
                 </div>
@@ -79,44 +79,66 @@
         </header>
 
         <main id="main"><h1 class="h1__main-title">
-                Rock Paper Scissors
-            </h1><section>
-                <h2 class="h2__sub-title">
-                Select game
-            </h2><div class="div__variant-options">
-                <div class="div__variant-select">
-                <button class="button__variant-select div__variant-tile-wrapper debossable background-color__variant_basic" type="button" data-url="/basic" aria-label="select Basic game." rel="next">
-                <picture>
-                 <source srcset="assets/img/basic.webp" type="image/webp">
-                 <img class="img__variant-tile-img" src="assets/img/basic.png" alt="Basic game image">
-                
-            </picture><span class="span__variant-tile-name">
+                Rock Paper Scissors <span class="color__variant_basic">
                 Basic
             </span>
-            </button>
-            </div><div class="div__variant-select">
-                <button class="button__variant-select div__variant-tile-wrapper debossable background-color__variant_bigbang" type="button" data-url="/bigbang" aria-label="select BigBang game." rel="next">
-                <picture>
-                 <source srcset="assets/img/big-bang.webp" type="image/webp">
-                 <img class="img__variant-tile-img" src="assets/img/big-bang.png" alt="BigBang game image">
-                
-            </picture><span class="span__variant-tile-name">
-                Big Bang
-            </span>
-            </button>
-            </div><div class="div__variant-select">
-                <button class="button__variant-select div__variant-tile-wrapper debossable background-color__variant_xtreme" type="button" data-url="/xtreme" aria-label="select Xtreme game." rel="next">
-                <picture>
-                 <source srcset="assets/img/xtreme.webp" type="image/webp">
-                 <img class="img__variant-tile-img" src="assets/img/xtreme.png" alt="Xtreme game image">
-                
-            </picture><span class="span__variant-tile-name">
-                Xtreme
-            </span>
-            </button>
+            </h1>
+            <div class="div__num-of-game-participants">
+                <div class="div__num-players-wrapper">
+                <label class="style__param-input style__param-input-left" for="Number-of-players">
+                Number of players:
+            </label><select class="style__param-input style__param-input-right" id="Number-of-players" name="Number-of-players">
+                <option value="1">1</option> <option value="2" selected="">2</option> <option value="3">3</option> <option value="4">4</option> <option value="5">5</option> <option value="6">6</option> <option value="7">7</option> <option value="8">8</option> <option value="9">9</option>
+            </select>
+            </div>
+                <div class="div__num-players-wrapper">
+                <label class="style__param-input style__param-input-left" for="Number-of-robots">
+                Number of robots:
+            </label><select class="style__param-input style__param-input-right" id="Number-of-robots" name="Number-of-robots">
+                <option value="0" selected="">0</option> <option value="1">1</option> <option value="2">2</option> <option value="3">3</option>
+            </select>
             </div>
             </div>
-            </section></main>
+            <div class="div__num-games-wrapper">
+                <input type="radio" id="One-game-shoot-out-radio" name="num-of-games" value="1">
+                <label class="style__param-input" for="One-game-shoot-out-radio" id="One-game-shoot-out-radio-label" aria-label="One game shoot-out option, not selected, number of games 3.">
+                One game shoot-out
+            </label><input type="radio" id="Best-of-radio" name="num-of-games" value="3" checked="">
+                <label class="style__param-input" for="Best-of-radio" id="Best-of-radio-label" aria-label="Best of multiple games option, selected, number of games 3.">
+                Best of
+            </label><select class="style__param-input" id="Best-of-radio-select-1" name="Best-of-radio-select-1" aria-label="Best of multiple games setter, selected, number of games 3.">
+                <option value="3" selected="">3</option> <option value="5">5</option> <option value="7">7</option> <option value="9">9</option> <option value="11">11</option> <option value="13">13</option> <option value="15">15</option>
+            </select>
+            </div>
+            <div class="div__player-names">
+                <div class="div__player-name-wrapper">
+                <div class="div__player-names-title">
+                <p>Player Names</p>
+            </div>
+            </div>
+                <div class="div__player-name-group-wrapper" id="player-name-group">
+                <div class="div__player-name-wrapper">
+                <label for="player-name-1">
+                Player 1
+            </label> <div class="div__player-name-input">
+                <input class="input__player-name background-color_1 color_1_text" type="text" id="player-name-1" name="player-name-1" value="Player 1">
+                
+            </div>
+            </div><div class="div__player-name-wrapper">
+                <label for="player-name-2">
+                Player 2
+            </label> <div class="div__player-name-input">
+                <input class="input__player-name background-color_2 color_2_text" type="text" id="player-name-2" name="player-name-2" value="Player 2">
+                
+            </div>
+            </div>
+            </div>
+            </div>
+            <div class="div__play">
+                <button class="button__play button__clickable debossable" id="play-button" aria-label="play game.">
+                Play
+            </button>
+            </div></main>
     </div>
     <footer class="footer__footer">
         <div class="div__copyright">
