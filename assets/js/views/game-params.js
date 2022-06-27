@@ -13,6 +13,7 @@ import {
     htmlButton, htmlInput, htmlLabel
 } from '../utils/index.js';
 import { setView } from '../routing.js'
+import { GameMode } from '../enums.js';
 
 
 // Parameters for game parameters
@@ -78,9 +79,11 @@ const PROPS = [COLOR_PROP, BACKGROUND_COLOR_PROP, SELECTION_TILE_DIV_PROP];
 
 /** Working values for params */
 let wip = {
-    numPlayers: DEFAULT_PLAYERS,
+    numPlayers: 0,
     playerArray: [],
-    numRobots: DEFAULT_ROBOTS
+    numRobots: 0,
+    bestOf: 0,
+    gameMode: GameMode.Live
 }
 
 /**
@@ -94,6 +97,8 @@ export default function gameParamsView(gameState) {
     wip.numPlayers = gameState.game.numPlayers;
     wip.playerArray = gameState.game.getPlayers();
     wip.numRobots = gameState.game.numRobots;
+    wip.bestOf = gameState.bestOf;
+    wip.gameMode = gameState.game.gameMode;
 
     const button = htmlButton(['button__play', 'button__clickable', 'debossable'], 'Play', {
         id: playButtonId,
@@ -105,7 +110,7 @@ export default function gameParamsView(gameState) {
                 ${getNumPlayers(numRobotsInfo(wip.numRobots))}`
             )}
             ${htmlDiv('div__num-games-wrapper', 
-                getNumOfGames(gameState, 'num-of-games', gameState.bestOf, numGameOptions)
+                getNumOfGames('num-of-games', wip.bestOf, numGameOptions)
             )}
             ${htmlDiv('div__player-names', 
                 `${htmlDiv('div__player-name-wrapper', 
@@ -123,7 +128,7 @@ export default function gameParamsView(gameState) {
  * @param {Event} event - HTMLElement: change event
  * @param {GameState} gameState - game state object
  */
-function playGame(event, gameState) {
+export function playGame(event, gameState) {
 
     const playerCheck = persistPlayerNames(wip.playerArray);
     if (playerCheck.ok) {
@@ -139,6 +144,7 @@ function playGame(event, gameState) {
             player.colour = PLAYER_COLOURS[index];
         })
 
+        gameState.bestOf = wip.bestOf;
         gameState.game.init(wip.numPlayers, wip.numRobots, players);
         gameState.startMatch();
 
@@ -242,10 +248,13 @@ function getNumPlayers(params) {
 
 /**
  * Set the number of players
- * @param {Event} event - HTMLElement: change event
+ * @param {Event|number} event - HTMLElement: change event or number of players
  */
  function setNumPlayers(event) {
-    let num = parseInt(event.target.value);
+    let num = event;
+    if (typeof event !== 'number') {
+        num = parseInt(event.target.value);
+    }
     if (num !== wip.numPlayers) {
 
         let array = adjustArray(
@@ -261,7 +270,9 @@ function getNumPlayers(params) {
         log(`numPlayers ${num}`);
 
         // update DOM
-        displayPlayers(array, playerCheck.duplicates);
+        if (wip.gameMode !== GameMode.Demo){
+            displayPlayers(array, playerCheck.duplicates);
+        }
     }
 }
 
@@ -277,16 +288,19 @@ function getNumPlayers(params) {
 
 /**
  * Set the number of robots
- * @param {Event} event - HTMLElement: change event
+ * @param {Event|number} event - HTMLElement: change event or number of robots
  */
 function setNumRobots(event) {
-    let numRobots = parseInt(event.target.value);
-    wip.numRobots = numRobots;
-    log(`numRobots ${numRobots}`);
+    let num = event;
+    if (typeof event !== 'number') {
+        num = parseInt(event.target.value);
+    }
+    wip.numRobots = num;
+    log(`numRobots ${num}`);
 };
 
 /** Set the maximum number of games */
-const selectedBestOf = (gameState) => gameState.bestOf = parseInt(
+const selectedBestOf = () => wip.bestOf = parseInt(
     document.getElementById(bestOfSelectId).value
 );
 
@@ -310,12 +324,11 @@ const selectedBestOf = (gameState) => gameState.bestOf = parseInt(
 
 /**
  * Number of games component.
- * @param {GameState} gameState - game state object
  * @param {string} group - group name
  * @param {number} defaultValue - default number
  * @param {Array[object]} options - parameters object {@link numGamesParams}
  */
- function getNumOfGames(gameState, group, defaultValue, options) {
+ function getNumOfGames(group, defaultValue, options) {
 
     /**
      * Generate selections list
@@ -346,7 +359,7 @@ const selectedBestOf = (gameState) => gameState.bestOf = parseInt(
                     selectElement = htmlSelect(['style__param-input'], optionsList(selectId, opt.selections, defaultValue), {
                         id: selectId,
                         name: selectId,
-                        'aria-label': getNumOfGamesAriaLabel(gameState, selectId)
+                        'aria-label': getNumOfGamesAriaLabel(selectId)
                     });
                 } else {
                     // no select, just a radio option
@@ -366,7 +379,7 @@ const selectedBestOf = (gameState) => gameState.bestOf = parseInt(
                         htmlLabel(['style__param-input'], opt.title, { 
                             for: radioId,
                             id: labelId,
-                            'aria-label': getNumOfGamesAriaLabel(gameState, labelId)
+                            'aria-label': getNumOfGamesAriaLabel(labelId)
                         }) + 
                         selectElement;
             }).reduce(accumulator, '');
@@ -383,21 +396,21 @@ const selectedBestOf = (gameState) => gameState.bestOf = parseInt(
 function setNumGames(event, gameState) {
     if (event.target.id === oneGameRadioId) {
         if (event.target.checked) {
-            gameState.bestOf = 1;
+            wip.bestOf = 1;
         }
     } else if (event.target.id === bestOfRadioId) {
         if (event.target.checked) {
-            selectedBestOf(gameState);
+            selectedBestOf();
         }
     } else if (event.target.id === bestOfSelectId) {
         document.getElementById(bestOfRadioId).checked = true;
-        selectedBestOf(gameState);
+        selectedBestOf();
     }
 
     [oneGameRadioLabelId, bestOfRadioLabelId, bestOfSelectId].forEach(id => {
         const element = document.getElementById(id);
         if (element) {
-            element.setAttribute('aria-label', getNumOfGamesAriaLabel(gameState, id));
+            element.setAttribute('aria-label', getNumOfGamesAriaLabel(id));
         }
     });
 
@@ -405,25 +418,38 @@ function setNumGames(event, gameState) {
 }
 
 /**
- * Get aria label for number of games input label
- * @param {GameState} gameState - current game state
- * @param {string} id - id of label
- * @returns 
+ * Set the game parameters in demo mode.
+ * @param {number} numPlayers - number of players
+ * @param {number} numRobots - number of robots
+ * @param {number} numGames - number of robots
  */
-function getNumOfGamesAriaLabel(gameState, id) {
+export function setParamsOverride(numPlayers, numRobots, numGames) {
+    wip.gameMode = GameMode.Demo;
+
+    setNumPlayers(numPlayers);
+    setNumRobots(numRobots);
+    wip.bestOf = numGames;
+}
+
+/**
+ * Get aria label for number of games input label
+ * @param {string} id - id of label
+ * @returns {string}
+ */
+function getNumOfGamesAriaLabel(id) {
     let title;
     let selected;
     if (id == oneGameRadioLabelId) {
         title = 'One game shoot-out option';
-        selected = gameState.bestOf === 1;
+        selected = wip.bestOf === 1;
     } else if (id === bestOfRadioLabelId) {
         title = 'Best of multiple games option';
-        selected = gameState.bestOf > 1;
+        selected = wip.bestOf > 1;
     } else {
         title = 'Best of multiple games setter';
-        selected = gameState.bestOf > 1;
+        selected = wip.bestOf > 1;
     }
-    return `${title}, ${selected ? 'selected' : 'not selected'}, number of games ${gameState.bestOf}.`;
+    return `${title}, ${selected ? 'selected' : 'not selected'}, number of games ${wip.bestOf}.`;
 }
 
 /**

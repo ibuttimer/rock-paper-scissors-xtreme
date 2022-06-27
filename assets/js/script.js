@@ -7,9 +7,11 @@ import {
     DEFAULT_PLAYERS, DEFAULT_ROBOTS 
 } from './globals.js';
 import { GameVariant, Game } from './game.js';
+import { GameMode } from './enums.js';
 import { default as GameState } from './game-state.js';
 import { View, setView } from './routing.js'
 import { loadStorageInteger } from './utils/index.js'
+import { setParamsOverride, playGame } from './views/index.js'
 
 /* Wait for the DOM to finish loading before running the game
     as per Love Maths example project */
@@ -59,6 +61,7 @@ function runGame() {
         new Game(variant, numPlayers, numRobots, ENABLE_LOG ? Game.OPT_CONSOLE: Game.OPT_NONE)
     )
 
+    // load number of games from local storage
     let numGames = loadStorageInteger(NUM_GAMES_KEY);
     if (!Number.isNaN(numGames)) {
         gameState.bestOf = numGames;
@@ -80,6 +83,12 @@ function runGame() {
                         break;
                 }
                 break;
+            case 'play':
+                gameState.game.setGameMode(GameMode.Demo);
+                setParamsOverride(numPlayers, numRobots, numGames);
+                playGame({}, gameState);
+                view = undefined;   // view set in playGame
+                break;
             default:
                 view = View.GameMenu;
                 break;
@@ -88,7 +97,9 @@ function runGame() {
         view = View.GameMenu;
     }
 
-    setView(view, gameState);
+    if (view){
+        setView(view, gameState);
+    }
 
     // clear local storage overrides for pristine start next time
     [

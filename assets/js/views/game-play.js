@@ -15,7 +15,7 @@ const currentPlayerHeaderId = 'current-player-header'
 
 const in_animation = 'animate__fade-in';
 const out_animation = 'animate__fade-out';
-const animation_time = 500;    // animation time in msec
+const animation_time = 500;    // animation time in msecs
 
 /**
  * Generate the game play view.

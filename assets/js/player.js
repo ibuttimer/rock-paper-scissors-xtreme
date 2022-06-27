@@ -140,9 +140,9 @@ import { variableCheck, requiredVariable } from './utils/index.js';
         // sanity checks
         requiredVariable(variant, 'variant');
         requiredVariable(mode, 'mode');
-        // robot's selection will be set in test & demo mode's and random in live
+        // robot's selection will be set in test mode and random in live & demo
         let selectionSet;
-        if (mode === GameMode.Live) {
+        if (mode === GameMode.Live || mode === GameMode.Demo) {
             selectionSet = variant.randomSelection();
             this.selection = selectionSet;
         } else {
