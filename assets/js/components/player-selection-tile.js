@@ -33,6 +33,7 @@ import { htmlDiv, htmlImg, htmlH3, htmlH4 } from '../utils/index.js'
     }
 
     return htmlDiv(classes, [banner, playerName, image, selectionName].join(' '), {
+        role: 'note',
         'aria-label': `${params.player.name} selected ${params.selection.name}.`
     });
 }
