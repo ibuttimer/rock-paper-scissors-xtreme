@@ -18,12 +18,14 @@ const rootPath = '../../';
 let source;
 /** Path to output file */
 let output;
+/** Path to config file */
+let config;
 /** Html content of source file */
 let html;
 
 
 // https://nodejs.dev/learn/nodejs-accept-arguments-from-the-command-line
-if (process.argv.length < 4) {
+if (process.argv.length < 5) {
     // get files vis user input
     readline.question(`Source file name: `, name => {
         source = name;
@@ -31,10 +33,14 @@ if (process.argv.length < 4) {
         readline.question(`Output file name: `, name => {
             output = name;
 
-            readline.close();
-   
-            processFile();
-        });
+            readline.question(`Config file name: `, name => {
+                config = name;
+    
+                readline.close();
+       
+                processFile();
+            });
+            });
     });
 } else {
     // get user arguments by creating a new array that excludes the first 2 params
@@ -42,6 +48,7 @@ if (process.argv.length < 4) {
 
     source = args[0];
     output = args[1];
+    config = args[2];
 
     processFile();
 }
@@ -61,7 +68,7 @@ function processFile() {
 
         // config override
         html = html.replace('type="module" src="assets/js/script.js"', 
-            'src="./test-config.js"></script>\n<script type="module" src="assets/js/script.js"');
+            'src="' + config + '"></script>\n<script type="module" src="assets/js/script.js"');
         
         // icons
         html = html.replaceAll('href="apple', 'href="' + rootPath + 'apple');
