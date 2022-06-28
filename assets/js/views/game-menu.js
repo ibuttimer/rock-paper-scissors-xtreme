@@ -4,8 +4,9 @@
 */
 import { 
     GAME_NAME, BASIC_URL, BASIC_VARIANT_NAME, BIGBANG_URL, BIGBANG_VARIANT_NAME, 
-    XTREME_URL, XTREME_VARIANT_NAME, IMG_ASSETS_BASE_URL, log 
+    XTREME_URL, XTREME_VARIANT_NAME, log 
 } from '../globals.js';
+import { default as config } from '../../../env.js';
 import { GameVariant } from '../game.js';
 import { setView } from '../routing.js'
 import { 
@@ -51,7 +52,7 @@ const gameSelects = gameParams.map(params => {
                 gameTileParams(params[VARIANT_NAME_IDX], 
                                 params[VARIANT_IMG_IDX].map(
                                     element => {
-                                        element.file = `${IMG_ASSETS_BASE_URL}${element.file}`;
+                                        element.file = `${config.IMG_ASSETS_BASE_URL}${element.file}`;
                                         return element;
                                     }), 
                                 `${params[VARIANT_IDX].name} game image`, 

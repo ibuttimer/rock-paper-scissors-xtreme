@@ -2,10 +2,11 @@
     Application entry point script.
     @author Ian Buttimer
 */
+import { log, DEFAULT_PLAYERS, DEFAULT_ROBOTS } from './globals.js';
 import { 
-    ENABLE_LOG, log, VARIANT_KEY, NUM_PLAYERS_KEY, NUM_ROBOTS_KEY, VIEW_KEY, NUM_GAMES_KEY,
-    DEFAULT_PLAYERS, DEFAULT_ROBOTS 
-} from './globals.js';
+    default as config, VARIANT_KEY, NUM_PLAYERS_KEY, NUM_ROBOTS_KEY, 
+    NUM_GAMES_KEY, VIEW_KEY 
+} from "../../env.js";
 import { GameVariant, Game } from './game.js';
 import { GameMode } from './enums.js';
 import { default as GameState } from './game-state.js';
@@ -58,7 +59,7 @@ function runGame() {
     }
 
     gameState = new GameState(
-        new Game(variant, numPlayers, numRobots, ENABLE_LOG ? Game.OPT_CONSOLE: Game.OPT_NONE)
+        new Game(variant, numPlayers, numRobots, config.ENABLE_LOG ? Game.OPT_CONSOLE: Game.OPT_NONE)
     )
 
     // load number of games from local storage

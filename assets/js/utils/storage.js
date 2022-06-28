@@ -6,7 +6,6 @@ import {
     DEFAULT_SOUND_SETTING, DEFAULT_ANIMATION_SETTING
 } from '../globals.js'
 
-
 const SOUND_SETTING = 'rpsxSound';
 const ANIMATION_SETTING = 'rpsxAnimation';
 const LOCAL_KEYS = [SOUND_SETTING, ANIMATION_SETTING];
@@ -85,4 +84,35 @@ export default function storageAvailable(type) {
             // acknowledge QuotaExceededError only if there's something already stored
             (storage && storage.length !== 0);
     }
+}
+
+/**
+ * Read a boolean value from localStorage.
+ * Note: storage values are 0 or non-zero number.
+ * @param {string} key - storage key
+ * @returns {boolean} true/false or false if not available or error
+ */
+
+ export function loadStorageBoolean(key) {
+    const value = loadStorageInteger(key);
+    return Number.isNaN(value) ? false : new Boolean(parseInt(enableLog)).valueOf();
+}
+/**
+ * Read an integer value from localStorage
+ * @param {string} key - storage key
+ * @returns {number|Nan} number or NaN if not available or error
+ */
+
+export function loadStorageInteger(key) {
+    const value = localStorage.getItem(key);
+    return value ? parseInt(value) : NaN;
+}
+/**
+ * Read a string value from localStorage
+ * @param {string} key - storage key
+ * @returns {string|null} number or null if not available or error
+ */
+
+export function loadStorageString(key) {
+    return localStorage.getItem(key);
 }

@@ -3,9 +3,9 @@
     @author Ian Buttimer
 */
 import { 
-    DEFAULT_PLAYERS, DEFAULT_ROBOTS, DEFAULT_GAMES, IMG_ASSETS_BASE_URL, ROOT_URL, PLAY_URL,
-    AUDIO_ASSETS_BASE_URL, log
+    DEFAULT_PLAYERS, DEFAULT_ROBOTS, DEFAULT_GAMES, ROOT_URL, PLAY_URL, log
 } from './globals.js'
+import { default as config } from '../../env.js'
 import { Game, GameVariant } from './game.js'
 import { GameKey, Selection, ResultCode, GameStatus } from './enums.js';
 import { setView, setSettingsAriaLabel } from './routing.js'
@@ -42,7 +42,7 @@ const SELECTIONS = new Map();
     [Selection.Glock, 'handgun.png']
 ].forEach(entry => 
     SELECTIONS.set(entry[0], 
-        selectionTileParams(`${IMG_ASSETS_BASE_URL}${entry[1]}`, `${entry[0].name} selection.`, entry[0])));
+        selectionTileParams(`${config.IMG_ASSETS_BASE_URL}${entry[1]}`, `${entry[0].name} selection.`, entry[0])));
 
 /**
  * Class representing the game state
@@ -85,9 +85,9 @@ export default class GameState {
      */
     #matchStatus;
 
-    static #errorAudio = new Audio(`${AUDIO_ASSETS_BASE_URL}beep-10.mp3`);
-    static #beepAudio = new Audio(`${AUDIO_ASSETS_BASE_URL}beep-22.mp3`);
-    static #winnerAudio = new Audio(`${AUDIO_ASSETS_BASE_URL}success-fanfare-trumpets-6185.mp3`);
+    static #errorAudio = new Audio(`${config.AUDIO_ASSETS_BASE_URL}beep-10.mp3`);
+    static #beepAudio = new Audio(`${config.AUDIO_ASSETS_BASE_URL}beep-22.mp3`);
+    static #winnerAudio = new Audio(`${config.AUDIO_ASSETS_BASE_URL}success-fanfare-trumpets-6185.mp3`);
 
     /**
      * @constructor

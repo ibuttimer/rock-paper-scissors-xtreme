@@ -33,35 +33,6 @@ console.assert(
     `Incorrect number of player colours: ${PLAYER_COLOURS.length}, expected ${MAX_PARTICIPANTS}`
 );
 
-/* localStorage parameter keys */
-const ENABLE_LOG_KEY = 'ENABLE_LOG';
-const ASSETS_BASE_URL_KEY = 'ASSETS_BASE_URL';
-export const VARIANT_KEY = 'VARIANT';
-export const NUM_PLAYERS_KEY = 'NUM_PLAYERS';
-export const NUM_ROBOTS_KEY = 'NUM_ROBOTS';
-export const NUM_GAMES_KEY = 'NUM_GAMES';
-export const VIEW_KEY = 'VIEW';
-
-// check localStorage for a value (expecting '0' or '1') for ENABLE_LOG, if found use it otherwise set from environment constants
-/* Note: If the value passed as the first parameter is omitted or is 0, -0, null, false, NaN, undefined, 
-   or the empty string (""), the object has an initial value of false. All other values, including any object, 
-   an empty array ([]), or the string "false", create an object with an initial value of true.
-   https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean */
-let enableLog = localStorage.getItem(ENABLE_LOG_KEY);
-enableLog = enableLog === null ? enableLog = config.ENABLE_LOG : new Boolean(parseInt(enableLog)).valueOf();
-export const ENABLE_LOG = enableLog;
-
-// check localStorage for a value for ASSETS_BASE_URL, if found use it otherwise set from environment constants
-let assetsBaseUrl = localStorage.getItem(ASSETS_BASE_URL_KEY);
-if (assetsBaseUrl === null) {
-    assetsBaseUrl = config.ASSETS_BASE_URL;
-}
-
-// clear local storage overrides for pristine start next time
-[ENABLE_LOG_KEY, ASSETS_BASE_URL_KEY].forEach(key => localStorage.removeItem(key));
-
-export const IMG_ASSETS_BASE_URL = `${assetsBaseUrl}img/`
-export const AUDIO_ASSETS_BASE_URL = `${assetsBaseUrl}audio/`
 
 /**
  * Make a url.
@@ -92,13 +63,12 @@ export const PLAY_URL = makePath(PLAY_ROUTE);
 export const ROUND_RESULT_ROUTE = 'roundresult';
 export const ROUND_RESULT_URL = makePath(ROUND_RESULT_ROUTE);
 
-
 /**
  * Log to console
  * @param {...any} data - info to log
  */
 export function log(...data) {
-    if (ENABLE_LOG){
+    if (config.ENABLE_LOG){
         console.log(...data);
     }
 }
