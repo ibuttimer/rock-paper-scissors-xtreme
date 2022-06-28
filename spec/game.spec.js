@@ -4,7 +4,6 @@
 import { Contest, Rule, GameVariant, Game, GameResult } from '../assets/js/game.js'
 import { GameKey, Selection, GameMode, GameEvent, ResultCode } from '../assets/js/enums.js'
 import { getRequiredVariableMessage } from './utils.spec.js';
-import { Player } from '../assets/js/player.js';
 
 /* 
   Check Selection class

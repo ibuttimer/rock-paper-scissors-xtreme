@@ -2,7 +2,7 @@
   "name": "rock-paper-scissors-xtreme",
   "version": "0.0.1",
   "description": "Extreme version of Rock, Paper, Scissors game.",
-  "main": "assets/js/game.js",
+  "main": "assets/js/script.js",
   "type": "module",
   "scripts": {
     "test": "jasmine"
@@ -20,10 +20,10 @@
     "url": "https://github.com/ibuttimer/rock-paper-scissors-xtreme/issues"
   },
   "homepage": "https://github.com/ibuttimer/rock-paper-scissors-xtreme#readme",
-  "devDependencies": {
-    "jasmine": "^4.1.0"
-  },
   "dependencies": {
     "tingle.js": "^0.16.0"
+  },
+  "devDependencies": {
+    "jasmine": "^4.2.1"
   }
 }
