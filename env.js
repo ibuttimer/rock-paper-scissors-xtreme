@@ -22,6 +22,7 @@ export const ALL_KEYS = [
 export const PARAMS_VIEW = 'params';
 export const PLAY_VIEW = 'play';
 export const CONTROL_VIEW = 'control';
+export const RULES_VIEW = 'rules';
 
 // check localStorage for a value (expecting '0' or '1') for ENABLE_LOG, if found use it otherwise set from environment constants
 /* Note: If the value passed as the first parameter is omitted or is 0, -0, null, false, NaN, undefined, 

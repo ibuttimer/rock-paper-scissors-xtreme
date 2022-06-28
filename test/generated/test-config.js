@@ -30,6 +30,7 @@ localStorage.setItem('NUM_GAMES', '5');
     'params' - params view
     'play' - play view
     'control' - view displayed is result of processing 'INPUT'
+    'rules' - rules view
 */
 localStorage.setItem('VIEW', 'params');
 

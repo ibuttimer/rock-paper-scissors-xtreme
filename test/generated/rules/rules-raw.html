@@ -1,0 +1,419 @@
+<html lang="en"><head>
+    <meta charset="utf-8">
+    <link rel="icon" href="favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="msapplication-TileColor" content="#ffc40d">
+    <meta name="theme-color" content="#fbb13c">    
+    <meta name="description" content="Extreme version of Rock, Paper, Scissors game.">
+
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+    <link rel="mask-icon" href="safari-pinned-tab.svg" color="#FBB13C">
+    <link rel="manifest" href="site.webmanifest">
+
+    <!-- Lineicons Free CDN -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.lineicons.com/3.0/lineicons.css"> 
+
+    <!-- tingle.js modal plugin -->
+    <link rel="stylesheet" type="text/css" href="lib/tingle.js/tingle.min.css">
+
+    <link rel="stylesheet" type="text/css" href="assets/css/styles.css">
+    <link rel="stylesheet" type="text/css" href="assets/css/styles-components.css">
+    <link rel="stylesheet" type="text/css" href="assets/css/styles-main.css">
+    <link rel="stylesheet" type="text/css" href="assets/css/styles-params.css">
+    <link rel="stylesheet" type="text/css" href="assets/css/styles-play.css">
+    <link rel="stylesheet" type="text/css" href="assets/css/styles-result.css">
+    <link rel="stylesheet" type="text/css" href="assets/css/styles-rules.css">
+
+    <title>Rock, Paper, Scissors Xtreme</title>
+</head>
+
+<body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div class="div__content">
+        <header>
+            <nav class="nav__top">
+                <div class="div__logo">
+                    <button type="button" class="button__logo" id="menu-logo" value="/" aria-label="logo, rules page, goto home.">
+                        <img src="android-chrome-192x192.png" width="28" height="28" class="img_logo" alt="logo">
+                    </button>
+                </div>
+                <ul class="ul__menu-row" id="menu-list">
+                    <li class="li__menu-item" id="menu-rules-option">
+                        <div class="div__menu-link">
+                            <button id="menu-rules" type="button" class="button__menu" value="/rules" aria-label="current page, rules.">
+                                <i class="lni lni-book"></i>&nbsp;Rules
+                            </button>
+                        </div>
+                    </li>
+                    <li class="li__menu-item" id="menu-settings-option">
+                        <div class="div__dropdown div__menu-link" id="menu-settings-dropdown">
+                            <button type="button" class="button__menu" aria-label="goto settings menu.">
+                                <i class="lni lni-cog"></i>&nbsp;Settings
+                            </button>
+                            <div class="div__dropdown-content">
+                                <div class="div__setting-option-wrapper">
+                                    <div class="div__setting-option">
+                                        <p>Enable animation</p>
+                                        <label class="label__toggle-control">
+                                            <input type="checkbox" id="checkbox-animation" value="animation">
+                                            <span id="animation-toggle-control" class="span_control" role="checkbox" aria-checked="true" aria-label="animation"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="div__setting-option-wrapper">
+                                    <div class="div__setting-option">
+                                        <p>Enable sound</p>
+                                        <label class="label__toggle-control">
+                                            <input type="checkbox" id="checkbox-sound" value="sound">
+                                            <span id="sound-toggle-control" class="span_control" role="checkbox" aria-checked="true" aria-label="sound"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </nav>
+        </header>
+
+        <main id="main"><article>
+                <h3 class="h3__rules-heading">
+                Introduction
+            </h3>
+        <p>
+                Rock Paper Scissors is a <a href="https://www.collinsdictionary.com/dictionary/english/zero-sum-game" target="_blank" rel="noopener" aria-label="visit zero sum game on collins dictionary site in another tab">
+                zero sum game
+            </a> that is usually played by two people using their hands.
+On this site, there are three different variations of the game available for play by multiple players, namely; 
+<a href="#basic-game-info">
+                Basic
+            </a>, <a href="#bigbang-game-info">
+                Big Bang
+            </a> and <a href="#xtreme-game-info">
+                Xtreme
+            </a>.
+            </p>
+        <h3 class="h3__rules-heading">
+                Common Rules
+            </h3>
+        <p>
+                The following rules are common to all variations of the game:
+</p><ul class="ul__common-rules">
+                <li>
+                A match consists of a minimum of 2 players, at least 1 of which must be a physical player.
+            </li><li>
+                The maximum number of players in a match is 12, with at most 9 physical players and 3 robots.
+            </li><li>
+                A match may be decided by 1 game, or the best of 3, 5, 7, 9, 11, 13 or 15 games.
+            </li><li>
+                Each player must make one selection per round. A selection may be made by clicking the appropriate selection tile, or pressing the key corresponding to the selection.
+            </li><li>
+                If a player presses the '<i>
+                #
+            </i>' key, a random selection is made for the round.
+            </li><li>
+                Once every player has made a selection, the results are evaluated and any losing players are eliminated from the game.
+            </li><li>
+                All remaining players, proceed to the next round to make a new selection.
+            </li><li>
+                In the event that all possible selections were made, all players proceed to the next round.
+            </li><li>
+                The game continues until only one player remains.
+            </li>
+            </ul>
+            <p></p>
+        <h3 class="h3__rules-heading" id="basic-game-info">
+                Basic variant
+            </h3>
+        <p>
+                The Basic variant has 3 possible selections; Rock, Paper and Scissors.
+            </p>
+        <div class="div__win-matrix">
+                <table class="table__win-matrix">
+                <thead class="thead__win-matrix">
+                <tr>
+                <th class="th__win-matrix">
+                Selection
+            </th><th class="th__win-matrix">
+                Win reason
+            </th><th class="th__win-matrix">
+                Key
+            </th>
+            </tr>
+            </thead>
+    <tbody>
+                <tr>
+                <td class="td__win-matrix">
+                Rock
+            </td>
+                <td class="td__win-matrix">
+                Rock blunts Scissors
+            </td>
+                <td class="td__win-matrix">
+                R
+            </td>
+            </tr> <tr>
+                <td class="td__win-matrix">
+                Paper
+            </td>
+                <td class="td__win-matrix">
+                Paper covers Rock
+            </td>
+                <td class="td__win-matrix">
+                P
+            </td>
+            </tr> <tr>
+                <td class="td__win-matrix">
+                Scissors
+            </td>
+                <td class="td__win-matrix">
+                Scissors cuts Paper
+            </td>
+                <td class="td__win-matrix">
+                S
+            </td>
+            </tr>
+            </tbody>
+            </table>
+            </div>
+        <div class="div__play">
+                <button class="button__play button__clickable background-color__variant_basic debossable" id="play-basic-button" aria-label="play basic game." value="/basic">
+                Play Basic
+            </button>
+            </div>
+        <h3 class="h3__rules-heading" id="bigbang-game-info">
+                Big Bang variant
+            </h3>
+        <p>
+                The Big Bang variant has 5 possible selections; Rock, Paper, Scissors, Lizard and Spock.
+            </p>
+        <div class="div__win-matrix">
+                <table class="table__win-matrix">
+                <thead class="thead__win-matrix">
+                <tr>
+                <th class="th__win-matrix">
+                Selection
+            </th><th class="th__win-matrix">
+                Win reason
+            </th><th class="th__win-matrix">
+                Key
+            </th>
+            </tr>
+            </thead>
+    <tbody>
+                <tr>
+                <td class="td__win-matrix">
+                Rock
+            </td>
+                <td class="td__win-matrix">
+                Rock blunts Scissors, Rock crushes Lizard
+            </td>
+                <td class="td__win-matrix">
+                R
+            </td>
+            </tr> <tr>
+                <td class="td__win-matrix">
+                Paper
+            </td>
+                <td class="td__win-matrix">
+                Paper covers Rock, Paper disproves Spock
+            </td>
+                <td class="td__win-matrix">
+                P
+            </td>
+            </tr> <tr>
+                <td class="td__win-matrix">
+                Scissors
+            </td>
+                <td class="td__win-matrix">
+                Scissors cuts Paper, Scissors decapitates Lizard
+            </td>
+                <td class="td__win-matrix">
+                S
+            </td>
+            </tr> <tr>
+                <td class="td__win-matrix">
+                Lizard
+            </td>
+                <td class="td__win-matrix">
+                Lizard eats Paper, Lizard poisons Spock
+            </td>
+                <td class="td__win-matrix">
+                L
+            </td>
+            </tr> <tr>
+                <td class="td__win-matrix">
+                Spock
+            </td>
+                <td class="td__win-matrix">
+                Spock vaporises Rock, Spock smashes Scissors
+            </td>
+                <td class="td__win-matrix">
+                V
+            </td>
+            </tr>
+            </tbody>
+            </table>
+            </div>
+        <div class="div__play">
+                <button class="button__play button__clickable background-color__variant_bigbang debossable" id="play-bigbang-button" aria-label="play big bang game." value="/bigbang">
+                Play Big Bang
+            </button>
+            </div>
+        <h3 class="h3__rules-heading" id="xtreme-game-info">
+                Xtreme variant
+            </h3>
+        <p>
+                The Xtreme variant has 9 possible selections; Rock, Paper, Scissors, Lizard, Spock, Spiderman, Batman, Wizard and Glock.
+            </p>
+        <div class="div__win-matrix">
+                <table class="table__win-matrix">
+                <thead class="thead__win-matrix">
+                <tr>
+                <th class="th__win-matrix">
+                Selection
+            </th><th class="th__win-matrix">
+                Win reason
+            </th><th class="th__win-matrix">
+                Key
+            </th>
+            </tr>
+            </thead>
+    <tbody>
+                <tr>
+                <td class="td__win-matrix">
+                Rock
+            </td>
+                <td class="td__win-matrix">
+                Rock blunts Scissors, Rock crushes Lizard, Rock knocks out Spiderman, Rock interrupts Wizard
+            </td>
+                <td class="td__win-matrix">
+                R
+            </td>
+            </tr> <tr>
+                <td class="td__win-matrix">
+                Paper
+            </td>
+                <td class="td__win-matrix">
+                Paper covers Rock, Paper disproves Spock, Paper delays Batman, Paper jams Glock
+            </td>
+                <td class="td__win-matrix">
+                P
+            </td>
+            </tr> <tr>
+                <td class="td__win-matrix">
+                Scissors
+            </td>
+                <td class="td__win-matrix">
+                Scissors cuts Paper, Scissors decapitates Lizard, Scissors cuts Spiderman, Scissors cuts Wizard
+            </td>
+                <td class="td__win-matrix">
+                S
+            </td>
+            </tr> <tr>
+                <td class="td__win-matrix">
+                Lizard
+            </td>
+                <td class="td__win-matrix">
+                Lizard eats Paper, Lizard poisons Spock, Lizard confuses Batman, Lizard is too small for Glock
+            </td>
+                <td class="td__win-matrix">
+                L
+            </td>
+            </tr> <tr>
+                <td class="td__win-matrix">
+                Spock
+            </td>
+                <td class="td__win-matrix">
+                Spock vaporises Rock, Spock smashes Scissors, Spock befuddles Spiderman, Spock zaps Wizard
+            </td>
+                <td class="td__win-matrix">
+                V
+            </td>
+            </tr> <tr>
+                <td class="td__win-matrix">
+                Spiderman
+            </td>
+                <td class="td__win-matrix">
+                Spiderman rips Paper, Spiderman contests Lizard, Spiderman annoys Wizard, Spiderman disarms Glock
+            </td>
+                <td class="td__win-matrix">
+                I
+            </td>
+            </tr> <tr>
+                <td class="td__win-matrix">
+                Batman
+            </td>
+                <td class="td__win-matrix">
+                Batman explodes Rock, Batman dismantles Scissors, Batman hangs Spock, Batman scares Spiderman
+            </td>
+                <td class="td__win-matrix">
+                B
+            </td>
+            </tr> <tr>
+                <td class="td__win-matrix">
+                Wizard
+            </td>
+                <td class="td__win-matrix">
+                Wizard burns Paper, Wizard transforms Lizard, Wizard stuns Batman, Wizard melts Glock
+            </td>
+                <td class="td__win-matrix">
+                W
+            </td>
+            </tr> <tr>
+                <td class="td__win-matrix">
+                Glock
+            </td>
+                <td class="td__win-matrix">
+                Glock breaks Rock, Glock dents Scissors, Glock shoots Spock, Glock kills Batman’s mum
+            </td>
+                <td class="td__win-matrix">
+                G
+            </td>
+            </tr>
+            </tbody>
+            </table>
+            </div>
+        <div class="div__play">
+                <button class="button__play button__clickable background-color__variant_xtreme debossable" id="play-xtreme-button" aria-label="play extreme game." value="/xtreme">
+                Play Xtreme
+            </button>
+            </div>
+        <h3 class="h3__rules-heading">
+                Using the keyboard
+            </h3>
+        <p>
+                Once a match has started, the following keys may be used to play:
+</p><ul class="ul__keys-info">
+                <li>
+                Round selections may be made by pressing the key corresponding to the selection, as specified in the game tables.
+            </li><li>
+                If a player presses the '<i>
+                #
+            </i>' key, a random selection is made for the round.
+            </li><li>
+                Pressing the '<i>
+                Control
+            </i>' key on the Play screen, displays the keys for the possible selections.
+            </li><li>
+                Pressing the '<i>
+                N
+            </i>' key on the Round Results screen, continues the match.
+            </li>
+            </ul>
+            <p></p>
+            </article></main>
+    </div>
+    <footer class="footer__footer">
+        <div class="div__copyright">
+            <p>© Ian Buttimer 2022</p>
+        </div>
+    </footer>
+
+    <script type="module" src="assets/js/script.js"></script>
+    <script src="lib/tingle.js/tingle.min.js" async="" defer=""></script>
+
+
+</body></html>

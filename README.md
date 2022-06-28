@@ -69,6 +69,7 @@ Together with `ASSETS_BASE_URL` and `ENABLE_LOG`, the following values may be us
   - `params` - game parameters view
   - `play` - game play view
   - `control` - view displayed is the result of processing input keys
+  - `rules` - game rules view
 - `INPUT`: a comma-separated list of game key characters representing player input. Possible values are:
   - alphabetic characters
   - modifier keys, `esc`, `alt`, `ctrl`, `meta`, `shift`
