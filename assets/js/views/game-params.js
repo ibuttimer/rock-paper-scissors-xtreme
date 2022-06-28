@@ -127,8 +127,9 @@ export default function gameParamsView(gameState) {
  * Apply settings and start game
  * @param {Event} event - HTMLElement: change event
  * @param {GameState} gameState - game state object
+ * @param {boolean} setPlayView - set the play view; default true
  */
-export function playGame(event, gameState) {
+export function playGame(event, gameState, setPlayView = true) {
 
     const playerCheck = persistPlayerNames(wip.playerArray);
     if (playerCheck.ok) {
@@ -148,7 +149,9 @@ export function playGame(event, gameState) {
         gameState.game.init(wip.numPlayers, wip.numRobots, players);
         gameState.startMatch();
 
-        setView(PLAY_URL, gameState);
+        if (setPlayView) {
+         setView(PLAY_URL, gameState);
+        }
     } else {
         // re-display players with errors
         displayPlayers(playerCheck.players, playerCheck.duplicates);

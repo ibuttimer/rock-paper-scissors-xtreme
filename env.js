@@ -12,6 +12,16 @@ export const NUM_PLAYERS_KEY = 'NUM_PLAYERS';
 export const NUM_ROBOTS_KEY = 'NUM_ROBOTS';
 export const NUM_GAMES_KEY = 'NUM_GAMES';
 export const VIEW_KEY = 'VIEW';
+export const INPUT_KEY = 'INPUT';
+export const ALL_KEYS = [
+    ENABLE_LOG_KEY, ASSETS_BASE_URL_KEY, VARIANT_KEY, NUM_PLAYERS_KEY, NUM_ROBOTS_KEY, NUM_GAMES_KEY, 
+    VIEW_KEY, INPUT_KEY
+];
+
+// values for 'VIEW_KEY'
+export const PARAMS_VIEW = 'params';
+export const PLAY_VIEW = 'play';
+export const CONTROL_VIEW = 'control';
 
 // check localStorage for a value (expecting '0' or '1') for ENABLE_LOG, if found use it otherwise set from environment constants
 /* Note: If the value passed as the first parameter is omitted or is 0, -0, null, false, NaN, undefined, 
@@ -27,9 +37,6 @@ let assetsBaseUrl = loadStorageString(ASSETS_BASE_URL_KEY);
 if (assetsBaseUrl === null) {
     assetsBaseUrl = 'assets/';
 }
-
-// clear local storage overrides for pristine start next time
-// [ENABLE_LOG_KEY, ASSETS_BASE_URL_KEY].forEach(key => localStorage.removeItem(key));
 
 export default {
     /** 
