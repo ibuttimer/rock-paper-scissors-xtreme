@@ -29,6 +29,11 @@ localStorage.setItem('NUM_GAMES', '5');
 /* Set the initial view, possible values are:
     'params' - params view
     'play' - play view
+    'control' - view displayed is result of processing 'INPUT'
 */
 localStorage.setItem('VIEW', 'params');
 
+/* Player input, a comma-separated list of game key characters. Possible values are:
+    alpha chars, 'esc', 'alt', 'ctrl', 'meta', 'shift' and modified alpha chars i.e. '{modifier}+{char} e.g. 'ctrl+n'
+    */
+localStorage.setItem('INPUT', 'r,p,s');

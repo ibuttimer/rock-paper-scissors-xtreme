@@ -16,6 +16,9 @@ The site is aimed at game enthusiasts and procrastinators.
 ### Features Left to Implement
 
 
+### Future enhancements
+- The [Demonstration](#demonstration) functionality is currently quite limited, this may be extended to allow simulation of actual gameplay.
+
 ## Design 
 The design specification is available in [design.md](design/design.md).
 
@@ -46,11 +49,35 @@ Update the file as required and run `git update-index --assume-unchanged env.js`
 See [git-update-index](https://git-scm.com/docs/git-update-index#Documentation/git-update-index.txt---no-assume-unchanged).
 
 ##### Local storage override
-Load a script, prior to `script.js` being loaded, which sets the following values in Window.localStorage:
+The local storage override facility may be used to change configuration values, as well as provide limited demonstration capabilities.
+This feature works by loading a script which sets specified values in window.localStorage, prior to `script.js` being loaded.
+
+###### Configuration override
+The following configuration values may be changed:
 - `ASSETS_BASE_URL`: the relative url to the assets folder
 - `ENABLE_LOG`: enable console logging flag; set '0' to disable and '1' to enable
 
-See [test-config.js](test/generated/test-config.js) and [main.html](test/generated/main.html).
+See [main.html](test/generated/main/main.html) and [test-main-config.js](test/generated/main/test-main-config.js).
+
+###### Demonstration
+Together with `ASSETS_BASE_URL` and `ENABLE_LOG`, the following values may be used to create a specific game status:
+- `VARIANT`: the game variant; valid options are `Basic`, `BigBang` and `Xtreme`
+- `NUM_PLAYERS`: the number of players
+- `NUM_ROBOTS`: the number of robots
+- `NUM_GAMES`: the number of games in the match
+- `VIEW`: the view to display; valid options are:
+  - `params` - game parameters view
+  - `play` - game play view
+  - `control` - view displayed is the result of processing input keys
+- `INPUT`: a comma-separated list of game key characters representing player input. Possible values are:
+  - alphabetic characters
+  - modifier keys, `esc`, `alt`, `ctrl`, `meta`, `shift`
+  - modified alphabetic characters i.e. '{modifier}+{char} e.g. 'ctrl+n'
+
+See [main.html](test/generated/win/basic-win.html) and [test-main-config.js](test/generated/win/test-win-config.js).
+
+> __Note:__ This functionality is presently limited to displaying the game parameters, game play and game result views. 
+> It is also limited to one round.
 
 ### Application structure
 The application structure is based on [React Architecture: How to Structure and Organize a React Application](https://www.taniarascia.com/react-architecture-directory-structure/).

@@ -73,6 +73,7 @@ function runGame() {
                 if (view === CONTROL_VIEW) {
 
                     gameState.selectionHandledCallback = (gameState, eventResult) => {
+                        // TODO support more than 1 round of play
                         if (!eventResult.roundInProgress) {
                             // round finished
                             setView(View.RoundResult, gameState);
