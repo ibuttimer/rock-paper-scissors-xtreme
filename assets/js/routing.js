@@ -6,6 +6,7 @@ import {
     ROOT_URL, BASIC_URL, BIGBANG_URL, XTREME_URL, PLAY_URL, ROUND_RESULT_URL,
     RULES_URL, log
 } from './globals.js';
+import { default as config } from '../../env.js'
 import { Enum } from './enums.js'
 import { 
     gameSelectMenu, setMenuHandler, gameParamsView, setParamsHandler,
@@ -23,11 +24,16 @@ let addedMenuEventHandlers = false;
 const mainElementId = 'main';
 const logoElementId = 'menu-logo';
 const rulesElementId = 'menu-rules';
+const settingsElementId = 'menu-settings';
 const hamburgerElementId = 'menu-hamburger';
+const hamburgerImgId = 'menu-hamburger-img';
 const rulesMenuId = 'menu-rules-div';
 const settingsMenuId = 'menu-settings-dropdown';
 const animationSettingElementId = 'animation-toggle-control';
 const soundSettingElementId = 'sound-toggle-control';
+const settingSwitches = [animationSettingElementId, soundSettingElementId];
+const hamburgerOpen = "open";
+const hamburgerClosed = "closed";
 
 /**
  * Enum representing views.
@@ -203,13 +209,19 @@ function addMenuEventHandlers(gameState) {
     const sound = document.getElementById("checkbox-sound");
     const animation = document.getElementById("checkbox-animation");
 
-    // Add handler to set initial state of toggle switches
+    const setInitial = (event) => {
+        sound.checked = gameState.soundEnabled;
+        animation.checked = gameState.animationEnabled;
+    };
+
+    // Add handlers to set initial state of toggle switches; 
+    // mouseover for desktop, click for mobile
     menu.addEventListener("mouseover", function( event ) {
         if (event.target.id === "menu-settings-dropdown") {
-            sound.checked = gameState.soundEnabled;
-            animation.checked = gameState.animationEnabled;
+            setInitial(event);
         }
     }, false);
+    document.getElementById(settingsElementId).addEventListener("click", setInitial, false);
 
     // Add toggle switches change handlers
     sound.addEventListener("change", function( event ) {
@@ -232,7 +244,7 @@ function addMenuEventHandlers(gameState) {
     document.getElementById(hamburgerElementId).addEventListener("click", function( event ) {
         let value = event.target.value ? event.target.value : event.currentTarget.value;
 
-        displayHamburger(value === "closed");   // display if closed, otherwise hide
+        displayHamburger(value === hamburgerClosed);   // display if closed, otherwise hide
     }, false);
 
 
@@ -241,7 +253,7 @@ function addMenuEventHandlers(gameState) {
         /* if the viewport is more than 370 pixels wide, hamburger not displayed, 
             so set value correctly in case window was resized with hamburger open */
         const value = document.getElementById(hamburgerElementId).getAttribute('value');
-        if (!event.matches && value === "open") {
+        if (!event.matches && value === hamburgerOpen) {
             displayHamburger(false);
         }
     });
@@ -263,7 +275,14 @@ function displayHamburger(display) {
         }
     });
 
-    document.getElementById(hamburgerElementId).setAttribute('value', display ? "open" : "closed");
+    document.getElementById(hamburgerElementId).setAttribute('value', display ? hamburgerOpen : hamburgerClosed);
+
+    const ariaLabel = `${display ? "close" : "open"} hamburger menu`;
+    let element = document.getElementById(hamburgerImgId);
+    element.setAttribute('src', `${config.IMG_ASSETS_BASE_URL}${display ? "menu-close.svg" : "menu-open.svg"}`);
+    element.setAttribute('alt', ariaLabel);
+
+    document.getElementById(hamburgerElementId).setAttribute('aria-label', ariaLabel);   
 }
 
 /**
@@ -284,7 +303,7 @@ function handleSettingChange(gameState, setting, enabled) {
  * @param {GameState} gameState - current game state
  */
 export function setSettingsAriaLabel(gameState) {
-    [animationSettingElementId, soundSettingElementId].forEach(id => {
+    settingSwitches.forEach(id => {
         const element = document.getElementById(id);
         if (element) {
             let value;

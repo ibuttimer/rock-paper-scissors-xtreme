@@ -292,7 +292,7 @@ table {
     :root {
         --std-margin-between: 8px;
 
-        --element-font-size: 0.9em;   /* 90% std size 1em */
+        --element-font-size: 0.95em;   /* 95% std size 1em */
     }
 
     .h1__main-title {
@@ -318,7 +318,7 @@ table {
     :root {
         --std-margin-between: 6px;
 
-        --element-font-size: 0.8em;   /* 80% std size 1em */
+        --element-font-size: 0.9em;   /* 90% std size 1em */
     }
 
     .h1__main-title {
@@ -344,7 +344,7 @@ table {
     :root {
         --std-margin-between: 5px;
 
-        --element-font-size: 0.7em;   /* 70% std size 1em */
+        --element-font-size: 0.85em;   /* 85% std size 1em */
     }
 
     .h1__main-title {
