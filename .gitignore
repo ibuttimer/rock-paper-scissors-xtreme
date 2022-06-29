@@ -32,3 +32,4 @@ __pycache__/
 cloudinary_python.txt
 *.code-workspace
 design/.$*.bkp
+design/.$*.dtmp

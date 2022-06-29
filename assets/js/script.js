@@ -99,7 +99,7 @@ function runGame() {
                 break;
         }
     } else {
-        view = View.GameMenu;
+        view = View.Landing;
     }
 
     if (view){

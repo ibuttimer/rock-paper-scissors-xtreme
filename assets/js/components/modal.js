@@ -29,8 +29,8 @@ export default function showModal(label, content, buttons = []) {
         beforeClose: function() {
             // here's goes some logic
             // e.g. save content before closing the modal
-            return true; // close the modal
-            return false; // nothing happens
+            // return true to close the modal, false to do nothing
+            return true;
         }
     });
 

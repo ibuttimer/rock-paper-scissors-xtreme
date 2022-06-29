@@ -1,0 +1,69 @@
+@import 'styles-base.css';
+
+/* custom properties */
+:root {
+    --var-num-games-input-border-radius: 6px;
+    
+    --var-input-margin: 1.5rem;
+    
+    --var-player-input-margin: 0.5rem;
+
+    --var-params-font-size: 1em;
+    
+    --var-border-colour: #213140;
+
+    --var-select-colour: var(--dark-blue);
+
+    --var-radio-active-colour: var(--light-blue-tone-2);
+    --var-radio-active-text-colour: var(--light-blue-text);
+}
+
+.div__landing-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.div__landing-play,
+.div__landing-how-to {
+    text-align: center;
+    margin: var(--var-input-margin) 0 var(--var-input-margin);
+}
+
+.button__select-game,
+.button__how-to {
+    width: 200px;
+}
+
+/* media queries */
+
+/* small-medium screens, 650px wide or less */ 
+@media screen and (max-width: 650px) {
+    .button__select-game,
+    .button__how-to {
+        width: 180px;
+    }
+}
+
+/* tiny-small screens, 450px wide or less */ 
+@media screen and (max-width: 450px) {
+    .button__select-game,
+    .button__how-to {
+        width: 160px;
+    }
+}
+
+/* tiny-small screens, 280px wide or less */ 
+@media screen and (max-width: 280px) {
+    .button__select-game,
+    .button__how-to {
+        width: 60%;
+    }
+}
+
+/* tiny screens, 200px wide or less */ 
+@media screen and (max-width: 200px) {
+    .button__select-game,
+    .button__how-to {
+        width: 50%;
+    }
+}

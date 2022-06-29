@@ -84,6 +84,15 @@ Wireframes of page layouts are as followings:
 ## Home page
 
 The Home page will have the following features:
+- The option to start playing a game or get how to play instructions
+
+| Large screen | Small screen |
+|-|-|
+|![](img/rps-xtreme-landing-large.drawio.png)|![](img/rps-xtreme-landing-small.drawio.png)|
+
+## Game Select page
+
+The Game Select page will have the following features:
 - The option to select which game variant to play
 
 | Large screen | Small screen |

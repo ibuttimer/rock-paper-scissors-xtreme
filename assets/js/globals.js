@@ -50,6 +50,8 @@ function makePath() {
 }
 
 export const ROOT_URL = '/';
+export const GAME_ROUTE = 'game';
+export const GAME_URL = makePath(GAME_ROUTE);
 export const RULES_ROUTE = 'rules';
 export const RULES_URL = makePath(RULES_ROUTE);
 export const BASIC_ROUTE = 'basic';

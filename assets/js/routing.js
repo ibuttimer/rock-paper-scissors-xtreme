@@ -3,15 +3,15 @@
     @author Ian Buttimer
 */
 import { 
-    ROOT_URL, BASIC_URL, BIGBANG_URL, XTREME_URL, PLAY_URL, ROUND_RESULT_URL,
-    RULES_URL, log
+    ROOT_URL, GAME_URL, BASIC_URL, BIGBANG_URL, XTREME_URL, PLAY_URL, 
+    ROUND_RESULT_URL, RULES_URL, log
 } from './globals.js';
 import { default as config } from '../../env.js'
 import { Enum } from './enums.js'
 import { 
-    gameSelectMenu, setMenuHandler, gameParamsView, setParamsHandler,
-    gamePlayView, setPlayHandler, roundResultView, setRoundResultHandler,
-    rulesView, setRulesHandler
+    landingPage, setLandingHandler, gameSelectMenu, setMenuHandler, 
+    gameParamsView, setParamsHandler, gamePlayView, setPlayHandler, 
+    roundResultView, setRoundResultHandler, rulesView, setRulesHandler
 } from './views/index.js'
 import { htmlP, savePreferences } from './utils/index.js'
 import { showYesNoModal, MODAL_YES } from './components/index.js'
@@ -41,6 +41,7 @@ const hamburgerClosed = "closed";
  export class View extends Enum {
     // freeze views so can't be modified
     /** All active players, play again */
+    static Landing = Object.freeze(new View('Landing'));
     static GameMenu = Object.freeze(new View('GameMenu'));
     static BasicGame = Object.freeze(new View('BasicGame'));
     static BigBangGame = Object.freeze(new View('BigBangGame'));
@@ -68,7 +69,8 @@ const hamburgerClosed = "closed";
 
 /** Application routes */
 const routes = new Map([
-    [ROOT_URL, View.GameMenu],
+    [ROOT_URL, View.Landing],
+    [GAME_URL, View.GameMenu],
     [BASIC_URL, View.BasicGame],
     [BIGBANG_URL, View.BigBangGame],
     [XTREME_URL, View.XtremeGame],
@@ -118,11 +120,16 @@ export function setView(view, gameState) {
         let toHome = 'goto';    // default navigate to home
 
         switch (view) {
+            case View.Landing:
+                innerHTML = landingPage();
+                setClickHandler = setLandingHandler;
+                page = 'current';
+                toHome = '';
+                break;
             case View.GameMenu:
                 innerHTML = gameSelectMenu();
                 setClickHandler = setMenuHandler;
-                page = 'current';
-                toHome = '';
+                page = 'game selection';
                 break;
             case View.BasicGame:
             case View.BigBangGame:
