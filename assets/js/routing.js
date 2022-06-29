@@ -23,6 +23,9 @@ let addedMenuEventHandlers = false;
 const mainElementId = 'main';
 const logoElementId = 'menu-logo';
 const rulesElementId = 'menu-rules';
+const hamburgerElementId = 'menu-hamburger';
+const rulesMenuId = 'menu-rules-div';
+const settingsMenuId = 'menu-settings-dropdown';
 const animationSettingElementId = 'animation-toggle-control';
 const soundSettingElementId = 'sound-toggle-control';
 
@@ -163,6 +166,8 @@ export function setView(view, gameState) {
         element.setAttribute('aria-label', 
             view === View.Rules ? `current page, rules.` : `goto rules page.`);
     
+        displayHamburger(false);
+
         // add handlers
         if (setClickHandler) {
             setClickHandler(gameState);
@@ -223,7 +228,42 @@ function addMenuEventHandlers(gameState) {
         }, false);
     })
 
+    // Add hamburger click handler
+    document.getElementById(hamburgerElementId).addEventListener("click", function( event ) {
+        let value = event.target.value ? event.target.value : event.currentTarget.value;
+
+        displayHamburger(value === "closed");   // display if closed, otherwise hide
+    }, false);
+
+
+    var mql = window.matchMedia('(max-width: 370px)');
+    mql.addEventListener('change', (event) => {
+        /* if the viewport is more than 370 pixels wide, hamburger not displayed, 
+            so set value correctly in case window was resized with hamburger open */
+        const value = document.getElementById(hamburgerElementId).getAttribute('value');
+        if (!event.matches && value === "open") {
+            displayHamburger(false);
+        }
+    });
+
     addedMenuEventHandlers = true;
+}
+
+/**
+ * Display the hamburger menu
+ * @param {boolean} display - display flag
+ */
+function displayHamburger(display) {
+    [rulesMenuId, settingsMenuId].forEach(id => {
+        const element = document.getElementById(id);
+        if (display) {
+            element.classList.add('div__menu-link-show');
+        } else {
+            element.classList.remove('div__menu-link-show')
+        }
+    });
+
+    document.getElementById(hamburgerElementId).setAttribute('value', display ? "open" : "closed");
 }
 
 /**

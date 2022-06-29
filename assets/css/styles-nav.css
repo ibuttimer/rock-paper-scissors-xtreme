@@ -1,7 +1,5 @@
 @import 'styles-base.css';
 
-/* TODO navbar hamburger */
-
 /* custom properties */
 :root {
     --menu-item-padding: 120px;
@@ -44,7 +42,10 @@
 .ul__menu-row {
     width: 90%;
     list-style-type: none;
-    text-align: end;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
 }
 
 .li__menu-item {
@@ -53,11 +54,16 @@
     font-size: var(--menu-list-font-size);
 }
 
-.div__menu-link {
+.div__menu-link,
+.div__hamburger-link {
     display: block;
     text-decoration: none;
     padding: var(--std-padding-vert) var(--std-padding-horz);
     color: var(--menu-color);
+}
+
+.div__hamburger-link {
+    display: none;
 }
 
 .button__logo {
@@ -198,6 +204,28 @@
         --menu-list-font-size: 0.9rem;
         --menu-dropdown-font-size: 0.8rem;
     }
+}
+
+/* tiny-small screens, 370px wide or less */ 
+@media screen and (max-width: 370px) {
+    .nav__top {
+        align-items: flex-start;
+    }
+    .ul__menu-row {
+        flex-direction: column;
+        align-items: end;
+    }
+    .div__hamburger-link {
+        display: block;
+    }
+    .div__menu-link {
+        display: none;
+    }
+}
+
+/* needs to be below media query hiding menu items, so it has precedence over media query when applied */
+.div__menu-link-show {
+    display: block;
 }
 
 /* tiny-small screens, 280px wide or less */ 
