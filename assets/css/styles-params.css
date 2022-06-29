@@ -147,9 +147,6 @@
     margin-top: var(--var-input-margin);
 }
 
-.div__player-name-group-wrapper {
-}
-
 .div__player-name-wrapper {
     display: flex;
     flex-direction: row;
@@ -266,5 +263,12 @@
 
     .button__play {
         width: 60%;
+    }
+}
+
+/* tiny screens, 200px wide or less */ 
+@media screen and (max-width: 200px) {
+    .button__play {
+        width: 50%;
     }
 }

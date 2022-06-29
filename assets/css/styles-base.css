@@ -131,7 +131,7 @@ table {
 
 .button__clickable {
     border: 0;
-    line-height: 2.5;
+    height: 35px;
     padding: 0 20px;
     font-size: var(--element-font-size);
     text-align: center;
@@ -280,6 +280,13 @@ table {
 
 /* media queries */
 
+/* small-medium screens, 700px high or less */ 
+@media screen and (max-height: 700px) {
+    :root {
+        --std-padding-vert: 8px;
+    }
+}
+
 /* small-medium screens, 650px wide or less */ 
 @media screen and (max-width: 650px) {
     :root {
@@ -296,6 +303,13 @@ table {
     }
     .h3__sub-title {
         font-size: 1.05em;  /* 90% std size 1.17em */
+    }
+}
+
+/* tiny-small screens, 500px high or less */ 
+@media screen and (max-height: 500px) {
+    :root {
+        --std-padding-vert: 6px;
     }
 }
 
@@ -318,6 +332,13 @@ table {
     }
 }
 
+/* tiny-small screens, 300px high or less */ 
+@media screen and (max-height: 300px) {
+    :root {
+        --std-padding-vert: 4px;
+    }
+}
+
 /* tiny-small screens, 280px wide or less */ 
 @media screen and (max-width: 280px) {
     :root {
@@ -334,26 +355,5 @@ table {
     }
     .h3__sub-title {
         font-size: 0.82em;  /* 70% std size 1.17em */
-    }
-}
-
-/* small-medium screens, 700px high or less */ 
-@media screen and (max-height: 700px) {
-    :root {
-        --std-padding-vert: 8px;
-    }
-}
-
-/* tiny-small screens, 500px high or less */ 
-@media screen and (max-height: 500px) {
-    :root {
-        --std-padding-vert: 6px;
-    }
-}
-
-/* tiny-small screens, 300px high or less */ 
-@media screen and (max-height: 300px) {
-    :root {
-        --std-padding-vert: 4px;
     }
 }

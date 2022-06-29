@@ -130,6 +130,15 @@
     .button__round-result-next-round,
     .button__round-result-next-game,
     .button__round-result-done {
-        width: 140px;
+        width: 60%;
+    }
+}
+
+/* tiny screens, 200px wide or less */ 
+@media screen and (max-width: 200px) {
+    .button__round-result-next-round,
+    .button__round-result-next-game,
+    .button__round-result-done {
+        width: 50%;
     }
 }
