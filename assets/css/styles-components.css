@@ -82,13 +82,6 @@
 }
 
 /* leader board component */
-.div__leader-board-wrapper {
-}
-
-.tr__player-score-row {
-
-}
-
 .table__leader-board, 
 .td__player-name,
 .td__player-score {
@@ -121,9 +114,6 @@
     text-align: center;
     width: var(--var-result-selection-tile-size);
     background-image: none;
-}
-
-.div__play-sel-tile-wrapper:hover {
 }
 
 .img__play-sel-tile-img {
@@ -190,8 +180,9 @@
         --var-result-selection-tile-padding: 6px;
 
         --font-size-factor: 0.8;
-        /* --h3-selection-tile-font-size: 0.93em;  80% std size 1.17em */
-        /* --h4-selection-tile-font-size: 0.8em;   80% std size 1em */
+
+        --game-progress-title-size: 70px;
+        --game-progress-entry-size: 110px;
     }
 
     .h4__play-sel-tile-med {
@@ -217,6 +208,9 @@
         --var-result-selection-tile-img-size: 30px;
 
         --var-result-selection-tile-padding: 10px;
+
+        --game-progress-title-size: 60px;
+        --game-progress-entry-size: 100px;
     }
 
     .h4__play-sel-tile-name {
