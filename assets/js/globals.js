@@ -21,7 +21,7 @@ export const MAX_PARTICIPANTS = MAX_PLAYERS + MAX_ROBOTS;
 export const MIN_GAMES = 1;
 export const MAX_GAMES = 15;
 export const DEFAULT_GAMES = 3;
-export const DEFAULT_SOUND_SETTING = true;
+export const DEFAULT_SOUND_SETTING = false;
 export const DEFAULT_ANIMATION_SETTING = true;
 
 export const PLAYER_COLOURS = [
