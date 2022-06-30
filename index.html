@@ -34,62 +34,61 @@
 
 <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div class="div__content">
-        <header>
-            <nav class='nav__top'>
-                <div class='div__logo'>
-                    <button type="button" class='button__logo'  id="menu-logo" value="/" 
-                            aria-label='logo, current page, home.'>
-                        <img src='android-chrome-192x192.png' width='28' height='28'
-                                class="img_logo" alt='logo'/>
-                    </button>
-                </div>
-                <ul class='ul__menu-row' id="menu-list">
-                    <li class='li__menu-item' id="menu-hamburger-option">
-                        <div class="div__hamburger-link">
-                            <button id="menu-hamburger" type="button" class='button__menu' value="closed" aria-label='open hamburger menu.'>
-                                <img id="menu-hamburger-img" src="assets/img/menu-open.svg" width='28' height='28' alt="open hamburger menu"/>
-                            </button>
-                        </div>
-                    </li>
-                    <li class='li__menu-item' id="menu-rules-option">
-                        <div class="div__menu-link" id="menu-rules-div">
-                            <button id="menu-rules" type="button" class='button__menu' value="/rules" aria-label='goto rules page.'>
-                                <i class='lni lni-book'></i>&nbsp;Rules
-                            </button>
-                        </div>
-                    </li>
-                    <li class='li__menu-item' id="menu-settings-option">
-                        <div class="div__dropdown div__menu-link" id="menu-settings-dropdown">
-                            <button id="menu-settings" type="button" class="button__menu" aria-label='goto settings menu.'>
-                                <i class='lni lni-cog'></i>&nbsp;Settings
-                            </button>
-                            <div class="div__dropdown-content">
-                                <div class="div__setting-option-wrapper">
-                                    <div class="div__setting-option">
-                                        <p>Enable animation</p>
-                                        <label class="label__toggle-control">
-                                            <input type="checkbox" id="checkbox-animation" value="animation">
-                                            <span id="animation-toggle-control" class="span_control" role="checkbox" aria-checked="false" aria-label="animation setting"></span>
-                                        </label>
-                                    </div>
+    <header>
+        <nav class='nav__top'>
+            <div class='div__logo'>
+                <button type="button" class='button__logo'  id="menu-logo" value="/" 
+                        aria-label='logo, current page, home.'>
+                    <img src='android-chrome-192x192.png' width='28' height='28'
+                            class="img_logo" alt='logo'/>
+                </button>
+            </div>
+            <ul class='ul__menu-row' id="menu-list">
+                <li class='li__menu-item' id="menu-hamburger-option">
+                    <div class="div__hamburger-link">
+                        <button id="menu-hamburger" type="button" class='button__menu' value="closed" aria-label='open hamburger menu.'>
+                            <img id="menu-hamburger-img" src="assets/img/menu-open.svg" width='28' height='28' alt="open hamburger menu"/>
+                        </button>
+                    </div>
+                </li>
+                <li class='li__menu-item' id="menu-rules-option">
+                    <div class="div__menu-link" id="menu-rules-div">
+                        <button id="menu-rules" type="button" class='button__menu' value="/rules" aria-label='goto rules page.'>
+                            <i class='lni lni-book'></i>&nbsp;Rules
+                        </button>
+                    </div>
+                </li>
+                <li class='li__menu-item' id="menu-settings-option">
+                    <div class="div__dropdown div__menu-link" id="menu-settings-dropdown">
+                        <button id="menu-settings" type="button" class="button__menu" aria-label='goto settings menu.'>
+                            <i class='lni lni-cog'></i>&nbsp;Settings
+                        </button>
+                        <div class="div__dropdown-content">
+                            <div class="div__setting-option-wrapper">
+                                <div class="div__setting-option">
+                                    <p>Enable animation</p>
+                                    <label class="label__toggle-control">
+                                        <input type="checkbox" id="checkbox-animation" value="animation">
+                                        <span id="animation-toggle-control" class="span_control" role="checkbox" aria-checked="false" aria-label="animation setting"></span>
+                                    </label>
                                 </div>
-                                <div class="div__setting-option-wrapper">
-                                    <div class="div__setting-option">
-                                        <p>Enable sound</p>
-                                        <label class="label__toggle-control">
-                                            <input type="checkbox" id="checkbox-sound" value="sound">
-                                            <span id="sound-toggle-control" class="span_control" role="checkbox" aria-checked="false" aria-label="animation setting"></span>
-                                        </label>
-                                    </div>
+                            </div>
+                            <div class="div__setting-option-wrapper">
+                                <div class="div__setting-option">
+                                    <p>Enable sound</p>
+                                    <label class="label__toggle-control">
+                                        <input type="checkbox" id="checkbox-sound" value="sound">
+                                        <span id="sound-toggle-control" class="span_control" role="checkbox" aria-checked="false" aria-label="animation setting"></span>
+                                    </label>
                                 </div>
                             </div>
                         </div>
-                    </li>
-                </ul>
-            </nav>
-        </header>
-
+                    </div>
+                </li>
+            </ul>
+        </nav>
+    </header>
+    <div class="div__content">
         <main id="main">
             <!-- content of main will be replaced by JavaScript -->
         </main>

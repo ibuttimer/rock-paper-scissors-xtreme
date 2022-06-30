@@ -21,6 +21,7 @@
 .div__landing-content {
     display: flex;
     flex-direction: column;
+    margin-top: var(--var-input-margin);
 }
 
 .div__landing-play,
@@ -32,6 +33,15 @@
 .button__select-game,
 .button__how-to {
     width: 200px;
+    height: 100px;
+}
+
+.button__select-game {
+    background-color: var(--light-blue);
+}
+
+.button__how-to {
+    background-color: var(--yellow);
 }
 
 /* media queries */
@@ -41,6 +51,7 @@
     .button__select-game,
     .button__how-to {
         width: 180px;
+        height: 90px;
     }
 }
 
@@ -49,6 +60,7 @@
     .button__select-game,
     .button__how-to {
         width: 160px;
+        height: 80px;
     }
 }
 
@@ -57,6 +69,10 @@
     .button__select-game,
     .button__how-to {
         width: 60%;
+        height: 70px;
+    }
+    .button__clickable {
+        padding: 0 15px;
     }
 }
 
@@ -65,5 +81,10 @@
     .button__select-game,
     .button__how-to {
         width: 50%;
+        height: 60px;
+    }
+
+    .button__clickable {
+        padding: 0 10px;
     }
 }
