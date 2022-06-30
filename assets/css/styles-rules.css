@@ -1,9 +1,4 @@
-@import 'styles-base.css';
-
-/* custom properties */
-:root {
-    
-}
+/* Styles related to rules page */
 
 .h3__rules-heading {
     line-height: 2;

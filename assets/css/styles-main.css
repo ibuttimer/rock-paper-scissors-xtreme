@@ -1,4 +1,4 @@
-@import 'styles-base.css';
+/* Styles related to main game select page */
 
 /* custom properties */
 :root {
@@ -43,10 +43,6 @@
 
 .div__variant-select {
     text-align: center;
-}
-
-.button__variant-select {
-    background-color: transparent;
 }
 
 /* media queries */

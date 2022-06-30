@@ -1,11 +1,10 @@
-@import 'styles-base.css';
+/* Styles related to footer */
 
 /* custom properties */
 :root {
     --footer-height: 50px;
     --footer-height-padded: calc(var(--footer-height) + (2 * var(--std-padding-vert)))
 }
-
 
 /* sticky footer courtesy of
   https://css-tricks.com/couple-takes-sticky-footer/#aa-there-is-flexbox */

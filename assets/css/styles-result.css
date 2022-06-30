@@ -1,9 +1,4 @@
-@import 'styles-base.css';
-
-/* custom properties */
-:root {
-
-}
+/* Styles related to result page */
 
 .div__round-result-leader-board {
     display: flex;
