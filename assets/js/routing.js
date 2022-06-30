@@ -99,6 +99,7 @@ export function setView(view, gameState) {
     }
 
     switch (view) {
+        case View.Landing:
         case View.GameMenu:
         case View.Rules:
             if (gameState.isMatchInProgress) {

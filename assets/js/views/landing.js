@@ -23,7 +23,7 @@ export default function landingPage() {
                 htmlSection([],
                     htmlH2(['h2__sub-title'], "I know what I'm doing") +
                     htmlDiv('div__landing-play', 
-                        htmlButton(['button__select-game', 'button__clickable', 'background-color__variant_basic', 'debossable'], "Let's Play", {
+                        htmlButton(['button__select-game', 'button__clickable', 'debossable'], "Let's Play", {
                             id: gameButtonId,
                             'aria-label': 'select game to play.',
                             value: GAME_URL
@@ -33,7 +33,7 @@ export default function landingPage() {
                 htmlSection([],
                     htmlH2(['h2__sub-title'], "So how does this work then?") +
                     htmlDiv('div__landing-how-to', 
-                        htmlButton(['button__how-to', 'button__clickable', 'background-color__variant_basic', 'debossable'], "How to Play", {
+                        htmlButton(['button__how-to', 'button__clickable', 'debossable'], "How to Play", {
                             id: rulesButtonId,
                             'aria-label': 'how to play the game.',
                             value: RULES_URL
