@@ -10,7 +10,7 @@ import { Player, Robot } from '../player.js';
 import { default as titleHeader } from '../components/title.js'
 import { 
     generateId, optionsList, accumulator, adjustArray, htmlH4, htmlSelect, htmlDiv, 
-    htmlButton, htmlInput, htmlLabel, log
+    htmlButton, htmlInput, htmlLabel, log, ViewDetail
 } from '../utils/index.js';
 import { setView } from '../routing.js'
 import { GameMode } from '../enums.js';
@@ -87,11 +87,22 @@ let wip = {
 }
 
 /**
+ * Get the game params view details.
+ * @param {GameState} gameState - game state object
+ * @returns {ViewDetail} view details
+ */
+ export default function gameParamsViewDetails(gameState) {
+
+    return new ViewDetail(gameParamsViewHtml(gameState))
+                .setEventHandlerSetter(setParamsHandler);
+}
+
+/**
  * Generate the game parameters view.
  * @param {GameState} gameState - game state object
  * @returns {string} html game parameters view
  */
-export default function gameParamsView(gameState) {
+function gameParamsViewHtml(gameState) {
 
     // set initial working values
     wip.numPlayers = gameState.game.numPlayers;
@@ -586,7 +597,7 @@ function playerNames(playerArray, errorIndices) {
  * Set handlers for game parameters
  * @param {GameState} gameState - game state object
  */
-export function setParamsHandler(gameState) {
+function setParamsHandler(gameState) {
     [   // num games
         [numPlayersId, setNumPlayers],
         [numRobotsId, setNumRobots],

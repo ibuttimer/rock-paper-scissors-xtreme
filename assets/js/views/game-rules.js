@@ -10,7 +10,7 @@ import {
 import { 
     htmlP, htmlA, htmlLi, htmlUl, accumulator, htmlDiv, htmlButton,
     htmlTable, htmlThead, htmlTbody, htmlTh, htmlTr, htmlTd, 
-    htmlArticle, htmlH3, htmlI
+    htmlArticle, htmlH3, htmlI, ViewDetail
 } from '../utils/index.js'
 import { GameVariant, Rule } from '../game.js'
 import { Selection } from '../enums.js'
@@ -224,11 +224,22 @@ ${htmlUl(['ul__keys-info'], keysItems())}`);
 const h3Heading = (innerHtml, attribs = {}) => htmlH3(['h3__rules-heading'], innerHtml, attribs)
 
 /**
+ * Get the rules view details.
+ * @param {GameState} gameState - game state object
+ * @returns {ViewDetail} view details
+ */
+ export default function gameRulesViewDetails(gameState) {
+
+    return new ViewDetail(rulesViewHtml(gameState))
+                .setEventHandlerSetter(setRulesHandler);
+}
+
+/**
  * Generate the rules view.
  * @param {GameState} gameState - game state object
  * @returns {string} html for view
  */
- export default function rulesView(gameState) {
+function rulesViewHtml(gameState) {
     return htmlArticle([], 
         `${h3Heading('Introduction')}
         ${intro}
@@ -261,7 +272,7 @@ const h3Heading = (innerHtml, attribs = {}) => htmlH3(['h3__rules-heading'], inn
  * Set handlers for rules
  * @param {GameState} gameState - game state object
  */
- export function setRulesHandler(gameState) {
+function setRulesHandler(gameState) {
     [playBasicButtonId, playBigBangButtonId, playXtremeButtonId].forEach(id => {
         const button = document.getElementById(id);
         if (button) {

@@ -7,7 +7,7 @@ import {
     XTREME_URL, XTREME_VARIANT_NAME
 } from '../globals.js';
 import { default as config } from '../../../env.js';
-import { log } from '../utils/index.js'
+import { log, ViewDetail } from '../utils/index.js'
 import { GameVariant } from '../game.js';
 import { setView } from '../routing.js'
 import { 
@@ -62,10 +62,21 @@ const gameSelects = gameParams.map(params => {
 })
 
 /**
+ * Get the game select view details.
+ * @param {GameState} gameState - game state object
+ * @returns {ViewDetail} view details
+ */
+ export default function gameSelectViewDetails(gameState) {
+
+    return new ViewDetail(gameSelectMenuHtml())
+                .setEventHandlerSetter(setMenuHandler);
+}
+
+/**
  * Generate the game select menu.
  * @returns {string} html for menu
  */
-export default function gameSelectMenu() {
+function gameSelectMenuHtml() {
     return htmlH1(['h1__main-title'], GAME_NAME) +
             htmlSection([],
                 htmlH2(['h2__sub-title'], 'Select game') +
@@ -182,7 +193,7 @@ function getGameTile(params) {
  * Set click handlers for game select menu
  * @param {GameState} gameState - game state object
  */
-export function setMenuHandler(gameState) {
+function setMenuHandler(gameState) {
     const buttons = document.getElementsByClassName('button__variant-select');
     for (const button of buttons) {
         button.addEventListener('click', (event) => gameMenuHandler(event, gameState), false);

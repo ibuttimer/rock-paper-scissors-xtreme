@@ -14,3 +14,4 @@ export {
 export { 
     loadPreferences, savePreferences, loadStorageBoolean, loadStorageInteger, loadStorageString 
 } from './storage.js'
+export { ViewDetail } from './view-detail.js'

@@ -5,7 +5,7 @@
 import { ROUND_RESULT_URL, SHOW_SEL_KEYS_PROPERTY } from '../globals.js';
 import { titleHeader, currentPlayerNameHeader, gameProgress } from '../components/index.js'
 import { 
-    accumulator, htmlDiv, htmlImg, htmlH4, htmlP, htmlSection, 
+    accumulator, htmlDiv, htmlImg, htmlH4, htmlP, htmlSection, ViewDetail,
     addElementClass, removeElementClass, replaceElementClass, delay, log 
 } from '../utils/index.js';
 import { setView } from '../routing.js'
@@ -21,11 +21,24 @@ const out_animation = 'animate__fade-out';
 const animation_time = 500;    // animation time in msecs
 
 /**
+ * Get the game play view details.
+ * @param {GameState} gameState - game state object
+ * @returns {ViewDetail} view details
+ */
+ export default function gamePlayViewDetails(gameState) {
+
+    return new ViewDetail(gamePlayViewHtml(gameState))
+                .setObserver(new MutationObserver(playMutationsCallback), playMutationObserverConfig)
+                .setSettingListener(playSettingsChangeListener)
+                .setEventHandlerSetter(setPlayHandler);
+}
+
+/**
  * Generate the game play view.
  * @param {GameState} gameState - game state object
  * @returns {string} html for view
  */
- export default function gamePlayView(gameState) {
+ function gamePlayViewHtml(gameState) {
 
     gameState.selectionHandledCallback = handleSelectionCallback;
 
@@ -39,7 +52,7 @@ const animation_time = 500;    // animation time in msecs
             })}
             ${htmlSection(['section__select-play'], 
                 getSelections(gameState, tileClass))}`;
-        }
+}
 
 /**
  * Generate the selection options
@@ -151,7 +164,7 @@ export function handleSelectionCallback(gameState, eventResult) {
  * @param {GameState} gameState - game state object
  * @return {object} event handlers
  */
-export function setPlayHandler(gameState) {
+function setPlayHandler(gameState) {
     for (const tile of allSelectionTiles()) {
         tile.addEventListener('click', (event) => gamePlayHandler(event, gameState), false);
     }
@@ -183,7 +196,10 @@ const allSelectionTiles = () => {
     }
 }
 
-// Options for the observer (which mutations to observe)
+/**
+ * Options for the observer (which mutations to observe)
+ * @see {@link https://dom.spec.whatwg.org/#dictdef-mutationobserverinit}
+ */
 const playMutationObserverConfig = { attributes: true, childList: true, subtree: true };
 
 /**

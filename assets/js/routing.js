@@ -10,11 +10,9 @@ import {
 import { default as config } from '../../env.js'
 import { Enum } from './enums.js'
 import { 
-    landingPage, setLandingHandler, gameSelectMenu, setMenuHandler, 
-    gameParamsView, setParamsHandler, gamePlayView, setPlayHandler, 
-    roundResultView, setRoundResultHandler, rulesView, setRulesHandler
+    landingView, gameSelectView, gameParamsView, gamePlayView, roundResultView, gameRulesView
 } from './views/index.js'
-import { htmlP, savePreferences, log } from './utils/index.js'
+import { htmlP, savePreferences, log, ViewDetail } from './utils/index.js'
 import { showYesNoModal, MODAL_YES } from './components/index.js'
 import { GameVariant } from './game.js'
 
@@ -106,24 +104,10 @@ const routes = new Map([
  */
 export function setView(view, gameState) {
     /**
-     * Html for view, return value of function with prototype
-     * 
-     *  function(): @type {string}
+     * View details
+     * @type {ViewDetail}
      */
-    let innerHTML;
-    /**
-     * Function to set required event handlers with prototype
-     * 
-     *  function(gameState: @type {GameState}, mainElement: @type {Element}): @type {object|null}
-     * 
-     * Return object should have the following properties:
-     * @type {MutationObserver} observer - MutationObserver to observe the main element
-     * @type {object} options - options for the observer @see {@link https://dom.spec.whatwg.org/#dictdef-mutationobserverinit}
-     * @type {function} settingListener - settings change listener with prototype
-     * 
-     *  listener(property: @type {string}, value: @type {boolean})  
-     */
-    let setEventHandlers;
+    let viewDetails;
     let process = true;
 
     if (typeof view === 'string') {
@@ -163,14 +147,12 @@ export function setView(view, gameState) {
 
         switch (view) {
             case View.Landing:
-                innerHTML = landingPage();
-                setEventHandlers = setLandingHandler;
+                viewDetails = landingView(gameState);
                 page = 'current';
                 toHome = '';
                 break;
             case View.GameMenu:
-                innerHTML = gameSelectMenu();
-                setEventHandlers = setMenuHandler;
+                viewDetails = gameSelectView(gameState);
                 page = 'game selection';
                 break;
             case View.BasicGame:
@@ -187,23 +169,19 @@ export function setView(view, gameState) {
                     page = 'extreme';
                 }
 
-                innerHTML = gameParamsView(gameState);
-                setEventHandlers = setParamsHandler;
+                viewDetails = gameParamsView(gameState);
                 page = `${page} game parameters`;
                 break;
             case View.Play:
-                innerHTML = gamePlayView(gameState);
-                setEventHandlers = setPlayHandler;
+                viewDetails = gamePlayView(gameState);
                 page = 'play';
                 break;
             case View.RoundResult:
-                innerHTML = roundResultView(gameState);
-                setEventHandlers = setRoundResultHandler;
+                viewDetails = roundResultView(gameState);
                 page = 'results';
                 break;
             case View.Rules:
-                innerHTML = rulesView(gameState);
-                setEventHandlers = setRulesHandler;
+                viewDetails = gameRulesView(gameState);
                 page = 'rules';
                 break;
             default:
@@ -215,7 +193,7 @@ export function setView(view, gameState) {
 
         // set view html
         const mainElement = document.getElementById(mainElementId);
-        mainElement.innerHTML = innerHTML;
+        mainElement.innerHTML = viewDetails.html;
 
         // set aria-label for menu items
         let element = document.getElementById(logoElementId);
@@ -230,19 +208,15 @@ export function setView(view, gameState) {
         if (!addedMenuEventHandlers) {
             addMenuEventHandlers(gameState);
         }
-        if (setEventHandlers) {
-            const viewObservers = setEventHandlers(gameState);
-            if (viewObservers) {
-                if (viewObservers.hasOwnProperty('observer') && viewObservers.hasOwnProperty('options')) {
-                    // Start observing the target node for configured mutations
-                    viewObservers.observer.observe(mainElement, viewObservers.options);
-                    gameState.mutationObserver = viewObservers.observer;
-                }
-
-                if (viewObservers.hasOwnProperty('settingListener')) {
-                    gameState.settingChangeSubscription.registerListener(viewObservers.settingListener);
-                }
-            }
+        if (viewDetails.eventHandlerSetter) {
+            viewDetails.eventHandlerSetter(gameState);
+        }
+        if (viewDetails.observer) {
+            viewDetails.observer.observe(mainElement, viewDetails.observerOptions);
+            gameState.mutationObserver = viewDetails.observer;
+        }
+        if (viewDetails.settingListener) {
+            gameState.settingChangeSubscription.registerListener(viewDetails.settingListener);
         }
     }
 }

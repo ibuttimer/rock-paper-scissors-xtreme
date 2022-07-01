@@ -5,17 +5,28 @@
 import { GAME_NAME, GAME_URL, RULES_URL } from '../globals.js';
 import { setView } from '../routing.js'
 import { 
-    htmlDiv, htmlButton, htmlH1, htmlH2, htmlSection 
+    htmlDiv, htmlButton, htmlH1, htmlH2, htmlSection, ViewDetail 
 } from '../utils/index.js'
 
 const gameButtonId = 'game-select-button';
 const rulesButtonId = 'game-rules-button';
 
 /**
+ * Get the landing view details.
+ * @param {GameState} gameState - game state object
+ * @returns {ViewDetail} view details
+ */
+ export default function gameLandingViewDetails(gameState) {
+
+    return new ViewDetail(landingPageHtml())
+                .setEventHandlerSetter(setLandingHandler);
+}
+
+/**
  * Generate the landing menu.
  * @returns {string} html for menu
  */
-export default function landingPage() {
+function landingPageHtml() {
     return htmlH1(['h1__main-title'], GAME_NAME) +
             htmlDiv('div__landing-content',
                 htmlSection([],
@@ -45,7 +56,7 @@ export default function landingPage() {
  * Set click handlers for landing menu
  * @param {GameState} gameState - game state object
  */
-export function setLandingHandler(gameState) {
+function setLandingHandler(gameState) {
 
     const buttons = [gameButtonId, rulesButtonId].map(id => document.getElementById(id));
     for (const button of buttons) {

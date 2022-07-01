@@ -7,7 +7,7 @@ import {
     titleHeader, gameProgress, leaderBoard, playerSelectionTile, getPlayerSelectionTileParam
 } from '../components/index.js'
 import { 
-    accumulator, htmlDiv, htmlButton, htmlSection, htmlAside, htmlH3, htmlP 
+    accumulator, htmlDiv, htmlButton, htmlSection, htmlAside, htmlH3, htmlP, ViewDetail 
 } from '../utils/index.js';
 import { SELECTION_TILE_DIV_PROP } from './game-params.js'
 
@@ -40,11 +40,22 @@ const resultTexts = new Map([
 ]);
 
 /**
+ * Get the round result view details.
+ * @param {GameState} gameState - game state object
+ * @returns {ViewDetail} view details
+ */
+ export default function roundResultViewDetails(gameState) {
+
+    return new ViewDetail(roundResultViewHtml(gameState))
+                .setEventHandlerSetter(setRoundResultHandler);
+}
+
+/**
  * Generate the round result view.
  * @param {GameState} gameState - game state object
  * @returns {string} html for view
  */
-export default function roundResultView(gameState) {
+function roundResultViewHtml(gameState) {
     const roundResult = gameState.roundResult;
     return `${titleHeader(gameState)}
             ${gameProgress(gameState.progressMap)}
@@ -186,7 +197,7 @@ function getContinueButton(roundResult) {
  * Set handlers for round result
  * @param {GameState} gameState - game state object
  */
-export function setRoundResultHandler(gameState) {
+function setRoundResultHandler(gameState) {
     const button = document.getElementById(continueButtonId);
     if (button) {
         button.addEventListener('click', (event) => gameState.handleRoundResult(), false);
