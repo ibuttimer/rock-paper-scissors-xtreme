@@ -1,5 +1,8 @@
-import { log } from '../globals.js';
-import { accumulator } from '../utils/index.js';
+/**
+    Modal related functions.
+    @author Ian Buttimer
+*/
+import { accumulator, log } from '../utils/index.js';
 
 export const MODAL_YES = 'yes';
 export const MODAL_NO = 'no';

@@ -2,8 +2,6 @@
     Application global constants.
     @author Ian Buttimer
 */
-import { default as config } from '../../env.js'
-
 export const GAME_NAME = 'Rock Paper Scissors';
 export const BASIC_VARIANT_NAME = 'Basic';
 export const BIGBANG_VARIANT_NAME = 'Big Bang';
@@ -21,8 +19,15 @@ export const MAX_PARTICIPANTS = MAX_PLAYERS + MAX_ROBOTS;
 export const MIN_GAMES = 1;
 export const MAX_GAMES = 15;
 export const DEFAULT_GAMES = 3;
+
+// Settings default values
 export const DEFAULT_SOUND_SETTING = false;
 export const DEFAULT_ANIMATION_SETTING = true;
+export const DEFAULT_LANDING_SETTING = true;
+// GameState property names
+export const SOUND_PROPERTY = 'soundEnabled';
+export const ANIMATION_PROPERTY = 'animationEnabled';
+export const LANDING_PROPERTY = 'displayLanding';
 
 export const PLAYER_COLOURS = [
     'red', 'green', 'blue', 'aqua', 'darkgrey', 'orange', 
@@ -64,15 +69,5 @@ export const PLAY_ROUTE = 'play';
 export const PLAY_URL = makePath(PLAY_ROUTE);
 export const ROUND_RESULT_ROUTE = 'roundresult';
 export const ROUND_RESULT_URL = makePath(ROUND_RESULT_ROUTE);
-
-/**
- * Log to console
- * @param {...any} data - info to log
- */
-export function log(...data) {
-    if (config.ENABLE_LOG){
-        console.log(...data);
-    }
-}
 
 export default COPYRIGHT;

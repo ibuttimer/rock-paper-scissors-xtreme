@@ -28,6 +28,9 @@
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
+
+    margin-left: var(--std-margin-horz);
+    margin-right: var(--std-margin-horz);
 }
 
 .div__logo {

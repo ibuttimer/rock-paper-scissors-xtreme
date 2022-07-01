@@ -3,12 +3,33 @@
     @author Ian Buttimer
 */
 import { 
-    DEFAULT_SOUND_SETTING, DEFAULT_ANIMATION_SETTING
+    DEFAULT_SOUND_SETTING, DEFAULT_ANIMATION_SETTING, DEFAULT_LANDING_SETTING,
+    SOUND_PROPERTY, ANIMATION_PROPERTY, LANDING_PROPERTY
 } from '../globals.js'
 
 const SOUND_SETTING = 'rpsxSound';
 const ANIMATION_SETTING = 'rpsxAnimation';
-const LOCAL_KEYS = [SOUND_SETTING, ANIMATION_SETTING];
+const LANDING_SETTING = 'rpsxLanding';
+
+/**
+ * Setting parameter object
+ * @param {string} property - GameState property name
+ * @param {string} defaultValue - default value
+ * @returns {object}
+ */
+ const propertyDefault = (property, defaultValue) => {
+    return { property: property, defaultValue: defaultValue };
+};
+/** 
+ * Map of settings
+ * @type {string} key - localStorage key
+ * @type {object} value - setting parameter object @see {@link propertyDefault}
+ */
+ const keyProperty = new Map([
+    [SOUND_SETTING, propertyDefault(SOUND_PROPERTY, DEFAULT_SOUND_SETTING)],
+    [ANIMATION_SETTING, propertyDefault(ANIMATION_PROPERTY, DEFAULT_ANIMATION_SETTING)],
+    [LANDING_SETTING, propertyDefault(LANDING_PROPERTY, DEFAULT_LANDING_SETTING)]
+]);
 
 /**
  * Load user preferences
@@ -16,19 +37,10 @@ const LOCAL_KEYS = [SOUND_SETTING, ANIMATION_SETTING];
  */
  export function loadPreferences(gameState) {
     if (storageAvailable('localStorage')) {
-        LOCAL_KEYS.forEach(key => {
+        for (const [key, propDflt] of keyProperty.entries()) {
             let value = localStorage.getItem(key);
-            switch (key) {
-                case SOUND_SETTING:
-                    gameState.soundEnabled = value ? value === 'true' : DEFAULT_SOUND_SETTING;
-                    break;
-                case ANIMATION_SETTING:
-                    gameState.animationEnabled = value ? value === 'true' : DEFAULT_ANIMATION_SETTING;
-                    break;
-                default:
-                    throw new Error(`Unknown key: ${key}`);
-            }
-        });
+            gameState[propDflt.property] = value ? value === 'true' : propDflt.defaultValue;
+        }
     }
 }
 
@@ -38,20 +50,9 @@ const LOCAL_KEYS = [SOUND_SETTING, ANIMATION_SETTING];
  */
 export function savePreferences(gameState) {
     if (storageAvailable('localStorage')) {
-        LOCAL_KEYS.forEach(key => {
-            let value;
-            switch (key) {
-                case SOUND_SETTING:
-                    value = gameState.soundEnabled;
-                    break;
-                case ANIMATION_SETTING:
-                    value = gameState.animationEnabled;
-                    break;
-                default:
-                    throw new Error(`Unknown key: ${key}`);
-            }
-            localStorage.setItem(key, new Boolean(value).toString());
-        });
+        for (const [key, propDflt] of keyProperty.entries()) {
+            localStorage.setItem(key, new Boolean(gameState[propDflt.property]).toString());
+        }
     }
 }
 

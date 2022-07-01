@@ -2,6 +2,7 @@
     Suite of utility functions.
     @author Ian Buttimer
 */
+import { default as config } from '../../../env.js'
 import { 
     MIN_PLAYERS, MAX_PLAYERS, MIN_ROBOTS, MAX_ROBOTS, MIN_PARTICIPANTS,
     BASIC_VARIANT_NAME, BIGBANG_VARIANT_NAME, XTREME_VARIANT_NAME
@@ -12,12 +13,12 @@ import { Game, GameVariant } from "../game.js";
  * Check if a variable is null or undefined.
  * @param {*} variable - variable to check
  * @param {string} name - name of variable
- * @param {boolean} log - log console error flag; default false
+ * @param {boolean} logError - log console error flag; default false
  * @returns {boolean} true if variable is set, otherwise false
  */
-export function variableCheck(variable, name, log = false) {
+export function variableCheck(variable, name, logError = false) {
     let isSet = (variable !== null && variable !== undefined);
-    if (!isSet && log) {
+    if (!isSet && logError) {
         console.error(`Missing '${name}': null or undefined`);
     }
     return isSet;
@@ -254,6 +255,16 @@ export function adjustArray(array, requiredNum, newEntry) {
         array = array.slice(0, requiredNum);
     }
     return array;
+}
+
+/**
+ * Log to console
+ * @param {...any} data - info to log
+ */
+export function log(...data) {
+    if (config.ENABLE_LOG){
+        console.log(...data);
+    }
 }
 
 /* Jasmine requires a default export */

@@ -4,7 +4,8 @@
 */
 import { 
     ROOT_URL, GAME_URL, BASIC_URL, BIGBANG_URL, XTREME_URL, PLAY_URL, 
-    ROUND_RESULT_URL, RULES_URL, log
+    ROUND_RESULT_URL, RULES_URL,
+    SOUND_PROPERTY, ANIMATION_PROPERTY, LANDING_PROPERTY
 } from './globals.js';
 import { default as config } from '../../env.js'
 import { Enum } from './enums.js'
@@ -13,7 +14,7 @@ import {
     gameParamsView, setParamsHandler, gamePlayView, setPlayHandler, 
     roundResultView, setRoundResultHandler, rulesView, setRulesHandler
 } from './views/index.js'
-import { htmlP, savePreferences } from './utils/index.js'
+import { htmlP, savePreferences, log } from './utils/index.js'
 import { showYesNoModal, MODAL_YES } from './components/index.js'
 import { GameVariant } from './game.js'
 
@@ -31,9 +32,30 @@ const rulesMenuId = 'menu-rules-div';
 const settingsMenuId = 'menu-settings-dropdown';
 const animationSettingElementId = 'animation-toggle-control';
 const soundSettingElementId = 'sound-toggle-control';
-const settingSwitches = [animationSettingElementId, soundSettingElementId];
+const landingSettingElementId = 'landing-toggle-control';
 const hamburgerOpen = "open";
 const hamburgerClosed = "closed";
+
+/**
+ * Setting parameter object
+ * @param {string} property - GameState property name
+ * @param {string} setting - name for ariaLabel
+ * @param {string} checkbox - settings checkbox element id
+ * @returns {object}
+ */
+const propertySetting = (property, setting, checkbox) => {
+    return { property: property, setting: setting, checkbox: checkbox };
+};
+/** 
+ * Map of settings
+ * @type {string} key - toggle switch element id
+ * @type {object} value - setting parameter object @see {@link propertySetting}
+ */
+const settingSwitches = new Map([
+    [soundSettingElementId, propertySetting(SOUND_PROPERTY, 'sound', 'checkbox-sound')],
+    [animationSettingElementId, propertySetting(ANIMATION_PROPERTY, 'animation', 'checkbox-animation')],
+    [landingSettingElementId, propertySetting(LANDING_PROPERTY, 'start page', 'checkbox-landing')]
+]);
 
 /**
  * Enum representing views.
@@ -96,6 +118,10 @@ export function setView(view, gameState) {
                 break;
             }
         }
+    }
+
+    if (view === View.Landing && !gameState.displayLanding) {
+        view = View.GameMenu;   // don't display landing, go straight to game selection
     }
 
     switch (view) {
@@ -214,12 +240,12 @@ function checkChoice(choice, context) {
 function addMenuEventHandlers(gameState) {
 
     const menu = document.getElementById("menu-list");
-    const sound = document.getElementById("checkbox-sound");
-    const animation = document.getElementById("checkbox-animation");
 
+    // Set initial display state of toggle switches
     const setInitial = (event) => {
-        sound.checked = gameState.soundEnabled;
-        animation.checked = gameState.animationEnabled;
+        for (const propSetting of settingSwitches.values()) {
+            document.getElementById(propSetting.checkbox).checked = gameState[propSetting.property];
+        }
     };
 
     // Add handlers to set initial state of toggle switches; 
@@ -232,14 +258,13 @@ function addMenuEventHandlers(gameState) {
     document.getElementById(settingsElementId).addEventListener("click", setInitial, false);
 
     // Add toggle switches change handlers
-    sound.addEventListener("change", function( event ) {
-        handleSettingChange(gameState, 'soundEnabled', event.target.checked);
-    }, false);
-
-    animation.addEventListener("change", function( event ) {
-        handleSettingChange(gameState, 'animationEnabled', event.target.checked);
-    }, false);
-
+    for (const propSetting of settingSwitches.values()) {
+        document.getElementById(propSetting.checkbox)
+            .addEventListener("change", function( event ) {
+                handleSettingChange(gameState, propSetting.property, event.target.checked);
+            }, false)
+    }
+    
     // Add menu item click handler
     [logoElementId, rulesElementId].forEach(id => {
         document.getElementById(id).addEventListener("click", function( event ) {
@@ -311,25 +336,9 @@ function handleSettingChange(gameState, setting, enabled) {
  * @param {GameState} gameState - current game state
  */
 export function setSettingsAriaLabel(gameState) {
-    settingSwitches.forEach(id => {
-        const element = document.getElementById(id);
-        if (element) {
-            let value;
-            let setting;
-            switch (id) {
-                case animationSettingElementId:
-                    value = gameState.animationEnabled;
-                    setting = 'animation';
-                    break;
-                case soundSettingElementId:
-                    value = gameState.soundEnabled;
-                    setting = 'sound';
-                    break;
-                default:
-                    throw new Error(`Unknown setting id: ${id}`);
-            }
-            element.setAttribute('aria-label', `${setting}`);
-            element.setAttribute('aria-checked', `${value ? 'true' : 'false'}`);
-        }
-    });
+    for (const [key, propSetting] of settingSwitches.entries()) {
+        const element = document.getElementById(key);
+        element.setAttribute('aria-label', `${propSetting.setting}`);
+        element.setAttribute('aria-checked', `${gameState[propSetting.property] ? 'true' : 'false'}`);
+    }
 }

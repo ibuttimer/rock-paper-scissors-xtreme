@@ -4,13 +4,13 @@
 */
 import { 
     MIN_PLAYERS, MAX_PLAYERS, DEFAULT_PLAYERS, MIN_ROBOTS, MAX_ROBOTS, DEFAULT_ROBOTS,
-    MIN_GAMES, DEFAULT_GAMES, MAX_GAMES, PLAY_URL, PLAYER_COLOURS, log 
+    MIN_GAMES, DEFAULT_GAMES, MAX_GAMES, PLAY_URL, PLAYER_COLOURS
 } from '../globals.js';
 import { Player, Robot } from '../player.js';
 import { default as titleHeader } from '../components/title.js'
 import { 
     generateId, optionsList, accumulator, adjustArray, htmlH4, htmlSelect, htmlDiv, 
-    htmlButton, htmlInput, htmlLabel
+    htmlButton, htmlInput, htmlLabel, log
 } from '../utils/index.js';
 import { setView } from '../routing.js'
 import { GameMode } from '../enums.js';

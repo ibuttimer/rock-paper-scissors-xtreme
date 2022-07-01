@@ -2,12 +2,13 @@
     Application entry point script.
     @author Ian Buttimer
 */
-import { log, DEFAULT_PLAYERS, DEFAULT_ROBOTS } from './globals.js';
+import { DEFAULT_PLAYERS, DEFAULT_ROBOTS } from './globals.js';
 import { 
     default as config, VARIANT_KEY, NUM_PLAYERS_KEY, NUM_ROBOTS_KEY, 
     NUM_GAMES_KEY, VIEW_KEY, INPUT_KEY, ALL_KEYS,
     PARAMS_VIEW, PLAY_VIEW, CONTROL_VIEW, RULES_VIEW
 } from "../../env.js";
+import { log } from './utils/index.js';
 import { GameVariant, Game } from './game.js';
 import { GameMode } from './enums.js';
 import { default as GameState } from './game-state.js';

@@ -2,9 +2,7 @@
     Game selection menu view.
     @author Ian Buttimer
 */
-import { 
-    GAME_NAME, GAME_URL, RULES_URL, log 
-} from '../globals.js';
+import { GAME_NAME, GAME_URL, RULES_URL } from '../globals.js';
 import { setView } from '../routing.js'
 import { 
     htmlDiv, htmlButton, htmlH1, htmlH2, htmlSection 

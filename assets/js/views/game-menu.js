@@ -4,9 +4,10 @@
 */
 import { 
     GAME_NAME, BASIC_URL, BASIC_VARIANT_NAME, BIGBANG_URL, BIGBANG_VARIANT_NAME, 
-    XTREME_URL, XTREME_VARIANT_NAME, log 
+    XTREME_URL, XTREME_VARIANT_NAME
 } from '../globals.js';
 import { default as config } from '../../../env.js';
+import { log } from '../utils/index.js'
 import { GameVariant } from '../game.js';
 import { setView } from '../routing.js'
 import { 

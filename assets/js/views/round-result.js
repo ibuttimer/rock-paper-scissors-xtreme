@@ -2,7 +2,6 @@
     Game play view.
     @author Ian Buttimer
 */
-import { log } from '../globals.js';
 import { ResultCode } from "../enums.js";
 import { 
     titleHeader, gameProgress, leaderBoard, playerSelectionTile, getPlayerSelectionTileParam

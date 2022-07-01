@@ -3,9 +3,10 @@
     @author Ian Buttimer
 */
 import { 
-    DEFAULT_PLAYERS, DEFAULT_ROBOTS, DEFAULT_GAMES, ROOT_URL, PLAY_URL, log
+    DEFAULT_PLAYERS, DEFAULT_ROBOTS, DEFAULT_GAMES, ROOT_URL, PLAY_URL
 } from './globals.js'
 import { default as config } from '../../env.js'
+import { log } from './utils/index.js'
 import { Game, GameVariant } from './game.js'
 import { GameKey, Selection, ResultCode, GameStatus } from './enums.js';
 import { setView, setSettingsAriaLabel } from './routing.js'
@@ -80,6 +81,10 @@ export default class GameState {
      * @type {boolean} */
     animationEnabled;
     /**
+     * Display landing page flag
+     * @type {boolean} */
+    displayLanding;
+     /**
      * Match status
      * @type {GameStatus}
      */
