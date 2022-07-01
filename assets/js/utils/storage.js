@@ -3,13 +3,15 @@
     @author Ian Buttimer
 */
 import { 
-    DEFAULT_SOUND_SETTING, DEFAULT_ANIMATION_SETTING, DEFAULT_LANDING_SETTING,
-    SOUND_PROPERTY, ANIMATION_PROPERTY, LANDING_PROPERTY
+    DEFAULT_SOUND_SETTING, DEFAULT_ANIMATION_SETTING, 
+    DEFAULT_LANDING_SETTING, DEFAULT_SHOW_SEL_KEYS_SETTING,
+    SOUND_PROPERTY, ANIMATION_PROPERTY, LANDING_PROPERTY, SHOW_SEL_KEYS_PROPERTY
 } from '../globals.js'
 
 const SOUND_SETTING = 'rpsxSound';
 const ANIMATION_SETTING = 'rpsxAnimation';
 const LANDING_SETTING = 'rpsxLanding';
+const SHOW_SEL_KEYS_SETTING = 'rpsxShowSelKeys';
 
 /**
  * Setting parameter object
@@ -28,7 +30,8 @@ const LANDING_SETTING = 'rpsxLanding';
  const keyProperty = new Map([
     [SOUND_SETTING, propertyDefault(SOUND_PROPERTY, DEFAULT_SOUND_SETTING)],
     [ANIMATION_SETTING, propertyDefault(ANIMATION_PROPERTY, DEFAULT_ANIMATION_SETTING)],
-    [LANDING_SETTING, propertyDefault(LANDING_PROPERTY, DEFAULT_LANDING_SETTING)]
+    [LANDING_SETTING, propertyDefault(LANDING_PROPERTY, DEFAULT_LANDING_SETTING)],
+    [SHOW_SEL_KEYS_SETTING, propertyDefault(SHOW_SEL_KEYS_PROPERTY, DEFAULT_SHOW_SEL_KEYS_SETTING)]
 ]);
 
 /**
@@ -45,12 +48,16 @@ const LANDING_SETTING = 'rpsxLanding';
 }
 
 /**
- * Save user preferences
+ * Save user preference(s)
  * @param {GameState} gameState - current game state
+ * @param {string} property - GameState property name of setting to save
  */
-export function savePreferences(gameState) {
+export function savePreferences(gameState, property) {
     if (storageAvailable('localStorage')) {
         for (const [key, propDflt] of keyProperty.entries()) {
+            if (property && propDflt.property !== property) {
+                continue;
+            }
             localStorage.setItem(key, new Boolean(gameState[propDflt.property]).toString());
         }
     }

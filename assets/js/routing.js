@@ -5,7 +5,7 @@
 import { 
     ROOT_URL, GAME_URL, BASIC_URL, BIGBANG_URL, XTREME_URL, PLAY_URL, 
     ROUND_RESULT_URL, RULES_URL,
-    SOUND_PROPERTY, ANIMATION_PROPERTY, LANDING_PROPERTY
+    SOUND_PROPERTY, ANIMATION_PROPERTY, LANDING_PROPERTY, SHOW_SEL_KEYS_PROPERTY
 } from './globals.js';
 import { default as config } from '../../env.js'
 import { Enum } from './enums.js'
@@ -30,9 +30,6 @@ const hamburgerElementId = 'menu-hamburger';
 const hamburgerImgId = 'menu-hamburger-img';
 const rulesMenuId = 'menu-rules-div';
 const settingsMenuId = 'menu-settings-dropdown';
-const animationSettingElementId = 'animation-toggle-control';
-const soundSettingElementId = 'sound-toggle-control';
-const landingSettingElementId = 'landing-toggle-control';
 const hamburgerOpen = "open";
 const hamburgerClosed = "closed";
 
@@ -52,9 +49,10 @@ const propertySetting = (property, setting, checkbox) => {
  * @type {object} value - setting parameter object @see {@link propertySetting}
  */
 const settingSwitches = new Map([
-    [soundSettingElementId, propertySetting(SOUND_PROPERTY, 'sound', 'checkbox-sound')],
-    [animationSettingElementId, propertySetting(ANIMATION_PROPERTY, 'animation', 'checkbox-animation')],
-    [landingSettingElementId, propertySetting(LANDING_PROPERTY, 'start page', 'checkbox-landing')]
+    ['sound-toggle-control', propertySetting(SOUND_PROPERTY, 'sound', 'checkbox-sound')],
+    ['animation-toggle-control', propertySetting(ANIMATION_PROPERTY, 'animation', 'checkbox-animation')],
+    ['landing-toggle-control', propertySetting(LANDING_PROPERTY, 'start page', 'checkbox-landing')],
+    ['selection-keys-toggle-control', propertySetting(SHOW_SEL_KEYS_PROPERTY, 'show selection keys', 'checkbox-selection-keys')]
 ]);
 
 /**
@@ -107,8 +105,25 @@ const routes = new Map([
  * @param {GameState} gameState - game state object
  */
 export function setView(view, gameState) {
+    /**
+     * Html for view, return value of function with prototype
+     * 
+     *  function(): @type {string}
+     */
     let innerHTML;
-    let setClickHandler;
+    /**
+     * Function to set required event handlers with prototype
+     * 
+     *  function(gameState: @type {GameState}, mainElement: @type {Element}): @type {object|null}
+     * 
+     * Return object should have the following properties:
+     * @type {MutationObserver} observer - MutationObserver to observe the main element
+     * @type {object} options - options for the observer @see {@link https://dom.spec.whatwg.org/#dictdef-mutationobserverinit}
+     * @type {function} settingListener - settings change listener with prototype
+     * 
+     *  listener(property: @type {string}, value: @type {boolean})  
+     */
+    let setEventHandlers;
     let process = true;
 
     if (typeof view === 'string') {
@@ -149,13 +164,13 @@ export function setView(view, gameState) {
         switch (view) {
             case View.Landing:
                 innerHTML = landingPage();
-                setClickHandler = setLandingHandler;
+                setEventHandlers = setLandingHandler;
                 page = 'current';
                 toHome = '';
                 break;
             case View.GameMenu:
                 innerHTML = gameSelectMenu();
-                setClickHandler = setMenuHandler;
+                setEventHandlers = setMenuHandler;
                 page = 'game selection';
                 break;
             case View.BasicGame:
@@ -173,34 +188,37 @@ export function setView(view, gameState) {
                 }
 
                 innerHTML = gameParamsView(gameState);
-                setClickHandler = setParamsHandler;
+                setEventHandlers = setParamsHandler;
                 page = `${page} game parameters`;
                 break;
             case View.Play:
                 innerHTML = gamePlayView(gameState);
-                setClickHandler = setPlayHandler;
+                setEventHandlers = setPlayHandler;
                 page = 'play';
                 break;
             case View.RoundResult:
                 innerHTML = roundResultView(gameState);
-                setClickHandler = setRoundResultHandler;
+                setEventHandlers = setRoundResultHandler;
                 page = 'results';
                 break;
             case View.Rules:
                 innerHTML = rulesView(gameState);
-                setClickHandler = setRulesHandler;
+                setEventHandlers = setRulesHandler;
                 page = 'rules';
                 break;
             default:
                 throw new Error(`Unknown view: ${view}`);
         }
 
+        // main content about to change, remove old view-specific listeners etc.
+        gameState.prepForNewView();
+
         // set view html
-        let element = document.getElementById(mainElementId);
-        element.innerHTML = innerHTML;
+        const mainElement = document.getElementById(mainElementId);
+        mainElement.innerHTML = innerHTML;
 
         // set aria-label for menu items
-        element = document.getElementById(logoElementId);
+        let element = document.getElementById(logoElementId);
         element.setAttribute('aria-label', `logo, ${page} page, ${toHome} home.`);
         element = document.getElementById(rulesElementId);
         element.setAttribute('aria-label', 
@@ -209,11 +227,22 @@ export function setView(view, gameState) {
         displayHamburger(false);
 
         // add handlers
-        if (setClickHandler) {
-            setClickHandler(gameState);
-        }
         if (!addedMenuEventHandlers) {
             addMenuEventHandlers(gameState);
+        }
+        if (setEventHandlers) {
+            const viewObservers = setEventHandlers(gameState);
+            if (viewObservers) {
+                if (viewObservers.hasOwnProperty('observer') && viewObservers.hasOwnProperty('options')) {
+                    // Start observing the target node for configured mutations
+                    viewObservers.observer.observe(mainElement, viewObservers.options);
+                    gameState.mutationObserver = viewObservers.observer;
+                }
+
+                if (viewObservers.hasOwnProperty('settingListener')) {
+                    gameState.settingChangeSubscription.registerListener(viewObservers.settingListener);
+                }
+            }
         }
     }
 }
@@ -321,22 +350,29 @@ function displayHamburger(display) {
 /**
  * Handle a setting change
  * @param {GameState} gameState - current game state
- * @param {string} setting - setting attribute
- * @param {boolean} enabled - new setting value
+ * @param {string} property - GameState property name
+ * @param {boolean} value - new setting value
  */
-function handleSettingChange(gameState, setting, enabled) {
-    gameState[setting] = enabled;
-    savePreferences(gameState);
-    setSettingsAriaLabel(gameState);
-    log(`${setting}: ${gameState[setting]}`);
+function handleSettingChange(gameState, property, value) {
+    gameState[property] = value;
+    savePreferences(gameState, property);
+    setSettingsAriaLabel(gameState, property);
+
+    gameState.settingChangeSubscription.notifyListeners(property, value);
+
+    log(`${property}: ${gameState[property]}`);
 }
 
 /**
  * Set the aria labels for the settings menu
  * @param {GameState} gameState - current game state
+ * @param {string} property - GameState property name
  */
-export function setSettingsAriaLabel(gameState) {
+export function setSettingsAriaLabel(gameState, property) {
     for (const [key, propSetting] of settingSwitches.entries()) {
+        if (property && propSetting.property !== property) {
+            continue;
+        }
         const element = document.getElementById(key);
         element.setAttribute('aria-label', `${propSetting.setting}`);
         element.setAttribute('aria-checked', `${gameState[propSetting.property] ? 'true' : 'false'}`);

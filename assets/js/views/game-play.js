@@ -2,16 +2,19 @@
     Game play view.
     @author Ian Buttimer
 */
-import { ROUND_RESULT_URL, log } from '../globals.js';
+import { ROUND_RESULT_URL, SHOW_SEL_KEYS_PROPERTY } from '../globals.js';
 import { titleHeader, currentPlayerNameHeader, gameProgress } from '../components/index.js'
 import { 
-    accumulator, htmlDiv, htmlImg, htmlH4, htmlSection, 
-    addElementClass, removeElementClass, replaceElementClass, delay 
+    accumulator, htmlDiv, htmlImg, htmlH4, htmlP, htmlSection, 
+    addElementClass, removeElementClass, replaceElementClass, delay, log 
 } from '../utils/index.js';
 import { setView } from '../routing.js'
 import { SELECTION_TILE_DIV_PROP } from './game-params.js'
 
 const currentPlayerHeaderId = 'current-player-header'
+
+const selKeysVisibleClass = 'p__selection-tile-key';
+const selKeysHiddenClass = 'p__selection-tile-key-hidden';
 
 const in_animation = 'animate__fade-in';
 const out_animation = 'animate__fade-out';
@@ -35,18 +38,18 @@ const animation_time = 500;    // animation time in msecs
                 id: currentPlayerHeaderId
             })}
             ${htmlSection(['section__select-play'], 
-                getSelectable(gameState.selections, tileClass))}`;
+                getSelections(gameState, tileClass))}`;
         }
 
 /**
  * Generate the selection options
- * @param {Array} selections - array of all possible Selection for game variant
+ * @param {GameState} gameState - game state object
  * @param {string} tileClass - player-specific css class
  * @returns {string} html for selection options
  */
-function getSelectable(selections, tileClass) {
-    return selections.map(sel => {
-        return htmlDiv(['div__selection-option-wrapper'], selectionTile(sel, tileClass));
+function getSelections(gameState, tileClass) {
+    return gameState.selections.map(sel => {
+        return htmlDiv(['div__selection-option-wrapper'], selectionTile(sel, tileClass, gameState.showSelectionKeys));
     }).reduce(accumulator, '');
 }
 
@@ -54,9 +57,10 @@ function getSelectable(selections, tileClass) {
  * Class representing a selection tile
  * @param {object} params - parameters object {@link selectionTileParams}
  * @param {string} tileClass - player-specific css class
+ * @param {boolean} showKey - show selection key
  * @returns {string} html for selection tile
  */
- export function selectionTile(params, tileClass) {
+ export function selectionTile(params, tileClass, showKey) {
     const clickToSelect = `Click to select ${params.selection.name} or, press ${params.selection.key.key}.`;
     const image = htmlImg('img__selection-tile-img', {
         src: params.src, 
@@ -67,10 +71,11 @@ function getSelectable(selections, tileClass) {
         params.selection.name.length > 7 ? 'h4__selection-tile-name-long' : 
             params.selection.name.length > 5 ? 'h4__selection-tile-name-med' : 'h4__selection-tile-name', 
         params.selection.name);
+    const key = htmlP(showKey ? selKeysVisibleClass : selKeysHiddenClass, 
+        `<i class="lni lni-keyboard"></i>&nbsp;${params.selection.key.key.toUpperCase()}`);
 
     return htmlDiv(['div__selection-tile-wrapper', 'debossable-nbi', tileClass], 
-        `${image}
-        ${name}`, {
+        `${image} ${name} ${key}`, {
             'data-selection': params.selection,
             role: 'button',
             'aria-label': clickToSelect
@@ -144,11 +149,21 @@ export function handleSelectionCallback(gameState, eventResult) {
 /**
  * Set handlers for game play
  * @param {GameState} gameState - game state object
+ * @return {object} event handlers
  */
 export function setPlayHandler(gameState) {
     for (const tile of allSelectionTiles()) {
         tile.addEventListener('click', (event) => gamePlayHandler(event, gameState), false);
     }
+
+    // Create an observer instance linked to the callback function
+    const observer = new MutationObserver(playMutationsCallback);
+
+    return {
+        observer: observer,
+        options: playMutationObserverConfig,
+        settingListener: playSettingsChangeListener
+    };
 }
 
 /** All selection tiles */
@@ -165,5 +180,42 @@ const allSelectionTiles = () => {
     const selection = event.currentTarget.dataset.selection;
     if (selection) {
         gameState.handleSelection(selection);
+    }
+}
+
+// Options for the observer (which mutations to observe)
+const playMutationObserverConfig = { attributes: true, childList: true, subtree: true };
+
+/**
+ * Callback function to execute when mutations are observed
+ * @param {Array[MutationRecord]} mutationList 
+ * @param {MutationObserver} observer 
+ * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver#specifications}
+ */
+const playMutationsCallback = function(mutationList, observer) {
+    for(const mutation of mutationList) {
+        if (mutation.type === 'childList') {
+            log('A child node has been added or removed.');
+        }
+        else if (mutation.type === 'attributes') {
+            log('The ' + mutation.attributeName + ' attribute was modified.');
+        }
+    }
+};
+
+/**
+ * Handle a setting change
+ * @param {string} property - GameState property name
+ * @param {boolean} value - new setting value
+ */
+function playSettingsChangeListener(property, value) {
+    if (property === SHOW_SEL_KEYS_PROPERTY) {
+        const toRemove = value ? selKeysHiddenClass : selKeysVisibleClass;
+        const toAdd = value ? selKeysVisibleClass : selKeysHiddenClass;
+        replaceElementClass(
+            // make copy of HTMLCollection as it'll automatically update as classes are updated
+            Array.from(
+                document.getElementsByClassName(toRemove)
+            ), toRemove, toAdd);
     }
 }

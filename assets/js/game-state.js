@@ -6,7 +6,7 @@ import {
     DEFAULT_PLAYERS, DEFAULT_ROBOTS, DEFAULT_GAMES, ROOT_URL, PLAY_URL
 } from './globals.js'
 import { default as config } from '../../env.js'
-import { log } from './utils/index.js'
+import { log, Subscription } from './utils/index.js'
 import { Game, GameVariant } from './game.js'
 import { GameKey, Selection, ResultCode, GameStatus } from './enums.js';
 import { setView, setSettingsAriaLabel } from './routing.js'
@@ -67,11 +67,23 @@ export default class GameState {
     roundResult;
     /**
      * Function with the following signature:
-     *  callback(gameState: GameState, eventResult: PlayEventResult)
+     * 
+     *  callback(gameState: @type {GameState}, eventResult: @type {PlayEventResult})
+     * 
      * to be called back following player selection
      * @type {function}
      */
     selectionHandledCallback;
+    /**
+     * MutationObserver currently observing the content of main div.
+     * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver}
+     */
+    mutationObserver;
+    /**
+     * Subscription service for settings change
+     * @type {Subscription}
+     */
+    settingChangeSubscription;
     /**
      * Sound enabled flag
      * @type {boolean} */
@@ -84,6 +96,10 @@ export default class GameState {
      * Display landing page flag
      * @type {boolean} */
     displayLanding;
+    /**
+     * Show selection keys flag
+     * @type {boolean} */
+    showSelectionKeys;
      /**
      * Match status
      * @type {GameStatus}
@@ -112,6 +128,7 @@ export default class GameState {
         this.scores = new Map();
         this.roundResult = null;
         this.selectionHandledCallback = null;
+        this.settingChangeSubscription = new Subscription;
         this.#matchStatus = GameStatus.NotStarted;
 
         loadPreferences(this);
@@ -452,6 +469,17 @@ export default class GameState {
         if (this.soundEnabled) {
             GameState.#winnerAudio.play();
         }
+    }
+
+    /** Prepare for a new view, i.e. main content is about to change */
+    prepForNewView() {
+        // disconnect mutation observer
+        if (this.mutationObserver) {
+            this.mutationObserver.disconnect();
+            this.mutationObserver = null;
+        }
+        // clear setting listeners
+        this.settingChangeSubscription.unregisterAll();
     }
 
     /**

@@ -176,12 +176,16 @@ const REPLACE_STYLE = 2;
 /**
  * Add/remove/replace element classes
  * @param {number} action - action to perform
- * @param {Element|Array[Element]} elements - element(s) to perform action on
+ * @param {Element|Array[Element]|HTMLCollection} elements - element(s) to perform action on
  * @param {string|Array[string]} classes - class(s) to add/remove, or class to replace
  * @param {string} replacement - replacement class
+ * 
+ * Note: An HTMLCollection in the HTML DOM is live; it is automatically updated when the underlying document is changed. 
+ * For this reason it is a good idea to make a copy (eg. using Array.from) to iterate over if adding, moving, or removing nodes.
+ * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLCollection}
  */
 const modifyElementClassList = (action, elements, classes, replacement) => {
-    if (!(elements instanceof HTMLCollection)) {
+    if (!(elements instanceof HTMLCollection) && !Array.isArray(elements)) {
         elements = [elements];
     }
     for (const element of elements) {

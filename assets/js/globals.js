@@ -24,10 +24,12 @@ export const DEFAULT_GAMES = 3;
 export const DEFAULT_SOUND_SETTING = false;
 export const DEFAULT_ANIMATION_SETTING = true;
 export const DEFAULT_LANDING_SETTING = true;
+export const DEFAULT_SHOW_SEL_KEYS_SETTING = true;
 // GameState property names
 export const SOUND_PROPERTY = 'soundEnabled';
 export const ANIMATION_PROPERTY = 'animationEnabled';
 export const LANDING_PROPERTY = 'displayLanding';
+export const SHOW_SEL_KEYS_PROPERTY = 'showSelectionKeys';
 
 export const PLAYER_COLOURS = [
     'red', 'green', 'blue', 'aqua', 'darkgrey', 'orange', 

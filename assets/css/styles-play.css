@@ -45,6 +45,15 @@
     text-align: center;
 }
 
+.p__selection-tile-key {
+    display: inline-block;
+    color: gray;
+}
+
+.p__selection-tile-key-hidden {
+    display: none;
+}
+
 .animate__fade-in {
     animation-name: animate-fade-in;
     animation-duration: 1s;

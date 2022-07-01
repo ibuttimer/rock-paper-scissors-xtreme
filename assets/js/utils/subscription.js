@@ -45,6 +45,16 @@ export default class Subscription {
     }
 
     /**
+     * Remove all listeners
+     * @returns {boolean} true if listener removed, otherwise false
+     */
+     unregisterAll() {
+        const modified = this.listeners.length > 0;
+        this.listeners = [];
+        return modified;
+    }
+
+    /**
      * Notify listeners
      * @param  {...any} args - arguments to pass to listeners
      */
