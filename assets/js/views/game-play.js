@@ -47,6 +47,8 @@ const animation_time = 500;    // animation time in msecs
 
     return `${titleHeader(gameState)}
             ${gameProgress(gameState.progressMap)}
+            ${htmlDiv(['div__play-instruction'], 
+                htmlP([], 'Make round selection'))}
             ${htmlDiv(['div__play-player-name'], currentPlayerNameHeader(gameState), {
                 id: currentPlayerHeaderId
             })}

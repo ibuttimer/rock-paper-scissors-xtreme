@@ -59,6 +59,8 @@ function roundResultViewHtml(gameState) {
     const roundResult = gameState.roundResult;
     return `${titleHeader(gameState)}
             ${gameProgress(gameState.progressMap)}
+            ${htmlDiv(['div__result-heading'], 
+                htmlP([], 'Result'))}
             ${getResultText(roundResult)}
             ${getRoundResultAndLeaderBoard(gameState)}
             ${getExplanation(roundResult)}

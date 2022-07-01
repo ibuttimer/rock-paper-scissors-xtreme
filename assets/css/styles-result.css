@@ -24,6 +24,10 @@
     justify-content: space-around;
 }
 
+.div__result-heading {
+	text-align: center;
+}
+
 .h3__round-result-text {
 	text-align: center;
 }

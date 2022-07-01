@@ -118,7 +118,7 @@ const tdClasses = ['td__win-matrix'];
                 ${htmlTd(tdClasses, rule.contests
                     .map(contest => contest.explanation)
                     .reduce(
-                        (previousValue, currentValue) => `${previousValue}, ${currentValue}`
+                        (previousValue, currentValue) => `${previousValue}<br>${currentValue}`
                     )
                 )}
                 ${htmlTd(tdClasses, rule.selection.key.key.toUpperCase())}`

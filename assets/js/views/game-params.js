@@ -10,7 +10,7 @@ import { Player, Robot } from '../player.js';
 import { default as titleHeader } from '../components/title.js'
 import { 
     generateId, optionsList, accumulator, adjustArray, htmlH4, htmlSelect, htmlDiv, 
-    htmlButton, htmlInput, htmlLabel, log, ViewDetail
+    htmlButton, htmlInput, htmlLabel, htmlP, log, ViewDetail
 } from '../utils/index.js';
 import { setView } from '../routing.js'
 import { GameMode } from '../enums.js';
@@ -125,7 +125,8 @@ function gameParamsViewHtml(gameState) {
             )}
             ${htmlDiv('div__player-names', 
                 `${htmlDiv('div__player-name-wrapper', 
-                    `${htmlDiv('div__player-names-title', '<p>Player Names</p>')}`
+                    `${htmlDiv('div__player-names-title', 
+                        htmlP([], 'Enter player names'))}`
                 )}
                 ${htmlDiv('div__player-name-group-wrapper', playerNames(wip.playerArray), {
                     id: playerNameGroupId
