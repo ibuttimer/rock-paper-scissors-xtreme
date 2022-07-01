@@ -209,7 +209,8 @@
 
         --var-result-selection-tile-padding: 10px;
 
-        --game-progress-title-size: 60px;
+        --game-progress-span-padding: 5px;
+        --game-progress-title-size: 80px;
         --game-progress-entry-size: 100px;
     }
 
