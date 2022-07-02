@@ -197,10 +197,23 @@
     border: 2px solid red;
 }
 
-.div__duplicate-error {
+.div__param-errors {
+    display: block;
     margin: var(--var-input-margin) 0 var(--var-input-margin);
     text-align: center;
     color: red;
+}
+
+.div__param-errors-hidden {
+    display: none;
+}
+
+.span__label-error {
+    color: red;
+}
+
+.span__label-no-error {
+    color: transparent;
 }
 
 /* media queries */

@@ -49,7 +49,7 @@ const propertySetting = (property, setting, checkbox) => {
 const settingSwitches = new Map([
     ['sound-toggle-control', propertySetting(SOUND_PROPERTY, 'sound', 'checkbox-sound')],
     ['animation-toggle-control', propertySetting(ANIMATION_PROPERTY, 'animation', 'checkbox-animation')],
-    ['landing-toggle-control', propertySetting(LANDING_PROPERTY, 'start page', 'checkbox-landing')],
+    ['landing-toggle-control', propertySetting(LANDING_PROPERTY, 'show start page', 'checkbox-landing')],
     ['selection-keys-toggle-control', propertySetting(SHOW_SEL_KEYS_PROPERTY, 'show selection keys', 'checkbox-selection-keys')]
 ]);
 

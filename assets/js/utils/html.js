@@ -18,10 +18,19 @@ const htmlWrapper = (tag, className, innerHtml, attribs = {}, selfClosing = fals
     const attribString = Object.entries(attribs)
             .map(([key, value]) => {
                 let attrib;
-                if (key.toLowerCase() === 'checked') {
-                    attrib = value ? 'checked': '';     // special case for radio input checked
-                } else {
-                    attrib = `${key}="${value}"`;
+
+                key = key.toLowerCase();
+
+                switch (key) {
+                    case 'checked':
+                    case 'disabled':
+                    case 'required':
+                        // present is sufficient attributes
+                        attrib = value ? key: '';
+                        break;
+                    default:
+                        attrib = `${key}="${value}"`;
+                        break;
                 }
                 return `${attrib} `;
             })

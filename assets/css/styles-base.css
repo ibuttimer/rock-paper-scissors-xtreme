@@ -129,6 +129,11 @@ table {
                                       rgba(0, 0, 0, 0));
 }
 
+.debossable:disabled,
+.debossable-nbi:disabled {
+    box-shadow: none;
+}
+
 .button__clickable {
     border: 0;
     height: 35px;
@@ -141,6 +146,10 @@ table {
     background-color: orange;
 }
 
+.button__clickable:disabled {
+    color: lightgrey;
+    background-color: grey;
+}
 .button__clickable:hover {
     background-image: none;
 }
@@ -170,7 +179,7 @@ table {
 }
 
 .color_1 {
-    color: red; 
+    color: indianred; 
 }
 .color_2 {
     color: green;
@@ -206,7 +215,7 @@ table {
     color: darkseagreen;
 }
 .background-color_1 {
-    background-color: red; 
+    background-color: indianred; 
 }
 .background-color_2 {
     background-color: green;

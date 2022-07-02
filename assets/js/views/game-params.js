@@ -10,7 +10,8 @@ import { Player, Robot } from '../player.js';
 import { default as titleHeader } from '../components/title.js'
 import { 
     generateId, optionsList, accumulator, adjustArray, htmlH4, htmlSelect, htmlDiv, 
-    htmlButton, htmlInput, htmlLabel, htmlP, log, ViewDetail
+    htmlButton, htmlInput, htmlLabel, htmlP, log, ViewDetail, gameParticipantsCheck,
+    replaceElementClass, htmlSpan
 } from '../utils/index.js';
 import { setView } from '../routing.js'
 import { GameMode } from '../enums.js';
@@ -54,6 +55,7 @@ const bestOfRadioLabelId = generateRadioLabelId(bestOfRadioId);
 const bestOfSelectId = generateSelectId({}, bestOfRadioId, 1);  // index 1 corresponds to 'best of' index in numGameOptions 
 const playButtonId = 'play-button';
 const playerNameGroupId = 'player-name-group';
+const errorGroupId = 'error-group';
 
 // odd numbers greater than 1 up to max inclusive
 export const bestOfOptions = [...Array((MAX_GAMES + 2) - MIN_GAMES + 1).keys()].filter(x => x > 1 && x % 2);
@@ -111,10 +113,6 @@ function gameParamsViewHtml(gameState) {
     wip.bestOf = gameState.bestOf;
     wip.gameMode = gameState.game.gameMode;
 
-    const button = htmlButton(['button__play', 'button__clickable', 'debossable'], 'Play', {
-        id: playButtonId,
-        'aria-label': 'play game.'
-    });
     return `${titleHeader(gameState)}
             ${htmlDiv('div__num-of-game-participants', 
                 `${getNumPlayers(numPlayersInfo(wip.numPlayers))}
@@ -130,9 +128,12 @@ function gameParamsViewHtml(gameState) {
                 )}
                 ${htmlDiv('div__player-name-group-wrapper', playerNames(wip.playerArray), {
                     id: playerNameGroupId
+                })}
+                ${htmlDiv('div__param-errors-hidden', '', {
+                    id: errorGroupId
                 })}`
             )}
-            ${htmlDiv('div__play', button)}`;
+            ${htmlDiv('div__play', playButton(false))}`;
 }
 
 /** 
@@ -162,27 +163,29 @@ export function playGame(event, gameState, setPlayView = true) {
         gameState.startMatch();
 
         if (setPlayView) {
-         setView(PLAY_URL, gameState);
+            setView(PLAY_URL, gameState);
         }
     } else {
         // re-display players with errors
-        displayPlayers(playerCheck.players, playerCheck.duplicates);
+        displayCheckResult(playerCheck);
     }
 }
 
 /**
- * Save the entered player names
+ * Save the entered player names and check for param errors
  * @param {Array[Player]} array - array of players
  * @returns {object} result object with the following properties:
  * @type {boolean} ok - player names ok flag
  * @type {Array[Player]} players - array of players
  * @type {Array[number]} duplicates - array of indices with duplicate names
+ * @type {Array[string]} errors - array of error messages
  */
 function persistPlayerNames(array) {
     
-    const duplicates = new Map();
+    const duplicates = new Map();   // map with name as key and array of indices as value
     let areUnique = true;
 
+    // determine indices for each entered name
     array.forEach((player, index) => {
         const id = generatePlayerInputId(playerIndexToIdNum(index));
         const element = document.getElementById(id);
@@ -197,9 +200,10 @@ function persistPlayerNames(array) {
         }
     });
 
-    let indices = [];
+    let errors = [];  // error messages
+    let indices = [];   // array of indices with duplicate names
     if (!areUnique) {
-        // remove non duplicate entries
+        // remove non duplicate entries from map
         let notDuplicate = [];
         duplicates.forEach(function(value, key) {
             if (value.length === 1) {
@@ -211,12 +215,20 @@ function persistPlayerNames(array) {
         duplicates.forEach(function(value, key) {
             indices = indices.concat(value);
         })
+
+        errors.push('Duplicate player names identified! Please specify unique player names.');
+    }
+
+    const participantsCheck = gameParticipantsCheck(wip.numPlayers, wip.numRobots);
+    if (participantsCheck) {
+        errors = errors.concat(participantsCheck);
     }
 
     return { 
-        ok: areUnique,
+        ok: areUnique && errors.length === 0,
         players: array,
-        duplicates: indices
+        duplicates: indices,
+        errors: errors
     };
 }
 
@@ -271,24 +283,36 @@ function getNumPlayers(params) {
         num = parseInt(event.target.value);
     }
     if (num !== wip.numPlayers) {
+        participantsCheck(num, wip.numRobots);
+    }
+}
 
-        let array = adjustArray(
-            wip.playerArray, num, (index) => {
+/**
+ * Set the number of players
+ * @param {Event|number} event - HTMLElement: change event or number of players
+ */
+ function participantsCheck(numPlayers, numRobots) {
+    let array = wip.playerArray;
+    if (numPlayers != wip.numPlayers) {
+        array = adjustArray(
+            wip.playerArray, numPlayers, (index) => {
                 return new Player(`${defaultPlayerName(index)}`);
             });
-
-        const playerCheck = persistPlayerNames(array);
-
-        wip.numPlayers = num;
         wip.playerArray = array;
 
-        log(`numPlayers ${num}`);
-
-        // update DOM
-        if (wip.gameMode !== GameMode.Demo){
-            displayPlayers(array, playerCheck.duplicates);
-        }
+        wip.numPlayers = numPlayers;
+        log(`numPlayers ${numPlayers}`);
     }
+    if (numRobots !== wip.numRobots) {
+
+        wip.numRobots = numRobots;
+        log(`numRobots ${numRobots}`);
+    }
+
+    const playerCheck = persistPlayerNames(array);
+
+    // update DOM
+    displayCheckResult(playerCheck)
 }
 
 /**
@@ -302,6 +326,18 @@ function getNumPlayers(params) {
 }
 
 /**
+ * Display a params check result
+ * @param {object} playerCheck - object returned from {@link persistPlayerNames}
+ */
+function displayCheckResult(playerCheck) {
+    // update DOM
+    if (wip.gameMode !== GameMode.Demo){
+        displayPlayers(wip.playerArray, playerCheck.duplicates);
+        showErrors(playerCheck.errors);
+    }
+}
+
+/**
  * Set the number of robots
  * @param {Event|number} event - HTMLElement: change event or number of robots
  */
@@ -310,9 +346,10 @@ function setNumRobots(event) {
     if (typeof event !== 'number') {
         num = parseInt(event.target.value);
     }
-    wip.numRobots = num;
-    log(`numRobots ${num}`);
-};
+    if (num !== wip.numRobots) {
+        participantsCheck(wip.numPlayers, num);
+    }
+}
 
 /** Set the maximum number of games */
 const selectedBestOf = () => wip.bestOf = parseInt(
@@ -495,6 +532,9 @@ const playerIndexToIdNum = (index) => { return index + 1 };
  */
 const defaultPlayerName = (index) => `Player ${playerIndexToIdNum(index)}`;
 
+const errorLabel = htmlSpan(['span__label-error'], ' *');
+const noErrorLabel = htmlSpan(['span__label-no-error'], ' *');
+
 /**
  * Generate player name elements 
  * @param {Array[Player]} playerArray - array of players
@@ -503,32 +543,63 @@ const defaultPlayerName = (index) => `Player ${playerIndexToIdNum(index)}`;
  */
 function playerNames(playerArray, errorIndices) {
 
-    let showError = false;
-    let classes;
-    if (errorIndices) {
-        classes = (index) => {
+    let params;
+    if (errorIndices && errorIndices.length > 0) {
+        params = (index) => {
             let playerClasses = undefined;
+            let label = noErrorLabel;
             if (errorIndices.findIndex(idx => idx === index) >= 0) {
                 playerClasses = ['div__border-error'];
-                showError = true;
+                label = errorLabel;
             }
-            return playerClasses;
+            return {
+                classes: playerClasses,
+                label: label
+            }
         }
     } else {
-        classes = (index) => { return undefined; }
+        params = (index) => { return { label: noErrorLabel }; }
     }
-    let html = playerArray
-        .map((player, index) => getPlayerName(playerIndexToIdNum(index), player.name, classes(index)))
+    return playerArray
+        .map((player, index) => getPlayerName(playerIndexToIdNum(index), player.name, params(index)))
         .reduce(accumulator, '');
+}
 
-    if (showError) {
-        html += htmlDiv(['div__duplicate-error'],
-            htmlH4([], 'Duplicate player names identified! Please specify unique player names.')
-        );
+/**
+ * Shows parameter errors
+ * @param {string|Array[string]} errors - list of errors
+ */
+function showErrors(errors) {
+    const element = document.getElementById(errorGroupId);
+    let toSet;
+    let toRemove;
+    if (errors) {
+        toSet = 'div__param-errors';
+        toRemove = 'div__param-errors-hidden';
+
+        if (typeof errors === 'string') {
+            errors = [errors];
+        }
+        element.innerHTML = errors.map(error => htmlH4([], error))
+                .reduce(accumulator, '');
+    } else {
+        toSet = 'div__param-errors-hidden';
+        toRemove = 'div__param-errors';
     }
+    replaceElementClass(element, toRemove, toSet);
+}
 
-    return html;
-
+/**
+ * Generate html for the play button
+ * @param {boolean} disabled - disabled flag
+ * @returns {string}
+ */
+function playButton(disabled) {
+    return htmlButton(['button__play', 'button__clickable', 'debossable'], 'Play', {
+        id: playButtonId,
+        'aria-label': 'play game.',
+        disabled: disabled
+    });
 }
 
 /**
@@ -563,12 +634,19 @@ function playerNames(playerArray, errorIndices) {
  * Player name component.
  * @param {number} idNum - player id number
  * @param {string} defaultValue - default name
- * @param {Array[string]} classes - additional css classes
+ * @param {object} params - additional parameters object of the form
+ * 
+ *  @type {Array[string]} classes - additional css classes
+ *  @type {string} label - label addendum
+ * 
  * @returns {string} html for player name input
  */
- function getPlayerName(idNum, defaultValue, classes) {
+ function getPlayerName(idNum, defaultValue, params) {
 
-    const title = `Player ${idNum}`;
+    let title = `Player ${idNum}`;
+    if (params && params.hasOwnProperty('label') && params.label) {
+        title = `${title}${params.label}`;
+    }
 
     const id = generatePlayerInputId(idNum);
     const playerIndex = playerIdNumToIndex(idNum);
@@ -576,8 +654,9 @@ function playerNames(playerArray, errorIndices) {
     const backgroundCss = playerCss(playerIndex, BACKGROUND_COLOR_PROP);
 
     let inputClasses = ['input__player-name', backgroundCss, colorCss];
-    if (classes) {
-        inputClasses = inputClasses.concat(Array.isArray(classes) ? classes : [classes]);
+    if (params && params.hasOwnProperty('classes') && params.classes) {
+        inputClasses = inputClasses.concat(
+            Array.isArray(params.classes) ? params.classes : [params.classes]);
     }
 
     return htmlDiv(['div__player-name-wrapper'], [
