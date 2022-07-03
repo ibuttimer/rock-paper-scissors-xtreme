@@ -45,15 +45,19 @@ const animation_time = 500;    // animation time in msecs
     // player-specific css class for tile
     const tileClass = gameState.game.currentPlayer.css[SELECTION_TILE_DIV_PROP];
 
+    const playerNameHtml = htmlDiv(['div__play-player-name'], currentPlayerNameHeader(gameState), {
+        id: currentPlayerHeaderId
+    });
+    const playerSelectionsHtml = htmlDiv(['div__play-area'], 
+                            getSelections(gameState, tileClass));
+
     return `${titleHeader(gameState)}
             ${gameProgress(gameState.progressMap)}
             ${htmlDiv(['div__play-instruction'], 
                 htmlP([], 'Make round selection'))}
-            ${htmlDiv(['div__play-player-name'], currentPlayerNameHeader(gameState), {
-                id: currentPlayerHeaderId
-            })}
             ${htmlSection(['section__select-play'], 
-                getSelections(gameState, tileClass))}`;
+                playerNameHtml + 
+                playerSelectionsHtml)}`;
 }
 
 /**

@@ -10,15 +10,15 @@
 }
 
 /* play view */
-.section__select-play {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-around;
-}
-
 .div__play-instruction {
     margin: var(--var-game-tile-margin) var(--var-game-tile-margin) 0 var(--var-game-tile-margin);
     text-align: center;
+}
+
+.div__play-area {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
 }
 
 /* selection tile component */
