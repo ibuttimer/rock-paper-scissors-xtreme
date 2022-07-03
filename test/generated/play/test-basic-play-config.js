@@ -1,5 +1,5 @@
 /**
-    Configuration override to generate basic game variant params view
+    Configuration override to generate basic game variant play view
     @author Ian Buttimer
 */
 
@@ -15,11 +15,20 @@ localStorage.setItem('ENABLE_LOG', '0');
 
 /* Set the initial game parameters */
 localStorage.setItem('VARIANT', 'Basic');
-localStorage.setItem('NUM_PLAYERS', '3');
-localStorage.setItem('NUM_ROBOTS', '1');
+localStorage.setItem('NUM_PLAYERS', '9');
+localStorage.setItem('NUM_ROBOTS', '3');
 localStorage.setItem('NUM_GAMES', '5');
+
+/* Set the game mode, possible values are:
+    'live' - GameMode.Live
+    'test' - GameMode.Test
+    'demo' - GameMode.Demo
+    'managed' - GameMode.Managed
+*/
+localStorage.setItem('MODE', 'demo');
 
 /* Set the initial view, possible values are:
     'params' - params view
+    'play' - play view
 */
-localStorage.setItem('VIEW', 'params');
+localStorage.setItem('VIEW', 'play');

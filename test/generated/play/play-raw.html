@@ -35,7 +35,7 @@
     <header>
         <nav class="nav__top">
             <div class="div__logo">
-                <button type="button" class="button__logo" id="menu-logo" value="/" aria-label="logo, basic game parameters page, goto home.">
+                <button type="button" class="button__logo" id="menu-logo" value="/" aria-label="logo, play page, goto home.">
                     <img src="android-chrome-192x192.png" width="28" height="28" class="img_logo" alt="logo">
                 </button>
             </div>
@@ -108,71 +108,79 @@
                 Basic
             </span>
             </h1>
-            <div class="div__num-of-game-participants">
-                <div class="div__num-players-wrapper">
-                <label class="style__param-input style__param-input-left" for="Number-of-players">
-                Number of players:
-            </label><select class="style__param-input style__param-input-right" id="Number-of-players" name="Number-of-players">
-                <option value="1">1</option> <option value="2" selected="">2</option> <option value="3">3</option> <option value="4">4</option> <option value="5">5</option> <option value="6">6</option> <option value="7">7</option> <option value="8">8</option> <option value="9">9</option>
-            </select>
-            </div>
-                <div class="div__num-players-wrapper">
-                <label class="style__param-input style__param-input-left" for="Number-of-robots">
-                Number of robots:
-            </label><select class="style__param-input style__param-input-right" id="Number-of-robots" name="Number-of-robots">
-                <option value="0" selected="">0</option> <option value="1">1</option> <option value="2">2</option> <option value="3">3</option>
-            </select>
-            </div>
-            </div>
-            <div class="div__num-games-wrapper">
-                <input type="radio" id="One-game-shoot-out-radio" name="num-of-games" value="1">
-                <label class="style__param-input" for="One-game-shoot-out-radio" id="One-game-shoot-out-radio-label" aria-label="One game shoot-out option, not selected, number of games 3.">
-                One game shoot-out
-            </label><input type="radio" id="Best-of-radio" name="num-of-games" value="3" checked="">
-                <label class="style__param-input" for="Best-of-radio" id="Best-of-radio-label" aria-label="Best of multiple games option, selected, number of games 3.">
-                Best of
-            </label><select class="style__param-input" id="Best-of-radio-select-1" name="Best-of-radio-select-1" aria-label="Best of multiple games setter, selected, number of games 3.">
-                <option value="3" selected="">3</option> <option value="5">5</option> <option value="7">7</option> <option value="9">9</option> <option value="11">11</option> <option value="13">13</option> <option value="15">15</option>
-            </select>
-            </div>
-            <div class="div__player-names">
-                <div class="div__player-name-wrapper">
-                <div class="div__player-names-title">
+            <div class="div__game-progress-wrapper">
+                <div class="div__game-progress-entry">
+                <div class="div__game-progress-title">
                 <p>
-                Enter player names
+                Best of
+            </p>
+            </div> <div class="div__game-progress-data">
+                <p>
+                5
+            </p>
+            </div>
+            </div><div class="div__game-progress-entry">
+                <div class="div__game-progress-title">
+                <p>
+                Game
+            </p>
+            </div> <div class="div__game-progress-data">
+                <p>
+                1
+            </p>
+            </div>
+            </div><div class="div__game-progress-entry">
+                <div class="div__game-progress-title">
+                <p>
+                Round
+            </p>
+            </div> <div class="div__game-progress-data">
+                <p>
+                1
             </p>
             </div>
             </div>
-                <div class="div__player-name-group-wrapper" id="player-name-group">
-                <div class="div__player-name-wrapper">
-                <label for="player-name-1">
-                Player 1<span class="span__label-no-error">
-                 *
-            </span>
-            </label> <div class="div__player-name-input">
-                <input class="input__player-name background-color_1 color_1_text" type="text" id="player-name-1" name="player-name-1" value="Player 1">
-                
             </div>
-            </div><div class="div__player-name-wrapper">
-                <label for="player-name-2">
-                Player 2<span class="span__label-no-error">
-                 *
-            </span>
-            </label> <div class="div__player-name-input">
-                <input class="input__player-name background-color_2 color_2_text" type="text" id="player-name-2" name="player-name-2" value="Player 2">
-                
+            <div class="div__play-instruction">
+                <p>
+                Make round selection
+            </p>
+            </div>
+            <div class="div__play-player-name" id="current-player-header">
+                <h2 class="h2__sub-title color_1">
+                Player 1
+            </h2>
+            </div>
+            <section class="section__select-play">
+                <div class="div__selection-option-wrapper">
+                <div class="div__selection-tile-wrapper debossable-nbi div__selection-tile-wrapper-1" data-selection="Selection.Rock" role="button" aria-label="Click to select Rock or, press r.">
+                <img class="img__selection-tile-img" src="assets/img/rocks.png" alt="Rock selection. Click to select Rock or, press r.">
+                 <p class="p__selection-tile-name">
+                Rock
+            </p> <p class="p__selection-tile-key">
+                <i class="lni lni-keyboard"></i>&nbsp;R
+            </p>
+            </div>
+            </div><div class="div__selection-option-wrapper">
+                <div class="div__selection-tile-wrapper debossable-nbi div__selection-tile-wrapper-1" data-selection="Selection.Paper" role="button" aria-label="Click to select Paper or, press p.">
+                <img class="img__selection-tile-img" src="assets/img/paper.png" alt="Paper selection. Click to select Paper or, press p.">
+                 <p class="p__selection-tile-name">
+                Paper
+            </p> <p class="p__selection-tile-key">
+                <i class="lni lni-keyboard"></i>&nbsp;P
+            </p>
+            </div>
+            </div><div class="div__selection-option-wrapper">
+                <div class="div__selection-tile-wrapper debossable-nbi div__selection-tile-wrapper-1" data-selection="Selection.Scissors" role="button" aria-label="Click to select Scissors or, press s.">
+                <img class="img__selection-tile-img" src="assets/img/scissors.png" alt="Scissors selection. Click to select Scissors or, press s.">
+                 <p class="p__selection-tile-name-long">
+                Scissors
+            </p> <p class="p__selection-tile-key">
+                <i class="lni lni-keyboard"></i>&nbsp;S
+            </p>
             </div>
             </div>
-            </div>
-                <div class="div__param-errors-hidden" id="error-group">
-                
-            </div>
-            </div>
-            <div class="div__play">
-                <button class="button__play button__clickable debossable" id="play-button" aria-label="play game.">
-                Play
-            </button>
-            </div></main>
+            </section></main>
     </div>
     <footer class="footer__footer">
         <div class="div__copyright">

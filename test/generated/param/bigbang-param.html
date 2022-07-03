@@ -36,7 +36,7 @@
     <header>
         <nav class="nav__top">
             <div class="div__logo">
-                <button type="button" class="button__logo" id="menu-logo" value="/" aria-label="logo, results page, goto home.">
+                <button type="button" class="button__logo" id="menu-logo" value="/" aria-label="logo, basic game parameters page, goto home.">
                     <img src="../../../android-chrome-192x192.png" width="28" height="28" class="img_logo" alt="logo">
                 </button>
             </div>
@@ -109,113 +109,128 @@
                 Basic
             </span>
             </h1>
-            <div class="div__game-progress-wrapper">
-                <div class="div__game-progress-entry">
-                <div class="div__game-progress-title">
-                <p>
+            <div class="div__num-of-game-participants">
+                <div class="div__num-players-wrapper">
+                <label class="style__param-input style__param-input-left" for="Number-of-players">
+                Number of players:
+            </label><select class="style__param-input style__param-input-right" id="Number-of-players" name="Number-of-players">
+                <option value="1">1</option> <option value="2" selected="">2</option> <option value="3">3</option> <option value="4">4</option> <option value="5">5</option> <option value="6">6</option> <option value="7">7</option> <option value="8">8</option> <option value="9">9</option>
+            </select>
+            </div>
+                <div class="div__num-players-wrapper">
+                <label class="style__param-input style__param-input-left" for="Number-of-robots">
+                Number of robots:
+            </label><select class="style__param-input style__param-input-right" id="Number-of-robots" name="Number-of-robots">
+                <option value="0" selected="">0</option> <option value="1">1</option> <option value="2">2</option> <option value="3">3</option>
+            </select>
+            </div>
+            </div>
+            <div class="div__num-games-wrapper">
+                <input type="radio" id="One-game-shoot-out-radio" name="num-of-games" value="1">
+                <label class="style__param-input" for="One-game-shoot-out-radio" id="One-game-shoot-out-radio-label" aria-label="One game shoot-out option, not selected, number of games 5.">
+                One game shoot-out
+            </label><input type="radio" id="Best-of-radio" name="num-of-games" value="3" checked="">
+                <label class="style__param-input" for="Best-of-radio" id="Best-of-radio-label" aria-label="Best of multiple games option, selected, number of games 5.">
                 Best of
-            </p>
-            </div> <div class="div__game-progress-data">
+            </label><select class="style__param-input" id="Best-of-radio-select-1" name="Best-of-radio-select-1" aria-label="Best of multiple games setter, selected, number of games 5.">
+                <option value="3" selected="">3</option> <option value="5">5</option> <option value="7">7</option> <option value="9">9</option> <option value="11">11</option> <option value="13">13</option> <option value="15">15</option>
+            </select>
+            </div>
+            <div class="div__player-names">
+                <div class="div__player-name-wrapper">
+                <div class="div__player-names-title">
                 <p>
-                3
-            </p>
-            </div>
-            </div><div class="div__game-progress-entry">
-                <div class="div__game-progress-title">
-                <p>
-                Game
-            </p>
-            </div> <div class="div__game-progress-data">
-                <p>
-                1
-            </p>
-            </div>
-            </div><div class="div__game-progress-entry">
-                <div class="div__game-progress-title">
-                <p>
-                Round
-            </p>
-            </div> <div class="div__game-progress-data">
-                <p>
-                1
+                Enter player names
             </p>
             </div>
             </div>
+                <div class="div__player-name-group-wrapper" id="player-name-group"><div class="div__player-name-wrapper">
+                <label for="player-name-1">
+                Player 1<span class="span__label-no-error">
+                 *
+            </span>
+            </label> <div class="div__player-name-input">
+                <input class="input__player-name background-color_1 color_1_text" type="text" id="player-name-1" name="player-name-1" value="Player 1">
+                
             </div>
-            <div class="div__result-heading">
-                <p>
-                Result
-            </p>
+            </div><div class="div__player-name-wrapper">
+                <label for="player-name-2">
+                Player 2<span class="span__label-no-error">
+                 *
+            </span>
+            </label> <div class="div__player-name-input">
+                <input class="input__player-name background-color_2 color_2_text" type="text" id="player-name-2" name="player-name-2" value="Player 2">
+                
             </div>
-            <h3 class="h3__round-result-text">
-                Winner
-            </h3>
-            <div class="div__round-result-leader-board">
-                <div class="div__round-result">
-                <section class="section__round-result" id="round-result">
-                <div class="div__player-selection-wrapper">
-                <div class="div__play-sel-tile-wrapper div__selection-tile-wrapper-1 animate__fall-back div__to-left-diagonal" role="note" aria-label="Player 1 selected Rock.">
-                 <h4 class="h4__play-sel-tile-player-name color_1 h4__play-sel-tile-long std-line-height">
-                Player 1
-            </h4> <img class="img__play-sel-tile-img" src="../../../assets/img/rocks.png" alt="Rock selection. Selected by Player 1.">
-                 <h4 class="h4__play-sel-tile-name ">
-                Rock
-            </h4>
+            </div><div class="div__player-name-wrapper">
+                <label for="player-name-3">
+                Player 3<span class="span__label-no-error">
+                 *
+            </span>
+            </label> <div class="div__player-name-input">
+                <input class="input__player-name background-color_3 color_3_text" type="text" id="player-name-3" name="player-name-3" value="Player 3">
+                
             </div>
-            </div><div class="div__player-selection-wrapper">
-                <div class="div__play-sel-tile-wrapper div__selection-tile-wrapper-2" role="note" aria-label="Player 2 selected Paper.">
-                <h3 class="h3__play-sel-tile-banner h3__play-sel-tile-med">
-                Winner
-            </h3> <h4 class="h4__play-sel-tile-player-name color_2 h4__play-sel-tile-long std-line-height">
-                Player 2
-            </h4> <img class="img__play-sel-tile-img" src="../../../assets/img/paper.png" alt="Paper selection. Selected by Player 2.">
-                 <h4 class="h4__play-sel-tile-name ">
-                Paper
-            </h4>
+            </div><div class="div__player-name-wrapper">
+                <label for="player-name-4">
+                Player 4<span class="span__label-no-error">
+                 *
+            </span>
+            </label> <div class="div__player-name-input">
+                <input class="input__player-name background-color_4 color_4_text" type="text" id="player-name-4" name="player-name-4" value="Player 4">
+                
             </div>
+            </div><div class="div__player-name-wrapper">
+                <label for="player-name-5">
+                Player 5<span class="span__label-no-error">
+                 *
+            </span>
+            </label> <div class="div__player-name-input">
+                <input class="input__player-name background-color_5 color_5_text" type="text" id="player-name-5" name="player-name-5" value="Player 5">
+                
             </div>
-            </section>
+            </div><div class="div__player-name-wrapper">
+                <label for="player-name-6">
+                Player 6<span class="span__label-no-error">
+                 *
+            </span>
+            </label> <div class="div__player-name-input">
+                <input class="input__player-name background-color_6 color_6_text" type="text" id="player-name-6" name="player-name-6" value="Player 6">
+                
             </div>
-                                                        <aside class="aside__leader-board">
-                <div class="div__leader-board-wrapper">
-                <table class="table__leader-board">
-                <thead class="thead__leader-board">
-                <tr><th colspan="2">
-                Scores
-            </th>
-            </tr></thead> <tbody>
-                <tr class="tr__player-score-row">
-                <td class="td__player-name">
-                <p class="color_2">
-                Player 2
-            </p>
-            </td> <td class="td__player-score">
-                <p>
-                1
-            </p>
-            </td>
-            </tr><tr class="tr__player-score-row">
-                <td class="td__player-name">
-                <p class="color_1">
-                Player 1
-            </p>
-            </td> <td class="td__player-score">
-                <p>
-                0
-            </p>
-            </td>
-            </tr>
-            </tbody>
-            </table>
+            </div><div class="div__player-name-wrapper">
+                <label for="player-name-7">
+                Player 7<span class="span__label-no-error">
+                 *
+            </span>
+            </label> <div class="div__player-name-input">
+                <input class="input__player-name background-color_7 color_7_text" type="text" id="player-name-7" name="player-name-7" value="Player 7">
+                
             </div>
-            </aside>
+            </div><div class="div__player-name-wrapper">
+                <label for="player-name-8">
+                Player 8<span class="span__label-no-error">
+                 *
+            </span>
+            </label> <div class="div__player-name-input">
+                <input class="input__player-name background-color_8 color_8_text" type="text" id="player-name-8" name="player-name-8" value="Player 8">
+                
             </div>
-            <p class="p__elimination-explanation">
-                Paper covers Rock
-            </p>
-            <div class="div__round-result-next-button-wrapper">
-                <button class="button__round-result-next-game button__clickable debossable" id="continue-button" aria-label="Click for Next game." rel="next">
-                Next game
+            </div><div class="div__player-name-wrapper">
+                <label for="player-name-9">
+                Player 9<span class="span__label-no-error">
+                 *
+            </span>
+            </label> <div class="div__player-name-input">
+                <input class="input__player-name background-color_9 color_9_text" type="text" id="player-name-9" name="player-name-9" value="Player 9">
+                
+            </div>
+            </div></div>
+                <div class="div__param-errors" id="error-group"></div>
+            </div>
+            <div class="div__play">
+                <button class="button__play button__clickable debossable" id="play-button" aria-label="play game.">
+                Play
             </button>
             </div></main>
     </div>
@@ -225,7 +240,7 @@
         </div>
     </footer>
 
-    <script src="test-basic-result-config.js"></script>
+    <script src="test-bigbang-param-config.js"></script>
 <script type="module" src="../../../assets/js/script.js"></script>
     <script src="../../../lib/tingle.js/tingle.min.js" async="" defer=""></script>
 

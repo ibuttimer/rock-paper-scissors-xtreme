@@ -1,5 +1,5 @@
 /**
-    Configuration override to generate basic game variant params view
+    Configuration override to generate xtreme game variant params view
     @author Ian Buttimer
 */
 
@@ -14,13 +14,12 @@ localStorage.setItem('ASSETS_BASE_URL', '../../../assets/');
 localStorage.setItem('ENABLE_LOG', '0');
 
 /* Set the initial game parameters */
-localStorage.setItem('VARIANT', 'Basic');
-localStorage.setItem('NUM_PLAYERS', '3');
-localStorage.setItem('NUM_ROBOTS', '1');
+localStorage.setItem('VARIANT', 'Xtreme');
+localStorage.setItem('NUM_PLAYERS', '9');
+localStorage.setItem('NUM_ROBOTS', '3');
 localStorage.setItem('NUM_GAMES', '5');
 
 /* Set the initial view, possible values are:
     'params' - params view
-    'play' - play view
 */
-localStorage.setItem('VIEW', 'play');
+localStorage.setItem('VIEW', 'params');

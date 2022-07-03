@@ -15,8 +15,8 @@ localStorage.setItem('ENABLE_LOG', '0');
 
 /* Set the initial game parameters */
 localStorage.setItem('VARIANT', 'Basic');
-localStorage.setItem('NUM_PLAYERS', '3');
-localStorage.setItem('NUM_ROBOTS', '0');
+localStorage.setItem('NUM_PLAYERS', '9');
+localStorage.setItem('NUM_ROBOTS', '3');
 localStorage.setItem('NUM_GAMES', '5');
 
 /* Set the initial view, possible values are:
@@ -25,5 +25,14 @@ localStorage.setItem('NUM_GAMES', '5');
     'control' - view displayed is result of processing 'INPUT'
 */
 localStorage.setItem('VIEW', 'control');
+
+/* Set the game mode, possible values are:
+    'live' - GameMode.Live
+    'test' - GameMode.Test
+    'demo' - GameMode.Demo
+    'managed' - GameMode.Managed
+*/
+localStorage.setItem('MODE', 'demo');
+
 /* Player input, a comma-separated list of game key characters */
-localStorage.setItem('INPUT', 'r,p,s');
+localStorage.setItem('INPUT', 'r,p,s,r,p,s,r,p,s');

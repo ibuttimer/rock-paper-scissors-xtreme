@@ -1,5 +1,5 @@
 /**
-    Configuration override to generate basic game variant win view
+    Configuration override to generate big bang game variant params view
     @author Ian Buttimer
 */
 
@@ -14,16 +14,12 @@ localStorage.setItem('ASSETS_BASE_URL', '../../../assets/');
 localStorage.setItem('ENABLE_LOG', '0');
 
 /* Set the initial game parameters */
-localStorage.setItem('VARIANT', 'Basic');
-localStorage.setItem('NUM_PLAYERS', '3');
-localStorage.setItem('NUM_ROBOTS', '0');
-localStorage.setItem('NUM_GAMES', '1');
+localStorage.setItem('VARIANT', 'BigBang');
+localStorage.setItem('NUM_PLAYERS', '9');
+localStorage.setItem('NUM_ROBOTS', '3');
+localStorage.setItem('NUM_GAMES', '5');
 
 /* Set the initial view, possible values are:
     'params' - params view
-    'play' - play view
-    'control' - view displayed is result of processing 'INPUT'
 */
-localStorage.setItem('VIEW', 'control');
-/* Player input, a comma-separated list of game key characters */
-localStorage.setItem('INPUT', 'r,p,r');
+localStorage.setItem('VIEW', 'params');
