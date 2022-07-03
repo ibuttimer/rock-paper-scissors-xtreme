@@ -758,9 +758,11 @@ export class GameResult {
         let player = this.#makePlayNext(
             this.getPlayer(this.#currentIndex), selection);
 
-        // make plays for any robots
-        while (this.roundInProgress && player && player.isRobot) {
-            player = this.#makePlayNext(player, Selection.Random);
+        // make plays for any robots except when in fully managed mode
+        if (this.gameMode !== GameMode.Managed){
+            while (this.roundInProgress && player && player.isRobot) {
+                player = this.#makePlayNext(player, Selection.Random);
+            }
         }
 
         // if all player have played, evaluate & process round

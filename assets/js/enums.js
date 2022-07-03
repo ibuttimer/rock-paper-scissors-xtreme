@@ -223,10 +223,17 @@ import { requiredVariable } from './utils/index.js';
  */
  export class GameMode extends Enum {
     // freeze game modes so can't be modified
+    /** Live mode */
     static Live = Object.freeze(new Selection('Live'));
+    /** Test mode */
     static Test = Object.freeze(new Selection('Test'));
+    /** Demo mode, same as Live but managed player selections */
     static Demo = Object.freeze(new Selection('Demo'));
+    /** Managed mode, fully managed player & robot selections */
+    static Managed = Object.freeze(new Selection('Managed'));
   
+    static AllModes = [GameMode.Live, GameMode.Test, GameMode.Demo, GameMode.Managed];
+
     /**
      * @constructor
      * @param {string} name - game mode name.

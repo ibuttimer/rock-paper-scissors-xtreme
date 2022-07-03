@@ -5,7 +5,7 @@
 import { DEFAULT_PLAYERS, DEFAULT_ROBOTS } from './globals.js';
 import { 
     default as config, VARIANT_KEY, NUM_PLAYERS_KEY, NUM_ROBOTS_KEY, 
-    NUM_GAMES_KEY, VIEW_KEY, INPUT_KEY, ALL_KEYS,
+    NUM_GAMES_KEY, MODE_KEY, VIEW_KEY, INPUT_KEY, ALL_KEYS,
     PARAMS_VIEW, PLAY_VIEW, CONTROL_VIEW, RULES_VIEW
 } from "../../env.js";
 import { log } from './utils/index.js';
@@ -33,8 +33,9 @@ function runGame() {
 
     log('runGame');
 
-    // load variant from local storage
+    // load variant & mode from local storage
     const variant = loadVariant();
+    const mode = loadMode();
 
     // load number of players/robots from local storage
     const numPlayers = getNumber(NUM_PLAYERS_KEY, DEFAULT_PLAYERS);
@@ -67,8 +68,8 @@ function runGame() {
                 break;
             case PLAY_VIEW:
             case CONTROL_VIEW:
-                gameState.game.setGameMode(GameMode.Demo);
-                setParamsOverride(numPlayers, numRobots, gameState.bestOf);
+                gameState.game.setGameMode(mode);
+                setParamsOverride(numPlayers, numRobots, gameState.bestOf, mode);
                 playGame({}, gameState, view === PLAY_VIEW);    // set view in playGame for PLAY_VIEW
 
                 if (view === CONTROL_VIEW) {
@@ -117,22 +118,44 @@ function runGame() {
  */
 function loadVariant() {
     // load variant from local storage
-    let variant = localStorage.getItem(VARIANT_KEY);
-    if (typeof variant === 'string') {
-        variant = variant.toLowerCase();
-        if (variant === GameVariant.Basic.name.toLowerCase()) {
-            variant = GameVariant.Basic;
-        } else if (variant === GameVariant.BigBang.name.toLowerCase()) {
-            variant = GameVariant.BigBang;
-        } else if (variant === GameVariant.Xtreme.name.toLowerCase()) {
-            variant = GameVariant.Xtreme;
-        } else {
-            throw new Error(`Unknown variant setting: ${variant}`);
+    return loadEnum(VARIANT_KEY, GameVariant.AllVariants, GameVariant.Basic, 'variant');
+}
+
+/**
+ * Load an {@link Enum} setting from local storage
+ * @param {string} key - local storage key
+ * @param {Array[Enum]} possibilities - Array of possible values
+ * @param {Enum} defaultValue - default value
+ * @param {string} name - setting name
+ * @returns {Enum}
+ */
+function loadEnum(key, possibilities, defaultValue, name) {
+    // load variant from local storage
+    let value = undefined;
+    let storage = localStorage.getItem(key);
+    if (typeof storage === 'string') {
+        storage = storage.toLowerCase();
+        for (let entry of possibilities ) {
+            if (storage === entry.name.toLowerCase()) {
+                value = entry;
+                break;
+            }
+        }
+        if (!value) {
+            throw new Error(`Unknown ${name} setting: ${storage}`);
         }
     } else {
-        variant = GameVariant.Basic;
+        value = defaultValue;
     }
-    return variant;
+    return value;
+}
+
+/**
+ * Get game mode from local storage
+ * @returns {GameMode}
+ */
+ function loadMode() {
+    return loadEnum(MODE_KEY, GameMode.AllModes, GameMode.Live, 'game mode');
 }
 
 /**

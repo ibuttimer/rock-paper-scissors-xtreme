@@ -26,6 +26,14 @@ localStorage.setItem('NUM_ROBOTS', '1');
 /** Set the number of players parameter, @see {@link globals.js} MIN_GAMES/MAX_GAMES */
 localStorage.setItem('NUM_GAMES', '5');
 
+/* Set the game mode, possible values are:
+    'live' - GameMode.Live
+    'test' - GameMode.Test
+    'demo' - GameMode.Demo
+    'managed' - GameMode.Managed
+*/
+localStorage.setItem('MODE', 'demo');
+
 /* Set the initial view, possible values are:
     'params' - params view
     'play' - play view

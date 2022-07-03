@@ -11,11 +11,12 @@ export const VARIANT_KEY = 'VARIANT';
 export const NUM_PLAYERS_KEY = 'NUM_PLAYERS';
 export const NUM_ROBOTS_KEY = 'NUM_ROBOTS';
 export const NUM_GAMES_KEY = 'NUM_GAMES';
+export const MODE_KEY = 'MODE';
 export const VIEW_KEY = 'VIEW';
 export const INPUT_KEY = 'INPUT';
 export const ALL_KEYS = [
     ENABLE_LOG_KEY, ASSETS_BASE_URL_KEY, VARIANT_KEY, NUM_PLAYERS_KEY, NUM_ROBOTS_KEY, NUM_GAMES_KEY, 
-    VIEW_KEY, INPUT_KEY
+    MODE_KEY, VIEW_KEY, INPUT_KEY
 ];
 
 // values for 'VIEW_KEY'

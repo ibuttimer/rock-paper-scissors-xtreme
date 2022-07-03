@@ -331,7 +331,7 @@ function getNumPlayers(params) {
  */
 function displayCheckResult(playerCheck) {
     // update DOM
-    if (wip.gameMode !== GameMode.Demo){
+    if (wip.gameMode === GameMode.Live){
         displayPlayers(wip.playerArray, playerCheck.duplicates);
         showErrors(playerCheck.errors);
     }
@@ -474,9 +474,10 @@ function setNumGames(event, gameState) {
  * @param {number} numPlayers - number of players
  * @param {number} numRobots - number of robots
  * @param {number} numGames - number of robots
+ * @param {GameMode} gameMode - game mode
  */
-export function setParamsOverride(numPlayers, numRobots, numGames) {
-    wip.gameMode = GameMode.Demo;
+export function setParamsOverride(numPlayers, numRobots, numGames, gameMode) {
+    wip.gameMode = gameMode;
 
     setNumPlayers(numPlayers);
     setNumRobots(numRobots);
