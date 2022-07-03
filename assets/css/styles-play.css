@@ -42,7 +42,11 @@
     border-radius: 50%;
 }
 
-.h4__selection-tile-name {
+.p__selection-tile-name,
+.p__selection-tile-name-med,
+.p__selection-tile-name-long {
+    font-family: var(--heading-font);
+    font-weight: var(--heading-font-weight);
     text-align: center;
 }
 
@@ -86,7 +90,7 @@
 }
 
 .div__selection-tile-wrapper-1 {
-    border-color: indianred; 
+    border-color: #C90000; 
 }
 .div__selection-tile-wrapper-2 {
     border-color: green;
@@ -95,31 +99,31 @@
     border-color: blue;
 }
 .div__selection-tile-wrapper-4 {
-    border-color: aqua;
+    border-color: #006666;
 }
 .div__selection-tile-wrapper-5 {
-    border-color: darkgrey;
+    border-color: #6F6F6F;
 }
 .div__selection-tile-wrapper-6 {
-    border-color: orange;
+    border-color: #A36A00;
 }
 .div__selection-tile-wrapper-7 {
-    border-color: deeppink;
+    border-color: #BF0E6C;
 }
 .div__selection-tile-wrapper-8 {
-    border-color: salmon;
+    border-color: #B55D53;
 }
 .div__selection-tile-wrapper-9 {
     border-color: teal;
 }
 .div__selection-tile-wrapper-10 {
-    border-color: chocolate;
+    border-color: #1B1B7D;
 }
 .div__selection-tile-wrapper-11 {
-    border-color: orchid;
+    border-color: #AB57A8;
 }
 .div__selection-tile-wrapper-12 {
-    border-color: darkseagreen;
+    border-color: #558016;
 }
 
 /* media queries */
@@ -144,10 +148,10 @@
         --var-game-tile-padding: 9px;
     }
 
-    .h4__selection-tile-name {
+    .p__selection-tile-name {
         font-size: 0.9em;   /* 90% std size 1em */
     }
-    .h4__selection-tile-name-long {
+    .p__selection-tile-name-long {
         font-size: 0.7em;   /* 70% std size 1em */
         line-height: 1.6;   /* to keep tiles same height */
     }
@@ -161,14 +165,14 @@
         --var-game-tile-padding: 6px;
     }
 
-    .h4__selection-tile-name {
+    .p__selection-tile-name {
         font-size: 0.8em;   /* 80% std size 1em */
     }
-    .h4__selection-tile-name-med {
+    .p__selection-tile-name-med {
         font-size: 0.7em;   /* 70% std size 1em */
         line-height: 1.6;   /* to keep tiles same height */
     }
-    .h4__selection-tile-name-long {
+    .p__selection-tile-name-long {
         font-size: 0.45em;   /* 60% std size 1em */
         line-height: 2.4;   /* to keep tiles same height */
     }
@@ -182,9 +186,9 @@
         --var-game-tile-padding: 4px;
     }
 
-    .h4__selection-tile-name,
-    .h4__selection-tile-name-med,
-    .h4__selection-tile-name-long {
+    .p__selection-tile-name,
+    .p__selection-tile-name-med,
+    .p__selection-tile-name-long {
         display: none;
     }
 }

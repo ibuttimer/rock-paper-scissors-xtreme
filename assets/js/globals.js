@@ -32,8 +32,8 @@ export const LANDING_PROPERTY = 'displayLanding';
 export const SHOW_SEL_KEYS_PROPERTY = 'showSelectionKeys';
 
 export const PLAYER_COLOURS = [
-    'red', 'green', 'blue', 'aqua', 'darkgrey', 'orange', 
-    'deeppink', 'salmon', 'teal', 'chocolate', 'orchid', 'darkseagreen'
+    '#C90000', 'green', 'blue', '#006666', '#6F6F6F', '#A36A00', 
+    '#BF0E6C', '#B55D53', 'teal', '#1B1B7D', '#AB57A8', '#558016'
 ];
 console.assert(
     PLAYER_COLOURS.length === MAX_PARTICIPANTS, 

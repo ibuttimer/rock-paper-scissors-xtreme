@@ -7,7 +7,7 @@ import {
     titleHeader, gameProgress, leaderBoard, playerSelectionTile, getPlayerSelectionTileParam
 } from '../components/index.js'
 import { 
-    accumulator, htmlDiv, htmlButton, htmlSection, htmlAside, htmlH3, htmlP, ViewDetail 
+    accumulator, htmlDiv, htmlButton, htmlSection, htmlAside, htmlH2, htmlP, ViewDetail 
 } from '../utils/index.js';
 import { SELECTION_TILE_DIV_PROP } from './game-params.js'
 
@@ -132,7 +132,7 @@ function getPlayerSelections(gameState) {
  * @returns {string} html for component
  */
 function getResultText(roundResult) {
-    return htmlH3(['h3__round-result-text'],
+    return htmlH2(['h2__round-result-text'],
                 resultTexts.has(roundResult.resultCode) ? 
                     resultTexts.get(roundResult.resultCode).resultText : ''
             );

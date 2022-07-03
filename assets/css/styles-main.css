@@ -39,6 +39,7 @@
     font-weight: var(--heading-font-weight);
     font-size: var(--default-h3-height);
     text-align: center;
+    color: white;
 }
 
 .div__variant-select {

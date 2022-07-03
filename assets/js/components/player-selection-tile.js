@@ -2,7 +2,7 @@
     Player's selection tile component.
     @author Ian Buttimer
 */
-import { htmlDiv, htmlImg, htmlH3, htmlH4 } from '../utils/index.js'
+import { htmlDiv, htmlImg, htmlH3, htmlP } from '../utils/index.js'
 
 /**
  * Player's selection tile component
@@ -15,16 +15,16 @@ import { htmlDiv, htmlImg, htmlH3, htmlH4 } from '../utils/index.js'
         htmlH3([
             'h3__play-sel-tile-banner', h3SizeModifier(params.banner)
         ], params.banner) : '';
-    const playerName = htmlH4([
-        'h4__play-sel-tile-player-name', params.player.css.color, h4SizeModifier(params.player.name),
+    const playerName = htmlP([
+        'p__play-sel-tile-player-name', params.player.css.color, h4SizeModifier(params.player.name),
         'std-line-height'
     ], params.player.name);
     const image = htmlImg('img__play-sel-tile-img', {
         src: params.src, 
         alt: `${params.alt} ${`Selected by ${params.player.name}.`}`
     });
-    const selectionName = htmlH4([
-        'h4__play-sel-tile-name', h4SizeModifier(params.selection.name)
+    const selectionName = htmlP([
+        'p__play-sel-tile-name', h4SizeModifier(params.selection.name)
     ], params.selection.name);
 
     let classes = ['div__play-sel-tile-wrapper'];

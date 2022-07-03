@@ -13,9 +13,9 @@
 	/* leader board component */
 	--leader-board-border-colour: var(--game-progress-border-colour);
 	--leader-board-span-padding: 10px;
-    --leader-board-header-colour: var(--brown);
+    --leader-board-header-colour: #AB660C;
     --leader-board-header-text-colour: #fff;
-    --leader-board-background-color: floralwhite;
+    --leader-board-background-color: #fff;
     --leader-board-margin: var(--var-result-selection-tile-margin);
     --leader-board-player-name-size: 100px;
     --leader-board-entry-size: 120px;
@@ -125,15 +125,20 @@
 .h3__play-sel-tile-banner {
     text-align: center;
     font-size: var(--h3-selection-tile-font-size);
-    color: goldenrod;
+    color: #7E5E0D;
+    text-shadow: 1px 1px 2px gold;
 }
 
-.h4__play-sel-tile-name {
+.p__play-sel-tile-name {
+    font-family: var(--heading-font);
+    font-weight: var(--heading-font-weight);
     text-align: center;
     font-size: var(--h4-selection-tile-font-size);
 }
 
-.h4__play-sel-tile-player-name {
+.p__play-sel-tile-player-name {
+    font-family: var(--heading-font);
+    font-weight: var(--heading-font-weight);
     text-align: center;
     font-size: var(--h4-selection-tile-font-size);
     overflow: hidden;
@@ -214,7 +219,7 @@
         --game-progress-entry-size: 100px;
     }
 
-    .h4__play-sel-tile-name {
+    .p__play-sel-tile-name {
         display: none;
     }
 }

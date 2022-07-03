@@ -81,10 +81,10 @@ function getSelections(gameState, tileClass) {
         src: params.src, 
         alt: `${params.alt} ${clickToSelect}`
     });
-    const name = htmlH4(
+    const name = htmlP(
         // reduce font size on longer names
-        params.selection.name.length > 7 ? 'h4__selection-tile-name-long' : 
-            params.selection.name.length > 5 ? 'h4__selection-tile-name-med' : 'h4__selection-tile-name', 
+        params.selection.name.length > 7 ? 'p__selection-tile-name-long' : 
+            params.selection.name.length > 5 ? 'p__selection-tile-name-med' : 'p__selection-tile-name', 
         params.selection.name);
     const key = htmlP(showKey ? selKeysVisibleClass : selKeysHiddenClass, 
         `<i class="lni lni-keyboard"></i>&nbsp;${params.selection.key.key.toUpperCase()}`);
