@@ -12,3 +12,6 @@ localStorage.setItem('ASSETS_BASE_URL', '../../../assets/');
    an empty array ([]), or the string "false", create an object with an initial value of true.
    https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean */
 localStorage.setItem('ENABLE_LOG', '0');
+
+/* Don't show landing page */
+localStorage.setItem('rpsxLanding', '0');
