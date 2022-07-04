@@ -1,8 +1,10 @@
 <!DOCTYPE html>
-<html lang="en"><head>
-    <meta charset="utf-8">
-    <link rel="icon" href="../../../favicon.ico">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="../../../favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="msapplication-TileColor" content="#ffc40d">
     <meta name="theme-color" content="#fbb13c">    
     <meta name="description" content="Extreme version of Rock, Paper, Scissors game.">
@@ -34,31 +36,33 @@
 <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <header>
-        <nav class="nav__top">
-            <div class="div__logo">
-                <button type="button" class="button__logo" id="menu-logo" value="/" aria-label="logo, play page, goto home.">
-                    <img src="../../../android-chrome-192x192.png" width="28" height="28" class="img_logo" alt="logo">
+        <nav class='nav__top'>
+            <div class='div__logo'>
+                <button type="button" class='button__logo'  id="menu-logo" value="/" 
+                        aria-label='logo, current page, home.'>
+                    <img src="../../../android-chrome-192x192.png" width='28' height='28'
+                            class="img_logo" alt='logo'/>
                 </button>
             </div>
-            <ul class="ul__menu-row" id="menu-list">
-                <li class="li__menu-item" id="menu-hamburger-option">
+            <ul class='ul__menu-row' id="menu-list">
+                <li class='li__menu-item' id="menu-hamburger-option">
                     <div class="div__hamburger-link">
-                        <button id="menu-hamburger" type="button" class="button__menu" value="closed" aria-label="open hamburger menu">
-                            <img id="menu-hamburger-img" src="../../../assets/img/menu-open.svg" width="28" height="28" alt="open hamburger menu">
+                        <button id="menu-hamburger" type="button" class='button__menu' value="closed" aria-label='open hamburger menu.'>
+                            <img id="menu-hamburger-img" src="../../../assets/img/menu-open.svg" width='28' height='28' alt="open hamburger menu"/>
                         </button>
                     </div>
                 </li>
-                <li class="li__menu-item" id="menu-rules-option">
+                <li class='li__menu-item' id="menu-rules-option">
                     <div class="div__menu-link" id="menu-rules-div">
-                        <button id="menu-rules" type="button" class="button__menu" value="/rules" aria-label="goto rules page.">
-                            <i class="lni lni-book"></i>&nbsp;Rules
+                        <button id="menu-rules" type="button" class='button__menu' value="/rules" aria-label='goto rules page.'>
+                            <i class='lni lni-book'></i>&nbsp;Rules
                         </button>
                     </div>
                 </li>
-                <li class="li__menu-item" id="menu-settings-option">
+                <li class='li__menu-item' id="menu-settings-option">
                     <div class="div__dropdown div__menu-link" id="menu-settings-dropdown">
-                        <button id="menu-settings" type="button" class="button__menu" aria-label="goto settings menu.">
-                            <i class="lni lni-cog"></i>&nbsp;Settings
+                        <button id="menu-settings" type="button" class="button__menu" aria-label='goto settings menu.'>
+                            <i class='lni lni-cog'></i>&nbsp;Settings
                         </button>
                         <div class="div__dropdown-content">
                             <div class="div__setting-option-wrapper">
@@ -66,7 +70,7 @@
                                     <p>Enable animation</p>
                                     <label class="label__toggle-control">
                                         <input type="checkbox" id="checkbox-animation" value="animation">
-                                        <span id="animation-toggle-control" class="span_control" role="checkbox" aria-checked="true" aria-label="animation"></span>
+                                        <span id="animation-toggle-control" class="span_control" role="checkbox" aria-checked="false" aria-label="animation setting"></span>
                                     </label>
                                 </div>
                             </div>
@@ -75,7 +79,7 @@
                                     <p>Enable sound</p>
                                     <label class="label__toggle-control">
                                         <input type="checkbox" id="checkbox-sound" value="sound">
-                                        <span id="sound-toggle-control" class="span_control" role="checkbox" aria-checked="true" aria-label="sound"></span>
+                                        <span id="sound-toggle-control" class="span_control" role="checkbox" aria-checked="false" aria-label="animation setting"></span>
                                     </label>
                                 </div>
                             </div>
@@ -84,7 +88,7 @@
                                     <p>Show start page</p>
                                     <label class="label__toggle-control">
                                         <input type="checkbox" id="checkbox-landing" value="landing">
-                                        <span id="landing-toggle-control" class="span_control" role="checkbox" aria-checked="true" aria-label="show start page"></span>
+                                        <span id="landing-toggle-control" class="span_control" role="checkbox" aria-checked="false" aria-label="start page setting"></span>
                                     </label>
                                 </div>
                             </div>
@@ -93,7 +97,7 @@
                                     <p>Show selection keys</p>
                                     <label class="label__toggle-control">
                                         <input type="checkbox" id="checkbox-selection-keys" value="landing">
-                                        <span id="selection-keys-toggle-control" class="span_control" role="checkbox" aria-checked="true" aria-label="show selection keys"></span>
+                                        <span id="selection-keys-toggle-control" class="span_control" role="checkbox" aria-checked="false" aria-label="show selection keys setting"></span>
                                     </label>
                                 </div>
                             </div>
@@ -104,95 +108,19 @@
         </nav>
     </header>
     <div class="div__content">
-        <main id="main"><h1 class="h1__main-title">
-                Rock Paper Scissors <span class="color__variant_basic">
-                Basic
-            </span>
-            </h1>
-            <div class="div__game-progress-wrapper">
-                <div class="div__game-progress-entry">
-                <div class="div__game-progress-title">
-                <p>
-                Best of
-            </p>
-            </div> <div class="div__game-progress-data">
-                <p>
-                5
-            </p>
-            </div>
-            </div><div class="div__game-progress-entry">
-                <div class="div__game-progress-title">
-                <p>
-                Game
-            </p>
-            </div> <div class="div__game-progress-data">
-                <p>
-                1
-            </p>
-            </div>
-            </div><div class="div__game-progress-entry">
-                <div class="div__game-progress-title">
-                <p>
-                Round
-            </p>
-            </div> <div class="div__game-progress-data">
-                <p>
-                1
-            </p>
-            </div>
-            </div>
-            </div>
-            <div class="div__play-instruction">
-                <p>
-                Make round selection
-            </p>
-            </div>
-            <section class="section__select-play">
-                <div class="div__play-player-name" id="current-player-header">
-                <h2 class="h2__sub-title color_1">
-                Player 1
-            </h2>
-            </div><div class="div__play-area">
-                <div class="div__selection-option-wrapper">
-                <div class="div__selection-tile-wrapper debossable-nbi div__selection-tile-wrapper-1" data-selection="Selection.Rock" role="button" aria-label="Click to select Rock or, press r.">
-                <img class="img__selection-tile-img" src="../../../assets/img/rocks.png" alt="Rock selection. Click to select Rock or, press r.">
-                    <p class="p__selection-tile-name">
-                Rock
-            </p> <p class="p__selection-tile-key">
-                <i class="lni lni-keyboard"></i>&nbsp;R
-            </p>
-            </div>
-            </div><div class="div__selection-option-wrapper">
-                <div class="div__selection-tile-wrapper debossable-nbi div__selection-tile-wrapper-1" data-selection="Selection.Paper" role="button" aria-label="Click to select Paper or, press p.">
-                <img class="img__selection-tile-img" src="../../../assets/img/paper.png" alt="Paper selection. Click to select Paper or, press p.">
-                    <p class="p__selection-tile-name">
-                Paper
-            </p> <p class="p__selection-tile-key">
-                <i class="lni lni-keyboard"></i>&nbsp;P
-            </p>
-            </div>
-            </div><div class="div__selection-option-wrapper">
-                <div class="div__selection-tile-wrapper debossable-nbi div__selection-tile-wrapper-1" data-selection="Selection.Scissors" role="button" aria-label="Click to select Scissors or, press s.">
-                <img class="img__selection-tile-img" src="../../../assets/img/scissors.png" alt="Scissors selection. Click to select Scissors or, press s.">
-                    <p class="p__selection-tile-name-long">
-                Scissors
-            </p> <p class="p__selection-tile-key">
-                <i class="lni lni-keyboard"></i>&nbsp;S
-            </p>
-            </div>
-            </div>
-            </div>
-            </section></main>
+        <main id="main">
+            <!-- content of main will be replaced by JavaScript -->
+        </main>
     </div>
     <footer class="footer__footer">
         <div class="div__copyright">
-            <p>© Ian Buttimer 2022</p>
+            <p>&copy; Ian Buttimer 2022</p>
         </div>
     </footer>
 
     <script src="test-basic-play-config.js"></script>
 <script type="module" src="../../../assets/js/script.js"></script>
-    <script src="../../../lib/tingle.js/tingle.min.js" async="" defer=""></script>
+    <script src="../../../lib/tingle.js/tingle.min.js" async defer></script>
+</body>
 
-
-</body></html>
+</html>

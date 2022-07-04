@@ -147,7 +147,7 @@ The following procedure was utilised to validate the JavaScript-generated conten
         - Create a configuration override script as detailed in [Local storage override](../README.md#local-storage-override). See [test-config.js](generated/test-config.js).
         - Run the [Node.js](https://nodejs.org/) script [adjust.cjs](generated/adjust.cjs) using the command `node adjust.cjs <project root path> <input.html> <output.html> <config.js>`. This will adjust the relative paths in _input.html_ and inject the required configuration override script prior to [script.js](../assets/js/script.js) being loaded. The resultant file is saved as _output.html_. This will ensure that the hosted _output.html_ will display correctly. 
 
-          E.g. run the following command from the [test/generated/main](generated\main) folder to generate `main.html`
+          E.g. run the following command from the [test/generated/main](generated/main) folder to generate `main.html`
 
           ```bash
           node ../adjust.cjs ../../../ main-raw.html main.html test-main-config.js
