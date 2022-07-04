@@ -120,6 +120,10 @@
     justify-content: space-around;
 }
 
+.div__play-sel-tile-win-wrapper {
+    height: 70%;
+}
+
 .img__play-sel-tile-img {
     height: var(--var-result-selection-tile-img-size);
     width: var(--var-result-selection-tile-img-size);

@@ -107,8 +107,10 @@ function getPlayerSelections(gameState) {
         // player-specific css class for tile
         let classes = [player.css[SELECTION_TILE_DIV_PROP]];
         let banner = undefined;
+        let wrapperClasses = [];
         if (player === winner) {
             banner = "Winner";
+            wrapperClasses = ['div__play-sel-tile-win-wrapper'];
         } else if (roundResult.losing.findIndex(loser => loser === player) >= 0) {
             if (gameState.animationEnabled) {
                 classes.push('animate__fall-back');
@@ -116,7 +118,7 @@ function getPlayerSelections(gameState) {
             classes.push('div__to-left-diagonal');
         }
 
-        return htmlDiv(['div__player-selection-wrapper'],
+        return htmlDiv(wrapperClasses.concat(['div__player-selection-wrapper']),
                     playerSelectionTile(
                         getPlayerSelectionTileParam(
                             player, selectionInfo.src, selectionInfo.alt, selection, 
