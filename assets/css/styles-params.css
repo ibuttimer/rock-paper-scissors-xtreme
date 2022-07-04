@@ -64,6 +64,7 @@
 
 .div__num-players-wrapper label {
     font-weight: var(--paragraph-bold-font-weight);
+    font-size: var(--element-font-size);
 }
 
 .div__num-players-wrapper select {
@@ -83,6 +84,7 @@
     flex-flow: row nowrap;
     justify-content: center;
     align-items: stretch;
+    font-size: var(--element-font-size);
 }
 
 .div__num-games-wrapper input {
@@ -218,8 +220,15 @@
 
 /* media queries */
 
+@media screen and (orientation: landscape), 
+        screen and (max-height: 480px) {
+    :root {
+        --var-input-margin: 0.5rem;
+    }        
+}
+
 /* small-medium screens, 650px wide or less */ 
-@media screen and (max-width: 650px) {
+@media screen and (max-width: 650px) and (orientation: portrait) {
     :root {
         --var-params-font-size: 0.9em;
     }
@@ -246,7 +255,7 @@
     }
 
     .style__param-input {
-        padding: 0.55rem 1.6rem;
+        padding: 0.45rem 1.0rem;
     }
 
     .button__play {

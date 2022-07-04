@@ -301,8 +301,9 @@ table {
     }
 }
 
-/* small-medium screens, 650px wide or less */ 
-@media screen and (max-width: 650px) {
+/* small-medium screens, 650px wide or less, 375px high or less */
+@media screen and (max-width: 650px),
+        screen and (max-height: 375px) {
     :root {
         --std-margin-between: 8px;
 
@@ -353,8 +354,9 @@ table {
     }
 }
 
-/* tiny-small screens, 280px wide or less */ 
-@media screen and (max-width: 280px) {
+/* tiny-small screens, 280px wide or less, 320px high or less */
+@media screen and (max-width: 280px),
+        screen and (max-height: 320px) {
     :root {
         --std-margin-between: 5px;
 
