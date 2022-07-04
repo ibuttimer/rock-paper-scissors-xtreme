@@ -371,3 +371,16 @@ table {
         font-size: 0.82em;  /* 70% std size 1.17em */
     }
 }
+
+/* tiny screens, 310px high or less */ 
+@media screen and (max-height: 310px) {
+    .h1__main-title {
+        font-size: 1.2em;   /* 60% std size 2em */
+    }
+    .h2__sub-title {
+        font-size: 0.9em;   /* 60% std size 1.5em */
+    }
+    .h3__sub-title {
+        font-size: 0.7em;   /* 60% std size 1.17em */
+    }
+}

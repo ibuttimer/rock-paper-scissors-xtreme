@@ -3,7 +3,7 @@
 /* custom properties */
 :root {
     --var-variant-tile-margin: calc(2 * var(--std-margin-between));
-    --var-variant-tile-size: 150px;
+    --var-variant-img-size: 150px;
 
     --var-variant-button-shadow-colour: #999;
     --var-variant-button-shadow-size: 5px;
@@ -22,15 +22,15 @@
 .div__variant-tile-wrapper {
     margin: var(--var-variant-tile-margin);
     border: calc(var(--std-margin-between) / 4) solid var(--dark-blue);
-    border-radius: calc(var(--var-variant-tile-size) * 0.2);
+    border-radius: calc(var(--var-variant-img-size) * 0.2);
     padding: var(--std-margin-between);
 
     cursor: pointer;
 }
 
 .img__variant-tile-img {
-    height: var(--var-variant-tile-size);
-    width: var(--var-variant-tile-size);
+    height: var(--var-variant-img-size);
+    width: var(--var-variant-img-size);
 }
 
 .span__variant-tile-name {
@@ -48,8 +48,10 @@
 
 /* media queries */
 
-/* small-medium screens, 750px wide or less */ 
-@media screen and (max-width: 750px) {
+/* small-medium screens, 750px wide or less and larger screens in portrait */ 
+@media screen and (max-width: 750px) and (min-height: 376px) and (orientation: portrait),
+        screen and (max-width: 820px) and (min-height: 1000px),
+        screen and (max-width: 912px) and (min-height: 1000px) {
 
     .div__variant-options {
         grid-template-rows: auto auto;
@@ -57,19 +59,51 @@
     }
 }
 
-/* media queries */
+/* small-medium screens, 700px wide or less and at least 370px high */ 
+@media screen and (max-width: 700px) and (min-height: 370px) {
+
+    :root {
+        --var-variant-img-size: 130px;
+    }
+}
+
+/* small-medium screens, 700px wide or less and at least 280px high */ 
+@media screen and (max-width: 700px) and (min-height: 280px) {
+
+    :root {
+        --var-variant-img-size: 110px;
+    }
+}
 
 /* small-medium screens, 650px wide or less */ 
 @media screen and (max-width: 650px) {
     :root {
-        --var-variant-tile-size: 130px;
+        --var-variant-img-size: 130px;
+        --var-variant-tile-margin: var(--std-margin-between);
     }
 }
 
-/* tiny-small screens, 450px wide or less */ 
-@media screen and (max-width: 450px) {
+/* tiny-small screens, 480px wide or less */ 
+@media screen and (max-width: 480px) {
     :root {
-        --var-variant-tile-size: 100px;
+        --var-variant-img-size: 90px;
+    }
+}
+
+/* tiny-small screens, 320px wide or less */ 
+@media screen and (max-width: 320px) {
+    :root {
+        --var-variant-img-size: 60px;
+    }
+    .div__variant-tile-wrapper {
+        width: 130px;
+    }
+}
+
+/* tiny-small screens, 320px wide or less and 480px high or less */ 
+@media screen and (max-width: 320px) and (max-height: 480px) {
+    .img__variant-tile-img {
+        display: none;
     }
 }
 
