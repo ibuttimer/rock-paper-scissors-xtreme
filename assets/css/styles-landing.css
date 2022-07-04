@@ -76,6 +76,28 @@
     }
 }
 
+/* small-medium screens, 670px wide or less and 375px high or less */ 
+@media screen and (max-width: 670px) and (max-height: 375px) {
+    .button__select-game,
+    .button__how-to {
+        width: 120px;
+        height: 60px;
+    }
+
+    .button__clickable {
+        padding: 0 10px;
+    }
+}
+
+/* landscape screens */ 
+@media screen and (orientation: landscape) {
+    .div__landing-content {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+    }
+}
+
 /* tiny screens, 200px wide or less */ 
 @media screen and (max-width: 200px) {
     .button__select-game,
