@@ -93,7 +93,7 @@
 /* tiny-small screens, 320px wide or less */ 
 @media screen and (max-width: 320px) {
     :root {
-        --var-variant-img-size: 60px;
+        --var-variant-img-size: 50px;
     }
     .div__variant-tile-wrapper {
         width: 130px;

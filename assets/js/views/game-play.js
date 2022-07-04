@@ -52,18 +52,21 @@ const variantClassName = (gameState) => { return `variant-${gameState.game.varia
     // player-specific css class for tile
     const tileClass = gameState.game.currentPlayer.css[SELECTION_TILE_DIV_PROP];
 
+    const instructionHtml = htmlDiv(['div__play-instruction'], 
+                                htmlP([], 'Make round selection'));
     const playerNameHtml = htmlDiv(['div__play-player-name'], currentPlayerNameHeader(gameState), {
         id: currentPlayerHeaderId
     });
+    const playHeaderHtml = htmlDiv(['div__play-header'], 
+                                    instructionHtml + 
+                                    playerNameHtml);
     const playerSelectionsHtml = htmlDiv(['div__play-area', variantClassName(gameState)], 
                             getSelections(gameState, tileClass));
 
     return `${titleHeader(gameState)}
             ${gameProgress(gameState.progressMap)}
-            ${htmlDiv(['div__play-instruction'], 
-                htmlP([], 'Make round selection'))}
             ${htmlSection(['section__select-play'], 
-                playerNameHtml + 
+                playHeaderHtml + 
                 playerSelectionsHtml)}`;
 }
 

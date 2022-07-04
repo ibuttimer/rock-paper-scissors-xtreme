@@ -57,14 +57,24 @@ const resultTexts = new Map([
  */
 function roundResultViewHtml(gameState) {
     const roundResult = gameState.roundResult;
+
+    const instructionHtml = htmlDiv(['div__result-heading'], 
+                                htmlP([], 'Result'));
+    const resultTextHtml = getResultText(roundResult);
+    const resultAndLeaderHtml = getRoundResultAndLeaderBoard(gameState);
+    const explanationHtml = htmlDiv(['div__elimination-explanation'], 
+                                getExplanation(roundResult));
+    const continueButton = getContinueButton(roundResult);
+
     return `${titleHeader(gameState)}
             ${gameProgress(gameState.progressMap)}
-            ${htmlDiv(['div__result-heading'], 
-                htmlP([], 'Result'))}
-            ${getResultText(roundResult)}
-            ${getRoundResultAndLeaderBoard(gameState)}
-            ${getExplanation(roundResult)}
-            ${getContinueButton(roundResult)}`;
+            ${htmlDiv(['div__result-header'], 
+                    instructionHtml + 
+                    resultTextHtml
+            )}
+            ${resultAndLeaderHtml}
+            ${explanationHtml}
+            ${continueButton}`;
 }
 
 /**

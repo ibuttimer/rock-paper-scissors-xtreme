@@ -1,9 +1,18 @@
 /* Styles related to result page */
 
+.div__result-header {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: var(--var-game-tile-margin);
+}
+
 .div__round-result-leader-board {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    align-items: center;
 }
 
 .div__round-result {
@@ -26,12 +35,17 @@
 }
 
 .div__result-heading {
+    margin: 0 var(--var-game-tile-margin) 0 var(--var-game-tile-margin);
 	text-align: center;
 }
 
 .h2__round-result-text {
 	text-align: center;
 }
+
+.div__elimination-explanation {
+	margin: var(--var-input-margin) 0 var(--var-input-margin);
+} 
 
 .p__elimination-explanation {
 	text-align: center;
@@ -103,6 +117,7 @@
         flex-direction: column;
     }
     .aside__leader-board {
+        margin-top: 0;
         width: 100%;
     }  
 }
@@ -140,5 +155,11 @@
     .button__round-result-next-game,
     .button__round-result-done {
         width: 50%;
+    }
+}
+
+@media screen and (orientation: landscape) {
+    .div__result-header {
+        flex-direction: row;
     }
 }

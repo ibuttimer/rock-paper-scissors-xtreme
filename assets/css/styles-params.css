@@ -142,7 +142,7 @@
 .div__player-names {
     /* to handle margin collapse 
     https://www.joshwcomeau.com/css/rules-of-margin-collapse/ */
-    margin-bottom: calc(2 * var(--var-input-margin));
+    margin-bottom: var(--var-input-margin);
 }
 
 .div__player-names-title {
@@ -188,7 +188,7 @@
 
 .div__play {
     text-align: center;
-    margin: var(--var-input-margin) 0 var(--var-input-margin);
+    margin: 0 0 var(--var-input-margin);
 }
 
 .button__play {
@@ -201,7 +201,7 @@
 
 .div__param-errors {
     display: block;
-    margin: var(--var-input-margin) 0 var(--var-input-margin);
+    margin: var(--var-input-margin) 0 0;
     text-align: center;
     color: red;
 }

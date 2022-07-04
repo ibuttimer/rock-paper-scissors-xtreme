@@ -107,6 +107,13 @@ table {
     margin-right: var(--std-margin-horz);
 }
 
+main {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+}
+
 .h1__main-title, 
 .h2__sub-title, 
 .h3__sub-title {

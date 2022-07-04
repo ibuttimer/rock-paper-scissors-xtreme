@@ -11,7 +11,7 @@
 
 /* play view */
 .div__play-instruction {
-    margin: var(--var-game-tile-margin) var(--var-game-tile-margin) 0 var(--var-game-tile-margin);
+    margin: 0 var(--var-game-tile-margin) 0 var(--var-game-tile-margin);
     text-align: center;
 }
 
@@ -19,6 +19,14 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: space-around;
+}
+
+.div__play-header {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: var(--var-game-tile-margin);
 }
 
 /* selection tile component */
@@ -288,5 +296,11 @@
 @media screen and (max-width: 640px) and (max-height: 375px) {
     .p__selection-tile-key {
         display: none;
+    }
+}
+
+@media screen and (orientation: landscape) {
+    .div__play-header {
+        flex-direction: row;
     }
 }
