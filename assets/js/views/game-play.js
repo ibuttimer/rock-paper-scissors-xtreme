@@ -5,7 +5,7 @@
 import { ROUND_RESULT_URL, SHOW_SEL_KEYS_PROPERTY } from '../globals.js';
 import { titleHeader, currentPlayerNameHeader, gameProgress } from '../components/index.js'
 import { 
-    accumulator, htmlDiv, htmlImg, htmlH4, htmlP, htmlSection, ViewDetail,
+    accumulator, htmlDiv, htmlImg, htmlP, htmlSection, ViewDetail,
     addElementClass, removeElementClass, replaceElementClass, delay, log 
 } from '../utils/index.js';
 import { setView } from '../routing.js'
@@ -34,6 +34,13 @@ const animation_time = 500;    // animation time in msecs
 }
 
 /**
+ * Get class to identify current game variant, e.g. 'variant-bigbang'
+ * @param {GameState} gameState - current game state
+ * @returns 
+ */
+const variantClassName = (gameState) => { return `variant-${gameState.game.variant.name.toLowerCase()}`; };
+
+/**
  * Generate the game play view.
  * @param {GameState} gameState - game state object
  * @returns {string} html for view
@@ -48,7 +55,7 @@ const animation_time = 500;    // animation time in msecs
     const playerNameHtml = htmlDiv(['div__play-player-name'], currentPlayerNameHeader(gameState), {
         id: currentPlayerHeaderId
     });
-    const playerSelectionsHtml = htmlDiv(['div__play-area'], 
+    const playerSelectionsHtml = htmlDiv(['div__play-area', variantClassName(gameState)], 
                             getSelections(gameState, tileClass));
 
     return `${titleHeader(gameState)}
@@ -67,8 +74,11 @@ const animation_time = 500;    // animation time in msecs
  * @returns {string} html for selection options
  */
 function getSelections(gameState, tileClass) {
+    const variantClass = variantClassName(gameState);
+
     return gameState.selections.map(sel => {
-        return htmlDiv(['div__selection-option-wrapper'], selectionTile(sel, tileClass, gameState.showSelectionKeys));
+        return htmlDiv(['div__selection-option-wrapper'], 
+                            selectionTile(sel, tileClass, gameState.showSelectionKeys, variantClass));
     }).reduce(accumulator, '');
 }
 
@@ -77,18 +87,21 @@ function getSelections(gameState, tileClass) {
  * @param {object} params - parameters object {@link selectionTileParams}
  * @param {string} tileClass - player-specific css class
  * @param {boolean} showKey - show selection key
+ * @param {string} variantClass - class to identify current variant
  * @returns {string} html for selection tile
  */
- export function selectionTile(params, tileClass, showKey) {
+ export function selectionTile(params, tileClass, showKey, variantClass) {
     const clickToSelect = `Click to select ${params.selection.name} or, press ${params.selection.key.key}.`;
-    const image = htmlImg('img__selection-tile-img', {
+    const image = htmlImg(['img__selection-tile-img', variantClass], {
         src: params.src, 
         alt: `${params.alt} ${clickToSelect}`
     });
-    const name = htmlP(
-        // reduce font size on longer names
-        params.selection.name.length > 7 ? 'p__selection-tile-name-long' : 
-            params.selection.name.length > 5 ? 'p__selection-tile-name-med' : 'p__selection-tile-name', 
+    const name = htmlP([
+            // reduce font size on longer names
+            params.selection.name.length > 7 ? 'p__selection-tile-name-long' : 
+                params.selection.name.length > 5 ? 'p__selection-tile-name-med' : 'p__selection-tile-name', 
+            variantClass
+        ], 
         params.selection.name);
     const key = htmlP(showKey ? selKeysVisibleClass : selKeysHiddenClass, 
         `<i class="lni lni-keyboard"></i>&nbsp;${params.selection.key.key.toUpperCase()}`);

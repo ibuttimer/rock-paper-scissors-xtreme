@@ -147,7 +147,7 @@
 /* media queries */
 
 /* small screens, 580px wide or less */ 
-@media screen and (max-width: 580px) {
+@media screen and (max-width: 580px) and (min-height: 321px) {
     :root {
         /* game progress component */
         --game-progress-grid-auto-flow: none;
@@ -200,10 +200,10 @@
     }
 
     .h3__play-sel-tile-med {
-        font-size: calc(var(--default-h3-height) * 0.6);   /* 70% std size 1em */
+        font-size: calc(var(--default-h3-height) * 0.6);   /* 60% std size 1em */
     }
     .h3__play-sel-tile-long {
-        font-size: calc(var(--default-h3-height) * 0.5);   /* 60% std size 1em */
+        font-size: calc(var(--default-h3-height) * 0.5);   /* 50% std size 1em */
     }
 }
 

@@ -311,13 +311,13 @@ table {
     }
 
     .h1__main-title {
-        font-size: 1.8em;   /* 90% std size 2em */
+        font-size: 1.6em;   /* 80% std size 2em */
     }
     .h2__sub-title {
-        font-size: 1.35em;  /* 90% std size 1.5em */
+        font-size: 1.2em;   /* 80% std size 1.5em */
     }
     .h3__sub-title {
-        font-size: 1.05em;  /* 90% std size 1.17em */
+        font-size: 0.93em;  /* 80% std size 1.17em */
     }
 }
 
@@ -329,7 +329,8 @@ table {
 }
 
 /* tiny-small screens, 450px wide or less */ 
-@media screen and (max-width: 450px) {
+@media screen and (max-width: 450px),
+        screen and (max-height: 450px) {
     :root {
         --std-margin-between: 6px;
 
@@ -356,7 +357,8 @@ table {
 
 /* tiny-small screens, 280px wide or less, 320px high or less */
 @media screen and (max-width: 280px),
-        screen and (max-height: 320px) {
+        screen and (max-height: 320px),
+        screen and (max-width: 320px) and (max-height: 480px) {
     :root {
         --std-margin-between: 5px;
 

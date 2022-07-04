@@ -44,9 +44,8 @@ const htmlWrapper = (tag, className, innerHtml, attribs = {}, selfClosing = fals
         if (Array.isArray(innerHtml)) {
             innerHtml = innerHtml.join(' ');    // aggregate innerHtml
         }
-        return `<${tag} ${className ? className : ''} ${attribString} ${selfClosing ? '/' : ''}>
-                ${selfClosing ? '' : `${innerHtml ? innerHtml : ''}
-            </${tag}>`}`;
+        return `<${tag} ${className ? className : ''} 
+                    ${attribString} ${selfClosing ? '/' : ''}>${selfClosing ? '' : `${innerHtml ? innerHtml : ''}</${tag}>`}`;
 };
 
 /**
