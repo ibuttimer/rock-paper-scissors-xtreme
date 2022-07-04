@@ -29,7 +29,13 @@
     padding: var(--var-game-tile-padding);
     text-align: center;
     width: var(--var-game-tile-size);
+    height: 60%;
     background-image: none;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
 }
 
 .div__selection-tile-wrapper:hover {
@@ -153,7 +159,6 @@
     }
     .p__selection-tile-name-long {
         font-size: 0.7em;   /* 70% std size 1em */
-        line-height: 1.6;   /* to keep tiles same height */
     }
 }
 
@@ -170,11 +175,9 @@
     }
     .p__selection-tile-name-med {
         font-size: 0.7em;   /* 70% std size 1em */
-        line-height: 1.6;   /* to keep tiles same height */
     }
     .p__selection-tile-name-long {
         font-size: 0.45em;   /* 45% std size 1em */
-        line-height: 2.4;   /* to keep tiles same height */
     }
 }
 
@@ -190,11 +193,9 @@
     }
     .p__selection-tile-name-med {
         font-size: 0.7em;   /* 70% std size 1em */
-        line-height: 1.6;   /* to keep tiles same height */
     }
     .p__selection-tile-name-long {
         font-size: 0.45em;   /* 45% std size 1em */
-        line-height: 2.4;   /* to keep tiles same height */
     }
 }
 
@@ -211,11 +212,9 @@
     }
     .p__selection-tile-name-med {
         font-size: 0.45em;   /* 45% std size 1em */
-        line-height: 2.4;   /* to keep tiles same height */
     }
     .p__selection-tile-name-long {
         font-size: 0.45em;   /* 45% std size 1em */
-        line-height: 2.4;   /* to keep tiles same height */
     }
     .p__selection-tile-key {
         font-size: 0.7em;   /* 70% std size 1em */

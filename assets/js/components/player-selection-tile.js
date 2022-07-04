@@ -13,10 +13,10 @@ import { htmlDiv, htmlImg, htmlH3, htmlP } from '../utils/index.js'
 
     const banner = params.banner ?
         htmlH3([
-            'h3__play-sel-tile-banner', h3SizeModifier(params.banner)
+            'p__play-sel-tile-banner', bannerSizeModifier(params.banner)
         ], params.banner) : '';
     const playerName = htmlP([
-        'p__play-sel-tile-player-name', params.player.css.color, h4SizeModifier(params.player.name),
+        'p__play-sel-tile-player-name', params.player.css.color, tilePlayerSizeModifier(params.player.name),
         'std-line-height'
     ], params.player.name);
     const image = htmlImg('img__play-sel-tile-img', {
@@ -24,7 +24,7 @@ import { htmlDiv, htmlImg, htmlH3, htmlP } from '../utils/index.js'
         alt: `${params.alt} ${`Selected by ${params.player.name}.`}`
     });
     const selectionName = htmlP([
-        'p__play-sel-tile-name', h4SizeModifier(params.selection.name)
+        'p__play-sel-tile-name', tilePlayerSizeModifier(params.selection.name)
     ], params.selection.name);
 
     let classes = ['div__play-sel-tile-wrapper'];
@@ -39,20 +39,20 @@ import { htmlDiv, htmlImg, htmlH3, htmlP } from '../utils/index.js'
 }
 
 /**
- * Get H4 font size css class based on length of text to display.
+ * Get player name font size css class based on length of text to display.
  * @param {string} text - text to display 
  * @returns {string} css class
  */
- const h4SizeModifier = (text) => text.length > 7 ? 'h4__play-sel-tile-long' : 
-                                    text.length > 5 ? 'h4__play-sel-tile-med' : '';
+ const tilePlayerSizeModifier = (text) => text.length > 7 ? 'p__play-sel-tile-name-long' : 
+                                    text.length > 5 ? 'p__play-sel-tile-name-med' : '';
 
 /**
- * Get H3 font size css class based on length of text to display.
+ * Get banner font size css class based on length of text to display.
  * @param {string} text - text to display 
  * @returns {string} css class
  */
- const h3SizeModifier = (text) => text.length > 7 ? 'h3__play-sel-tile-long' : 
-                                    text.length > 5 ? 'h3__play-sel-tile-med' : '';
+ const bannerSizeModifier = (text) => text.length > 7 ? 'p__play-sel-tile-banner-long' : 
+                                    text.length > 5 ? 'p__play-sel-tile-banner-med' : '';
 
 /**
  * Generate a player selection tile parameter object

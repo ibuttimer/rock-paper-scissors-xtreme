@@ -27,8 +27,6 @@
     --var-result-selection-tile-border: calc(var(--var-result-selection-tile-padding) / 2);
     --var-result-selection-tile-size: calc(var(--var-result-selection-tile-img-size) + (2 * var(--var-result-selection-tile-padding)));
 
-    --var-result-selection-tile-column: calc(var(--var-result-selection-tile-size) + (2 * var(--var-result-selection-tile-margin)) + (2 * var(--var-result-selection-tile-border)) + (2 * var(--var-result-selection-tile-padding)) + 10px);
-
     --font-size-factor: 1;
     --h3-selection-tile-font-size: calc(var(--default-h3-height) * var(--font-size-factor));
     --h4-selection-tile-font-size: calc(var(--default-h4-height) * var(--font-size-factor));
@@ -113,7 +111,13 @@
     padding: var(--var-result-selection-tile-padding);
     text-align: center;
     width: var(--var-result-selection-tile-size);
+    height: 60%;
     background-image: none;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
 }
 
 .img__play-sel-tile-img {
@@ -122,7 +126,7 @@
     border-radius: 50%;
 }
 
-.h3__play-sel-tile-banner {
+.p__play-sel-tile-banner {
     text-align: center;
     font-size: var(--h3-selection-tile-font-size);
     color: #7E5E0D;
@@ -156,6 +160,29 @@
     .div__game-progress-wrapper {
         grid-template-columns: 1fr;
     }
+
+    .div__round-result {
+        margin: auto;
+        width: 100%;
+    }
+}
+
+/* small-medium screens, 650px wide or less */ 
+@media screen and (max-width: 820px) {
+    :root {
+        --var-result-selection-tile-img-size: 70px;
+
+        --var-result-selection-tile-padding: 9px;
+
+        --font-size-factor: 0.9;
+    }
+
+    .p__play-sel-tile-name-long {
+        font-size: calc(var(--default-h4-height) * 0.7);   /* 70% std size 1em */
+    }
+    .p__play-sel-tile-banner-long {
+        font-size: calc(var(--default-h3-height) * 0.7);   /* 70% std size 1em */
+    }
 }
 
 /* small-medium screens, 650px wide or less */ 
@@ -168,17 +195,34 @@
         --font-size-factor: 0.9;
     }
 
-    .h4__play-sel-tile-long {
+    .p__play-sel-tile-name-long {
         font-size: calc(var(--default-h4-height) * 0.7);   /* 70% std size 1em */
-        line-height: 1.6;   /* to keep tiles same height */
     }
-    .h3__play-sel-tile-long {
+    .p__play-sel-tile-banner-long {
+        font-size: calc(var(--default-h3-height) * 0.7);   /* 70% std size 1em */
+    }
+}
+
+/* small-medium screens, 650px wide or less */ 
+@media screen and (max-width: 550px) {
+    :root {
+        --var-result-selection-tile-img-size: 55px;
+
+        --var-result-selection-tile-padding: 8px;
+
+        --font-size-factor: 0.9;
+    }
+
+    .p__play-sel-tile-name-long {
+        font-size: calc(var(--default-h4-height) * 0.7);   /* 70% std size 1em */
+    }
+    .p__play-sel-tile-banner-long {
         font-size: calc(var(--default-h3-height) * 0.7);   /* 70% std size 1em */
     }
 }
 
 /* tiny-small screens, 450px wide or less */ 
-@media screen and (max-width: 450px) {
+@media screen and (max-width: 490px) {
     :root {
         --var-result-selection-tile-img-size: 40px;
 
@@ -190,19 +234,17 @@
         --game-progress-entry-size: 110px;
     }
 
-    .h4__play-sel-tile-med {
-        font-size: calc(var(--default-h4-height) * 0.7);   /* 70% std size 1em */
-        line-height: 1.6;   /* to keep tiles same height */
-    }
-    .h4__play-sel-tile-long {
+    .p__play-sel-tile-name-med {
         font-size: calc(var(--default-h4-height) * 0.6);   /* 60% std size 1em */
-        line-height: 2.4;   /* to keep tiles same height */
+    }
+    .p__play-sel-tile-name-long {
+        font-size: calc(var(--default-h4-height) * 0.5);   /* 60% std size 1em */
     }
 
-    .h3__play-sel-tile-med {
+    .p__play-sel-tile-banner-med {
         font-size: calc(var(--default-h3-height) * 0.6);   /* 60% std size 1em */
     }
-    .h3__play-sel-tile-long {
+    .p__play-sel-tile-banner-long {
         font-size: calc(var(--default-h3-height) * 0.5);   /* 50% std size 1em */
     }
 }
@@ -212,7 +254,7 @@
     :root {
         --var-result-selection-tile-img-size: 30px;
 
-        --var-result-selection-tile-padding: 10px;
+        --var-result-selection-tile-padding: 4px;
 
         --game-progress-span-padding: 5px;
         --game-progress-title-size: 80px;
