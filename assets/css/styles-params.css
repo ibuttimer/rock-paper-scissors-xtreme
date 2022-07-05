@@ -94,10 +94,6 @@
     left: -9999px;
 }
 
-.div__num-games-wrapper select {
-    color: var(--var-select-colour);
-}
-
 .div__num-games-wrapper input + label {
     transition: border-color 0.15s ease-out, color 0.25s ease-out, background-color 0.15s ease-out, box-shadow 0.15s ease-out;
     /* ADD THESE PROPERTIES TO SWITCH FROM AUTO WIDTH TO FULL WIDTH */
@@ -110,32 +106,29 @@
     border-right: none;
 }
 .div__num-games-wrapper input + label:last-of-type {
-    border-left: none;
+    border-right: none;
 }
 .div__num-games-wrapper select {
     /* same as style__param-input-right */
     border-radius: 0 var(--var-num-games-input-border-radius) var(--var-num-games-input-border-radius) 0;
     border-left: none;
 }
-.div__num-games-wrapper input:hover + label {
+.div__num-games-wrapper input:hover + label,
+.div__num-games-wrapper input:hover + label + select {
     border-color: var(--var-border-colour);
 }
-.div__num-games-wrapper input:checked + label {
+.div__num-games-wrapper input:checked + label,
+.div__num-games-wrapper input:checked + label + select {
     color: var(--var-radio-active-text-colour);
     background-color: var(--var-radio-active-colour);
     border-color: var(--var-radio-active-colour);
     z-index: 1;
 }
-.div__num-games-wrapper input:focus + label {
-    outline: dotted 1px #CCC;
-    outline-offset: 0.35rem;
-}
 
 .div__num-games-wrapper select {
     font-size: var(--var-params-font-size);
     font-family: var(--paragraph-font);
-    font-weight: var(--paragraph-font-weight);
-    color: var(--dark-blue);
+    font-weight: var(--paragraph-bold-font-weight);
 }
 
 /* player name component */
@@ -145,8 +138,16 @@
     margin-bottom: var(--var-input-margin);
 }
 
-.div__player-names-title {
+.div__player-names-title,
+.div__number-games-title,
+.div__number-player-title {
     margin-top: var(--var-input-margin);
+    font-family: var(--heading-font);
+}
+
+.div__number-games-title,
+.div__number-player-title {
+    text-align: center;
 }
 
 .div__player-name-wrapper {
@@ -159,7 +160,9 @@
 }
 
 .div__player-name-wrapper label,
-.div__player-names-title {
+.div__player-names-title,
+.div__number-games-title,
+.div__number-player-title {
     font-weight: var(--paragraph-bold-font-weight);
 }
 

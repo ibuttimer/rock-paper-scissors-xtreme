@@ -113,13 +113,25 @@ function gameParamsViewHtml(gameState) {
     wip.bestOf = gameState.bestOf;
     wip.gameMode = gameState.game.gameMode;
 
+    const numPlayersTitleHtml = htmlDiv('div__number-player-title',
+                                htmlP([], 'Select number of participants'));
+    const numPlayersHtml = htmlDiv('div__num-of-game-participants', 
+                                getNumPlayers(numPlayersInfo(wip.numPlayers)) + 
+                                getNumPlayers(numRobotsInfo(wip.numRobots))
+    );
+
+    const numGamesTitleHtml = htmlDiv('div__number-games-title',
+                                htmlP([], 'Select number of games'));
+    const numGamesHtml = htmlDiv('div__num-games-wrapper', 
+                                    getNumOfGames('num-of-games', wip.bestOf, numGameOptions));
+
+
     return `${titleHeader(gameState)}
-            ${htmlDiv('div__num-of-game-participants', 
-                `${getNumPlayers(numPlayersInfo(wip.numPlayers))}
-                ${getNumPlayers(numRobotsInfo(wip.numRobots))}`
+            ${htmlDiv([], 
+                numPlayersTitleHtml + numPlayersHtml
             )}
-            ${htmlDiv('div__num-games-wrapper', 
-                getNumOfGames('num-of-games', wip.bestOf, numGameOptions)
+            ${htmlDiv([], 
+                numGamesTitleHtml + numGamesHtml
             )}
             ${htmlDiv('div__player-names', 
                 `${htmlDiv('div__player-name-wrapper', 
