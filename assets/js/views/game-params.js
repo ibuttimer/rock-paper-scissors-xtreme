@@ -4,7 +4,7 @@
 */
 import { 
     MIN_PLAYERS, MAX_PLAYERS, DEFAULT_PLAYERS, MIN_ROBOTS, MAX_ROBOTS, DEFAULT_ROBOTS,
-    MIN_GAMES, DEFAULT_GAMES, MAX_GAMES, PLAY_URL, PLAYER_COLOURS
+    MIN_GAMES, DEFAULT_GAMES, MAX_GAMES, PLAY_URL, PLAYER_COLOURS, MAX_NAME_LEN
 } from '../globals.js';
 import { Player, Robot } from '../player.js';
 import { default as titleHeader } from '../components/title.js'
@@ -124,7 +124,9 @@ function gameParamsViewHtml(gameState) {
             ${htmlDiv('div__player-names', 
                 `${htmlDiv('div__player-name-wrapper', 
                     `${htmlDiv('div__player-names-title', 
-                        htmlP([], 'Enter player names'))}`
+                        htmlP([], 
+                            'Enter player names ' + htmlSpan(['span_max-name-len'], `(${MAX_NAME_LEN} characters maximum)`)
+                        ))}`
                 )}
                 ${htmlDiv('div__player-name-group-wrapper', playerNames(wip.playerArray), {
                     id: playerNameGroupId
@@ -191,6 +193,10 @@ function persistPlayerNames(array) {
         const element = document.getElementById(id);
         const name = element ? element.value : undefined;
         player.name = name ? name : defaultPlayerName(index);
+
+        if (player.name.length > MAX_NAME_LEN) {
+            player.name = player.name.slice(0, MAX_NAME_LEN);
+        }
 
         if (!duplicates.has(player.name)) {
             duplicates.set(player.name, [index]);
@@ -668,7 +674,9 @@ function playButton(disabled) {
             htmlInput(inputClasses, {
                 type: 'text',
                 id: id,
-                name: id, value: defaultValue
+                name: id, 
+                value: defaultValue,
+                maxlength: MAX_NAME_LEN
             })
         ])
     ]);

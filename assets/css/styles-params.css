@@ -218,6 +218,12 @@
     color: transparent;
 }
 
+.span_max-name-len {
+    color: grey;
+    font-weight: var(--paragraph-font-weight);
+    font-size: 0.8em;
+}
+
 /* media queries */
 
 @media screen and (orientation: landscape), 

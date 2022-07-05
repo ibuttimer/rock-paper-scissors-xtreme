@@ -19,6 +19,7 @@ export const MAX_PARTICIPANTS = MAX_PLAYERS + MAX_ROBOTS;
 export const MIN_GAMES = 1;
 export const MAX_GAMES = 15;
 export const DEFAULT_GAMES = 3;
+export const MAX_NAME_LEN = 15;
 
 // Settings default values
 export const DEFAULT_SOUND_SETTING = false;
