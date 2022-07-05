@@ -173,7 +173,7 @@ export function playGame(event, gameState, setPlayView = true) {
         })
 
         gameState.bestOf = wip.bestOf;
-        gameState.game.init(wip.numPlayers, wip.numRobots, players);
+        gameState.game.init(wip.numPlayers, wip.numRobots, players, false);
         gameState.startMatch();
 
         if (setPlayView) {

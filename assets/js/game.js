@@ -592,8 +592,9 @@ export class GameResult {
      * @param {number} numPlayers - number of players
      * @param {number} numRobots - number of robots
      * @param {Array[Player|Robot]} playerList - array of game players
+     * @param {boolean} resetNames - reset name to default
      */
-    init(numPlayers, numRobots, playerList = null) {
+    init(numPlayers, numRobots, playerList = null, resetNames = true) {
         const errors = gameParticipantsCheck(numPlayers, numRobots);
         if (errors) {
             let errorMsg = errors.reduce(
@@ -625,6 +626,11 @@ export class GameResult {
             (index) => {
                 return new Robot(index);
             });
+
+        if (resetNames) {
+            incomingPlayers.forEach((player, index) => player.name = `Player ${index + 1}`);
+            incomingRobots.forEach((robot, index) => robot.name = `Robot ${index + 1}`);
+        }
         
         this.players = incomingPlayers.concat(incomingRobots);
         this.numPlayers = numPlayers;
