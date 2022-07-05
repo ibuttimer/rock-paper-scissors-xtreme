@@ -11,6 +11,7 @@
 
 .table__win-matrix {
     margin: auto;
+    margin-top: var(--std-margin-vert);
 }
 
 .table__win-matrix,
@@ -26,4 +27,39 @@
 .th__win-matrix,
 .td__win-matrix {
     padding: 0 var(--std-padding-horz);
+}
+
+.button__play-variant {
+    margin-top: var(--std-margin-vert);
+    width: 200px;
+}
+
+/* media queries */
+
+/* small-medium screens, 650px wide or less */ 
+@media screen and (max-width: 650px) and (orientation: portrait) {
+    .button__play-variant {
+        width: 180px;
+    }
+}
+
+/* tiny-small screens, 450px wide or less */ 
+@media screen and (max-width: 450px) {
+    .button__play-variant {
+        width: 160px;
+    }
+}
+
+/* tiny-small screens, 280px wide or less */ 
+@media screen and (max-width: 280px) {
+    .button__play-variant {
+        width: 60%;
+    }
+}
+
+/* tiny screens, 200px wide or less */ 
+@media screen and (max-width: 200px) {
+    .button__play-variant {
+        width: 50%;
+    }
 }

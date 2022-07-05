@@ -183,7 +183,7 @@ const xtremeWinMatrix = () => winMatrix(GameVariant.Xtreme);
 // play basic variant button
 const playBasicButtonId = 'play-basic-button';
 const playBasic = htmlDiv('div__play', 
-    htmlButton(['button__play', 'button__clickable', 'background-color__variant_basic', 'debossable'], 'Play Basic', {
+    htmlButton(['button__play-variant', 'button__clickable', 'background-color__variant_basic', 'debossable'], 'Play Basic', {
                 id: playBasicButtonId,
                 'aria-label': 'play basic game.',
                 value: BASIC_URL
@@ -192,7 +192,7 @@ const playBasic = htmlDiv('div__play',
 // play big bang variant button
 const playBigBangButtonId = 'play-bigbang-button';
 const playBigBang = htmlDiv('div__play', 
-    htmlButton(['button__play', 'button__clickable', 'background-color__variant_bigbang', 'debossable'], 'Play Big Bang', {
+    htmlButton(['button__play-variant', 'button__clickable', 'background-color__variant_bigbang', 'debossable'], 'Play Big Bang', {
                 id: playBigBangButtonId,
                 'aria-label': 'play big bang game.',
                 value: BIGBANG_URL
@@ -201,7 +201,7 @@ const playBigBang = htmlDiv('div__play',
 // play xtreme variant button
 const playXtremeButtonId = 'play-xtreme-button';
 const playXtreme = htmlDiv('div__play', 
-    htmlButton(['button__play', 'button__clickable', 'background-color__variant_xtreme', 'debossable'], 'Play Xtreme', {
+    htmlButton(['button__play-variant', 'button__clickable', 'background-color__variant_xtreme', 'debossable'], 'Play Xtreme', {
                 id: playXtremeButtonId,
                 'aria-label': 'play extreme game.',
                 value: XTREME_URL
