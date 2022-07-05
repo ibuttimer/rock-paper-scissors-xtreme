@@ -78,7 +78,7 @@ const gameSelects = gameParams.map(params => {
  */
 function gameSelectMenuHtml() {
     return htmlH1(['h1__main-title'], GAME_NAME) +
-            htmlSection([],
+            htmlSection(['section__game-select'],
                 htmlH2(['h2__sub-title'], 'Select game') +
                 htmlDiv(['div__variant-options'], 
                     gameSelects.reduce(
