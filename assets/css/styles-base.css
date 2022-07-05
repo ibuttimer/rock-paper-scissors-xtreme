@@ -177,15 +177,15 @@ main {
 }
 
 .background-color__variant_basic {
-    background-color: var(--basic-colour);
+    background-color: var(--light-blue);
 }
 
 .background-color__variant_bigbang {
-    background-color: var(--bigbang-colour);
+    background-color: var(--yellow);
 }
 
 .background-color__variant_xtreme {
-    background-color: var(--xtreme-colour);
+    background-color: var(--orange);
 }
 
 .color_1 {
