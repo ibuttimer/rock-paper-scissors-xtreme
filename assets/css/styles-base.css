@@ -102,9 +102,7 @@ table {
 .div__content {
     /* sticky footer */
     flex: 1 0 auto;
-
-    margin-left: var(--std-margin-horz);
-    margin-right: var(--std-margin-horz);
+    margin: var(--std-margin-vert) var(--std-margin-horz) 0 var(--std-margin-horz);
 }
 
 main {

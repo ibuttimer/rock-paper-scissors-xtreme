@@ -12,7 +12,10 @@ import { Enum } from './enums.js'
 import { 
     landingView, gameSelectView, gameParamsView, gamePlayView, roundResultView, gameRulesView
 } from './views/index.js'
-import { htmlP, savePreferences, log, ViewDetail } from './utils/index.js'
+import { 
+    htmlP, savePreferences, log, ViewDetail, 
+    addElementClass, removeElementClass, replaceElementClass 
+} from './utils/index.js'
 import { showYesNoModal, MODAL_YES } from './components/index.js'
 import { GameVariant } from './game.js'
 
@@ -22,12 +25,23 @@ let addedMenuEventHandlers = false;
 // html ids of elements
 const mainElementId = 'main';
 const logoElementId = 'menu-logo';
+const playElementId = 'menu-play';
 const rulesElementId = 'menu-rules';
 const settingsElementId = 'menu-settings';
-const hamburgerElementId = 'menu-hamburger';
-const hamburgerImgId = 'menu-hamburger-img';
+const playMenuId = 'menu-play-div';
 const rulesMenuId = 'menu-rules-div';
 const settingsMenuId = 'menu-settings-dropdown';
+
+const menuElement = (div, id) => { return { div: div, id: id } };
+const menuElements = [
+    menuElement(null, logoElementId),
+    menuElement(playMenuId, playElementId),
+    menuElement(rulesMenuId, rulesElementId),
+    menuElement(settingsMenuId, settingsElementId),
+];
+
+const hamburgerElementId = 'menu-hamburger';
+const hamburgerImgId = 'menu-hamburger-img';
 const hamburgerOpen = "open";
 const hamburgerClosed = "closed";
 
@@ -195,13 +209,40 @@ export function setView(view, gameState) {
         const mainElement = document.getElementById(mainElementId);
         mainElement.innerHTML = viewDetails.html;
 
-        // set aria-label for menu items
-        let element = document.getElementById(logoElementId);
-        element.setAttribute('aria-label', `logo, ${page} page, ${toHome} home.`);
-        element = document.getElementById(rulesElementId);
-        element.setAttribute('aria-label', 
-            view === View.Rules ? `current page, rules.` : `goto rules page.`);
-    
+        // set aria labels and active item for menu items
+        menuElements.forEach(entry => {
+            let ariaLabel;
+            let activePage = null;  // default, nothing to set
+            switch (entry.id) {
+                case logoElementId:
+                    ariaLabel = `logo, ${page} page, ${toHome} home.`;
+                    break;
+                case playElementId:
+                    activePage = view !== View.Rules;   // play is any view other than rules
+                    ariaLabel = activePage ? `current page, play.` : `goto play page.`;
+                    break;
+                case rulesElementId:
+                    activePage = view === View.Rules;   // play is any view other than rules
+                    ariaLabel = activePage ? `current page, rules.` : `goto rules page.`;
+                    break;
+                default:
+                    break;  // ignore settings, doesn't change
+            }
+            if (ariaLabel) {
+                // set aria label
+                let element = document.getElementById(entry.id);
+                element.setAttribute('aria-label', ariaLabel);
+                
+                // set active menu item
+                if (activePage !== null) {
+                    element = document.getElementById(entry.div);
+                    let remove = activePage ? 'div__menu-link-inactive' : 'div__menu-link-active';
+                    let replacement = activePage ? 'div__menu-link-active' : 'div__menu-link-inactive';
+                    replaceElementClass(element, remove, replacement);
+                }
+            }
+        });
+
         displayHamburger(false);
 
         // add handlers
@@ -250,15 +291,18 @@ function addMenuEventHandlers(gameState) {
             document.getElementById(propSetting.checkbox).checked = gameState[propSetting.property];
         }
     };
+    // Menu item click handler
+    const setTargetView = (event) => {
+        const value = event.target.value ? event.target.value : event.currentTarget.value;
+        setView(value, gameState);
+    };
 
-    // Add handlers to set initial state of toggle switches; 
-    // mouseover for desktop, click for mobile
+    // Add handler to set initial state of toggle switches; mouseover for desktop
     menu.addEventListener("mouseover", function( event ) {
         if (event.target.id === "menu-settings-dropdown") {
             setInitial(event);
         }
     }, false);
-    document.getElementById(settingsElementId).addEventListener("click", setInitial, false);
 
     // Add toggle switches change handlers
     for (const propSetting of settingSwitches.values()) {
@@ -268,12 +312,19 @@ function addMenuEventHandlers(gameState) {
             }, false)
     }
     
-    // Add menu item click handler
-    [logoElementId, rulesElementId].forEach(id => {
-        document.getElementById(id).addEventListener("click", function( event ) {
-            const value = event.target.value ? event.target.value : event.currentTarget.value;
-            setView(value, gameState);
-        }, false);
+    // Add menu item click handlers
+    menuElements.forEach(entry => {
+        let clickFunc;
+        switch (entry.id) {
+            case settingsElementId:
+                // handler to set initial state of toggle switches; click for mobile
+                clickFunc = setInitial;
+                break;
+            default:
+                clickFunc = setTargetView;
+                break;
+        }
+        document.getElementById(entry.id).addEventListener("click", clickFunc, false);
     })
 
     // Add hamburger click handler
@@ -283,7 +334,7 @@ function addMenuEventHandlers(gameState) {
         displayHamburger(value === hamburgerClosed);   // display if closed, otherwise hide
     }, false);
 
-
+    // https://developer.mozilla.org/en-US/docs/Web/API/Window/matchMedia
     var mql = window.matchMedia('(max-width: 370px)');
     mql.addEventListener('change', (event) => {
         /* if the viewport is more than 370 pixels wide, hamburger not displayed, 
@@ -302,23 +353,25 @@ function addMenuEventHandlers(gameState) {
  * @param {boolean} display - display flag
  */
 function displayHamburger(display) {
-    [rulesMenuId, settingsMenuId].forEach(id => {
-        const element = document.getElementById(id);
-        if (display) {
-            element.classList.add('div__menu-link-show');
-        } else {
-            element.classList.remove('div__menu-link-show')
+    menuElements.forEach(entry => {
+        if (entry.div) {
+            const element = document.getElementById(entry.div);
+            if (display) {
+                addElementClass(element, 'div__menu-link-show');
+            } else {
+                removeElementClass(element, 'div__menu-link-show');
+            }
         }
     });
-
-    document.getElementById(hamburgerElementId).setAttribute('value', display ? hamburgerOpen : hamburgerClosed);
 
     const ariaLabel = `${display ? "close" : "open"} hamburger menu`;
     let element = document.getElementById(hamburgerImgId);
     element.setAttribute('src', `${config.IMG_ASSETS_BASE_URL}${display ? "menu-close.svg" : "menu-open.svg"}`);
     element.setAttribute('alt', ariaLabel);
 
-    document.getElementById(hamburgerElementId).setAttribute('aria-label', ariaLabel);   
+    element = document.getElementById(hamburgerElementId);
+    element.setAttribute('value', display ? hamburgerOpen : hamburgerClosed);
+    element.setAttribute('aria-label', ariaLabel);   
 }
 
 /**

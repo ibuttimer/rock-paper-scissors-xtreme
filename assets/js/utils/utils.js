@@ -202,7 +202,12 @@ const modifyElementClassList = (action, elements, classes, replacement) => {
                 }
                 break;
             case REPLACE_STYLE:
-                element.classList.replace(classes, replacement);
+                if (element.classList.contains(classes)) {
+                    element.classList.replace(classes, replacement);
+                } else {
+                    // class to replace isn't there so just add replacement
+                    element.classList.add(replacement);
+                }
                 break;
             default:
                 throw new Error(`Unknown action: ${action}`);

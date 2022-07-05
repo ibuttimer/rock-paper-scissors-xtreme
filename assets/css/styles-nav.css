@@ -61,12 +61,20 @@
 .div__hamburger-link {
     display: block;
     text-decoration: none;
-    padding: var(--std-padding-vert) var(--std-padding-horz);
+    padding: calc(var(--std-padding-vert) / 2) var(--std-padding-horz);
     color: var(--menu-color);
 }
 
 .div__hamburger-link {
     display: none;
+}
+
+.div__menu-link-active {
+    border-bottom: 1px solid var(--menu-color);
+}
+
+.div__menu-link-inactive {
+    border-bottom: none;
 }
 
 .button__logo {
