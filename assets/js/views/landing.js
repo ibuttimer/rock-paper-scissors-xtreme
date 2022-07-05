@@ -30,7 +30,7 @@ function landingPageHtml() {
     return htmlH1(['h1__main-title'], GAME_NAME) +
             htmlDiv('div__landing-content',
                 htmlSection(['section__landing-choice'],
-                    htmlH2(['h2__sub-title'], "I know what I'm doing") +
+                    htmlH2(['h2__sub-title', 'h2__landing-prev-user'], "I know what I'm doing") +
                     htmlDiv('div__landing-play', 
                         htmlButton(['button__select-game', 'button__clickable', 'debossable'], "Let's Play", {
                             id: gameButtonId,
@@ -39,8 +39,8 @@ function landingPageHtml() {
                         })
                     )
                 ) + 
-                htmlSection([],
-                    htmlH2(['h2__sub-title'], "So how does this work then?") +
+                htmlSection(['section__landing-choice'],
+                    htmlH2(['h2__sub-title', 'h2__landing-new-user'], "So how does this work then?") +
                     htmlDiv('div__landing-how-to', 
                         htmlButton(['button__how-to', 'button__clickable', 'debossable'], "How to Play", {
                             id: rulesButtonId,
