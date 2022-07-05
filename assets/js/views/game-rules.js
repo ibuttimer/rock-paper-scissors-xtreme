@@ -22,6 +22,7 @@ import { bestOfOptions } from './game-params.js'
 const basicHeadingId = 'basic-game-info';
 const bigbangHeadingId = 'bigbang-game-info';
 const xtremeHeadingId = 'xtreme-game-info';
+const usingKeyboardId = 'using-keyboard-info';
 
 htmlA([], BASIC_VARIANT_NAME, {
     id: basicHeadingId
@@ -263,7 +264,9 @@ function rulesViewHtml(gameState) {
         ${xtremeRules}
         ${htmlDiv(['div__win-matrix'], xtremeWinMatrix())}
         ${playXtreme}
-        ${h3Heading(`Using the keyboard`)}
+        ${h3Heading(`Using the keyboard`, {
+            id: usingKeyboardId
+        })}
         ${keysInfo}`
     );
 }
