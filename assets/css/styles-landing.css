@@ -24,6 +24,10 @@
     margin-top: var(--var-input-margin);
 }
 
+.section__landing-choice {
+    padding: var(--std-padding-vert) var(--std-padding-horz);
+}
+
 .div__landing-play,
 .div__landing-how-to {
     text-align: center;

@@ -29,7 +29,7 @@ const rulesButtonId = 'game-rules-button';
 function landingPageHtml() {
     return htmlH1(['h1__main-title'], GAME_NAME) +
             htmlDiv('div__landing-content',
-                htmlSection([],
+                htmlSection(['section__landing-choice'],
                     htmlH2(['h2__sub-title'], "I know what I'm doing") +
                     htmlDiv('div__landing-play', 
                         htmlButton(['button__select-game', 'button__clickable', 'debossable'], "Let's Play", {
