@@ -1,0 +1,13 @@
+cd landing
+call generate.bat
+cd ..\menu
+call generate.bat
+cd ..\param
+call generate.bat
+cd ..\play
+call generate.bat
+cd ..\result
+call generate.bat
+cd ..\rules
+call generate.bat
+cd ..\win
