@@ -1,10 +1,11 @@
 /**
  * Node.js script to run lighthouse tests on project artifacts.
  * 
- * Usage: node runlighthouse.cjs <site root url> <generated content folder> <report folder>
+ * Usage: node runlighthouse.cjs <site root url> <generated content folder> <report folder> <report>
  *      <site root url> - url of site
  *      <generated content folder> - folder url relative to root url containing generated content
  *      <report folder> - folder to store results in
+ *      <report> - report to run, possible options are [all, landing, main, param, play, result, win, rules]
  * 
  * Based on
  *  https://joshuatz.com/posts/2021/using-lighthouse-cli-nodejs/ 
@@ -47,20 +48,43 @@ const accessibilityBPCfg = [
 const defaultUrl = 'https://ibuttimer.github.io/rock-paper-scissors-xtreme/'
 const defaultGeneratedPath = 'test/generated';
 const defaultReportPath = 'lighthouse';
+
+/**
+ * View config
+ * @param {string} name - report name
+ * @param {Array[string]} category - categories to test
+ * @param {boolean} root - is root flag; true = use root url, false = generated url
+ * @param {string} path - relative path to generated file
+ * @returns 
+ */
+const viewCfg = (name, category, root, path) => {
+    return { name: name, category: category, root: root, path: path };
+};
+const landingRpt = 'landing';
+const mainRpt = 'main';
+const paramRpt = 'param';
+const playRpt = 'play';
+const resultRpt = 'result';
+const winRpt = 'win';
+const rulesRpt = 'rules';
+const allRpt = 'all';
+/** List of all reports */
 const views = [
-    'param/basic-param.html',
-    'param/bigbang-param.html',
-    'param/xtreme-param.html',
-    'play/basic-play.html',
-    'play/bigbang-play.html',
-    'play/xtreme-play.html',
-    'result/basic-result.html',
-    'result/bigbang-result.html',
-    'result/xtreme-result.html',
-    'rules/rules.html',
-    'win/basic-win.html',
-    'win/bigbang-win.html',
-    'win/xtreme-win.html',
+    viewCfg(landingRpt, allCategoryCfg, true, '/'),
+    viewCfg(mainRpt, allCategoryCfg, true, '/'),
+    viewCfg(paramRpt, accessibilityBPCfg, false, 'param/basic-param.html'),
+    viewCfg(paramRpt, accessibilityBPCfg, false, 'param/bigbang-param.html'),
+    viewCfg(paramRpt, accessibilityBPCfg, false, 'param/xtreme-param.html'),
+    viewCfg(playRpt, accessibilityBPCfg, false, 'play/basic-play.html'),
+    viewCfg(playRpt, accessibilityBPCfg, false, 'play/bigbang-play.html'),
+    viewCfg(playRpt, accessibilityBPCfg, false, 'play/xtreme-play.html'),
+    viewCfg(resultRpt, accessibilityBPCfg, false, 'result/basic-result.html'),
+    viewCfg(resultRpt, accessibilityBPCfg, false, 'result/bigbang-result.html'),
+    viewCfg(resultRpt, accessibilityBPCfg, false, 'result/xtreme-result.html'),
+    viewCfg(winRpt, accessibilityBPCfg, false, 'win/basic-win.html'),
+    viewCfg(winRpt, accessibilityBPCfg, false, 'win/bigbang-win.html'),
+    viewCfg(winRpt, accessibilityBPCfg, false, 'win/xtreme-win.html'),
+    viewCfg(rulesRpt, accessibilityBPCfg, false, 'rules/rules.html'),
 ];
 
 /** Root url for site */
@@ -69,9 +93,14 @@ let rootUrl;
 let generatedPath;
 /** Folder to save reports */
 let reportPath;
+/** Reports to run; one of 
+ *  'all', 'landing', 'main', 'param', 'play', 'result', 'win' or 'rules'
+ * i.e. one of xxxRpt e.g. {@link landingRpt}
+ */
+let reports;
 
 // https://nodejs.dev/learn/nodejs-accept-arguments-from-the-command-line
-if (process.argv.length < 5) {
+if (process.argv.length < 6) {
     // get arguments via user input
     readline.question(`Site url [press enter for default]: `, name => {
         rootUrl = name.length === 0 ? defaultUrl : name;
@@ -81,8 +110,12 @@ if (process.argv.length < 5) {
     
             readline.question(`Report folder [press enter for default]: `, name => {
                 reportPath = name.length === 0 ? defaultReportPath : name;
-        
-                runTests();
+
+                readline.question(`Report to run [press enter for all]: `, name => {
+                    reports = name.length === 0 ? allRpt : name;
+
+                    runIt();
+                });
             });
         });
     });
@@ -93,14 +126,32 @@ if (process.argv.length < 5) {
     rootUrl = args[0];
     generatedPath = args[1];
     reportPath = args[2];
+    reports = args[3];
 
-    runTests();
+    runIt();
+}
+
+/**
+ * Check report selection and run
+ */
+function runIt() {
+    const runList = views.filter(entry => entry.name === reports);
+
+    if (runList.length) {
+        runTests(runList);
+    } else {
+        const reportSet = new Set();
+        views.forEach(entry => reportSet.add(entry.name));
+        console.log(`No report selected`)
+        console.log(`Possible options are [all, ${Array.from(reportSet).join(', ')}]`)
+        process.exit();
+    }
 }
 
 /**
  * Run the tests
  */
- async function runTests() {
+ async function runTests(runList) {
 
     const chrome = await chromeLauncher.launch({chromeFlags: ['--headless']});
     // https://github.com/GoogleChrome/lighthouse/blob/HEAD/docs/configuration.md
@@ -110,47 +161,44 @@ if (process.argv.length < 5) {
         onlyCategories: allCategoryCfg, 
         port: chrome.port
     };
-    const generatedOptions = Object.assign({}, mainOptions, {
-        onlyCategories: accessibilityBPCfg
-    });
     const lhConfigs = [
         { name: 'mobile', config: lrMobileConfig },
         { name: 'desktop', config: lrDesktopConfig }
     ];
     let markdown = '';
     const markdownFile = path.join(reportPath, `results.md`);
+    const reportFiles = [];
   
-    // run the tests for the main view
-    let options = mainOptions;
-    for (const cfg of lhConfigs) {
-        console.log(`Testing ${rootUrl}: ${cfg.name}`);
+    for (const running of runList) {
+        // config options
+        const options = Object.assign({}, mainOptions, {
+            onlyCategories: running.category
+        });
 
-        const runnerResult = await lighthouse(rootUrl, options, cfg.config);
-
-        const resultMarkdown = report(runnerResult, options.onlyCategories, 'main', cfg.name);
-    
-        markdown = `${markdown}\n${resultMarkdown}`;
-    }
-
-    // run the tests for the generated views
-    options = generatedOptions;
-    for (let index = 0; index < views.length; index++) {
-        const view = views[index];
-
-        const url = new URL(path.join(generatedPath, view), rootUrl);
-
-        for (const cfg of lhConfigs) {
-            console.log(`Testing ${url}: ${cfg.name}`);
+        let url;    // site url
+        let name;
+        if (running.root) { 
+            url = rootUrl;
+            name = running.name;
+        } else { 
+            url = new URL(path.join(generatedPath, running.path), rootUrl);
 
             const noExtPath = url.pathname.split('.')[0];
             const pathSplits = noExtPath.split('/');
-    
-            const runnerResult = await lighthouse(url, options, cfg.config);
-            
-            const resultMarkdown = report(
-                runnerResult, options.onlyCategories, pathSplits[pathSplits.length - 1], cfg.name);
 
-            markdown = `${markdown}\n${resultMarkdown}`;
+            name = pathSplits[pathSplits.length - 1];
+        }
+
+        for (const cfg of lhConfigs) {
+            console.log(`Testing ${url}: ${cfg.name}`);
+    
+            const runnerResult = await lighthouse(rootUrl, options, cfg.config);
+    
+            const reportResult = report(runnerResult, options.onlyCategories, name, cfg.name);
+
+            reportFiles.push(reportResult.filename);
+        
+            markdown = `${markdown}\n${reportResult.markdown}`;
         }
     }
 
@@ -158,6 +206,7 @@ if (process.argv.length < 5) {
     fs.writeFileSync(markdownFile, markdown, err => {});
 
     console.log(`Result reports saved in ${reportPath}`);
+    console.log(reportFiles.map(entry => `  ${entry}`).join('\n'));
     console.log(`Report markdown saved in ${markdownFile}`);
 
     await chrome.kill();
@@ -170,7 +219,9 @@ if (process.argv.length < 5) {
  * @param {Array[object]} categoryCfg - tested categories @see {@link categories}
  * @param {string} name - name of tested resource
  * @param {string} formFactor - form factor used for test
- * @returns {string} markdown text for test report
+ * @returns {object} 
+ * @type {string} markdown - markdown text for test report
+ * @type {string} filename - report filename
  */
 function report(runnerResult, categoryCfg, name, formFactor) {
 
@@ -185,11 +236,15 @@ function report(runnerResult, categoryCfg, name, formFactor) {
 
     // `.report` is the HTML report as a string
     const reportHtml = runnerResult.report;
+    const reportFilename = `${name}-${formFactor}.html`;
     const reportFile = path.join(reportPath, `${name}-${formFactor}.html`);
     fs.writeFileSync(reportFile, reportHtml);
 
     // generate markdown line for report
-    return shieldsIo(runnerResult, categoryCfg, name, formFactor);
+    return {
+        markdown: shieldsIo(runnerResult, categoryCfg, name, formFactor, reportFile),
+        filename: reportFilename
+    };
 }
 
 /**
@@ -198,9 +253,10 @@ function report(runnerResult, categoryCfg, name, formFactor) {
  * @param {Array[object]} categoryCfg - tested categories @see {@link categories}
  * @param {string} name - name of tested resource
  * @param {string} formFactor - form factor used for test
+ * @param {string} reportFile - relative path to report file
  * @returns {string} markdown text for test report
  */
-function shieldsIo(runnerResult, categoryCfg, name, formFactor) {
+function shieldsIo(runnerResult, categoryCfg, name, formFactor, reportFile) {
     let markdown = `| ${titleCase(name)} | ${titleCase(formFactor)} |`;
     categories.forEach(category => {
         
@@ -217,7 +273,10 @@ function shieldsIo(runnerResult, categoryCfg, name, formFactor) {
         }
         markdown += ` ${link} |`
     });
-    return markdown;
+
+    const url = new URL(reportFile, rootUrl);
+
+    return `${markdown} [${`${name}-${formFactor}`}](${url}) |`;
 }
 
 /**
