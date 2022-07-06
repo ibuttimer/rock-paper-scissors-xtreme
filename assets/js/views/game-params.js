@@ -136,8 +136,9 @@ function gameParamsViewHtml(gameState) {
             ${htmlDiv('div__player-names', 
                 `${htmlDiv('div__player-name-wrapper', 
                     `${htmlDiv('div__player-names-title', 
-                        htmlP([], 
-                            'Enter player names ' + htmlSpan(['span_max-name-len'], `(${MAX_NAME_LEN} characters maximum)`)
+                        htmlP(['p__player-names-title'], 
+                            'Enter player names' + 
+                            htmlSpan(['span_max-name-len'], `(${MAX_NAME_LEN} characters maximum)`)
                         ))}`
                 )}
                 ${htmlDiv('div__player-name-group-wrapper', playerNames(wip.playerArray), {

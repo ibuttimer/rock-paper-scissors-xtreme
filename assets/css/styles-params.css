@@ -150,6 +150,13 @@
     text-align: center;
 }
 
+.p__player-names-title {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
 .div__player-name-wrapper {
     display: flex;
     flex-direction: row;
@@ -225,6 +232,7 @@
     color: grey;
     font-weight: var(--paragraph-font-weight);
     font-size: 0.8em;
+    margin-left: 0.8em;
 }
 
 /* media queries */
@@ -247,6 +255,16 @@
 
     .button__play {
         width: 180px;
+    }
+}
+
+/* small-medium screens, 510px wide or less */ 
+@media screen and (max-width: 510px) {
+    .p__player-names-title {
+        flex-direction: column;
+    }
+    .span_max-name-len {
+        margin-left: 0;
     }
 }
 
