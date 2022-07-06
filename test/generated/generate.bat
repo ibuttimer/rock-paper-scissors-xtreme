@@ -11,3 +11,5 @@ call generate.bat
 cd ..\rules
 call generate.bat
 cd ..\win
+call generate.bat
+cd ..
