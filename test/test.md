@@ -1,6 +1,6 @@
 # Testing 
 
-Test release: [QA Release V1.0.5](https://github.com/ibuttimer/rock-paper-scissors-xtreme/releases/tag/v1.0.5-qa)
+Test release: [Release V1.0.5](https://github.com/ibuttimer/rock-paper-scissors-xtreme/releases/tag/v1.0.5)
 
 The site was tested using the following methods:
 
@@ -12,8 +12,7 @@ The scripts may be run using [npm](https://www.npmjs.com) from the project root 
 ```shell
 > npm test
 ```
-Or if using Visual Studio Code, the [Jasmine Test Explorer
-](https://marketplace.visualstudio.com/items?itemName=hbenl.vscode-jasmine-test-adapter), allows tests to be run from the sidebar of Visual Studio Code.
+Or if using Visual Studio Code, the [Jasmine Test Explorer](https://marketplace.visualstudio.com/items?itemName=hbenl.vscode-jasmine-test-adapter), allows tests to be run from the sidebar of Visual Studio Code.
 
 ## Manual 
 The site was manually tested in the following browsers:
@@ -90,12 +89,12 @@ and store the results locally in the [lighthouse](lighthouse) folder.
 
 > __Note 2:__ In order to ensure the correct view is displayed, the [runlighthouse.cjs](runlighthouse.cjs) script runs against generated content for the [Landing Page](../README.md#landing-page) and [Game Selection Page](../README.md#game-selection-page). This is the same as running against the actual root url of the site, see [Generate Content](#generate-content) for details.
 
-> __Note 3:__ As it is not possible to directly access generated pages, i.e. [Game Parameter Page](../README.md#game-parameter-page), [Game Play Page](../README.md#game-play-page), [Result Page](../README.md#result-page) and [Rules Page](../README.md#rules-page), in normal usage, only Accessibility and Best Practises testing was carried out on these pages as the Performance and SEO result are not applicable.
+> __Note 3:__ As it is not possible to directly access generated pages, i.e. [Game Parameter Page](../README.md#game-parameter-page), [Game Play Page](../README.md#game-play-page), [Result Page](../README.md#result-page) and [Rules Page](../README.md#rules-page), in normal usage, only Accessibility and Best Practises testing was carried out on these pages as the Performance and SEO results are not applicable.
 
 | Page | Test | Result |  |  |  | Report |
 |-|-|-|-|-|-|-|
-| Landing | Mobile | ![Performance 95](https://img.shields.io/badge/Performance-95-brightgreen) | ![Accessibility 100](https://img.shields.io/badge/Accessibility-100-brightgreen) | ![Performance 100](https://img.shields.io/badge/Performance-100-brightgreen) | ![SEO 100](https://img.shields.io/badge/SEO-100-brightgreen) | [landing-mobile](https://ibuttimer.github.io/rock-paper-scissors-xtreme/test/lighthouse/landing-mobile.html) |
-| Landing | Desktop | ![Performance 100](https://img.shields.io/badge/Performance-100-brightgreen) | ![Accessibility 100](https://img.shields.io/badge/Accessibility-100-brightgreen) | ![Performance 100](https://img.shields.io/badge/Performance-100-brightgreen) | ![SEO 100](https://img.shields.io/badge/SEO-100-brightgreen) | [landing-desktop](https://ibuttimer.github.io/rock-paper-scissors-xtreme/test/lighthouse/landing-desktop.html) |
+| Landing | Mobile | ![Performance 94](https://img.shields.io/badge/Performance-94-brightgreen) | ![Accessibility 100](https://img.shields.io/badge/Accessibility-100-brightgreen) | ![Performance 100](https://img.shields.io/badge/Performance-100-brightgreen) | ![SEO 100](https://img.shields.io/badge/SEO-100-brightgreen) | [landing-mobile](https://ibuttimer.github.io/rock-paper-scissors-xtreme/test/lighthouse/landing-mobile.html) |
+| Landing | Desktop | ![Performance 99](https://img.shields.io/badge/Performance-99-brightgreen) | ![Accessibility 100](https://img.shields.io/badge/Accessibility-100-brightgreen) | ![Performance 100](https://img.shields.io/badge/Performance-100-brightgreen) | ![SEO 100](https://img.shields.io/badge/SEO-100-brightgreen) | [landing-desktop](https://ibuttimer.github.io/rock-paper-scissors-xtreme/test/lighthouse/landing-desktop.html) |
 | Menu | Mobile | ![Performance 96](https://img.shields.io/badge/Performance-96-brightgreen) | ![Accessibility 100](https://img.shields.io/badge/Accessibility-100-brightgreen) | ![Performance 100](https://img.shields.io/badge/Performance-100-brightgreen) | ![SEO 100](https://img.shields.io/badge/SEO-100-brightgreen) | [menu-mobile](https://ibuttimer.github.io/rock-paper-scissors-xtreme/test/lighthouse/menu-mobile.html) |
 | Menu | Desktop | ![Performance 99](https://img.shields.io/badge/Performance-99-brightgreen) | ![Accessibility 100](https://img.shields.io/badge/Accessibility-100-brightgreen) | ![Performance 100](https://img.shields.io/badge/Performance-100-brightgreen) | ![SEO 100](https://img.shields.io/badge/SEO-100-brightgreen) | [menu-desktop](https://ibuttimer.github.io/rock-paper-scissors-xtreme/test/lighthouse/menu-desktop.html) |
 | Basic-param | Mobile | n/a | ![Accessibility 100](https://img.shields.io/badge/Accessibility-100-brightgreen) | ![Performance 100](https://img.shields.io/badge/Performance-100-brightgreen) | n/a | [basic-param-mobile](https://ibuttimer.github.io/rock-paper-scissors-xtreme/test/lighthouse/basic-param-mobile.html) |
@@ -132,7 +131,7 @@ Testing undertaken:
 
 | Feature | Expected | Action | Related | Result | 
 |---------|----------|--------|---------|--------|
-| Audio commentary | Audio commentary provided for important page elements | Process page using screen reader | All pages | ![PAss](https://badgen.net/badge/checks/Pass/green) |
+| Audio commentary | Audio commentary provided for important page elements | Process page using screen reader | All pages | ![Pass](https://badgen.net/badge/checks/Pass/green) |
 
 
 ## User
@@ -198,5 +197,8 @@ Issues were logged in [GitHub Issues](https://github.com/ibuttimer/rock-paper-sc
 
 ### Unfixed Issues
 
+#### Bug
 There are currently no issues outstanding. 
 
+#### Enhancement
+- [Tile size for BigBang/Basic games](https://github.com/ibuttimer/rock-paper-scissors-xtreme/issues/5)
