@@ -3,6 +3,20 @@
   // Hover to view descriptions of existing attributes.
   "version": "0.2.0",
   "configurations": [
+    {
+      "name": "Launch lighthouse tests",
+      "program": "${workspaceFolder}\\test\\runlighthouse.cjs",
+      "request": "launch",
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "type": "node",
+      "args": [
+        "http://127.0.0.1:3000/",
+        "test\\generated",
+        ".\\lighthouse"
+      ]
+    },
       {
             "name": "Python: Current File (Integrated Terminal)",
             "type": "python",

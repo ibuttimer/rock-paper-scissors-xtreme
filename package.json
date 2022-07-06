@@ -24,6 +24,8 @@
     "tingle.js": "^0.16.0"
   },
   "devDependencies": {
-    "jasmine": "^4.2.1"
+    "chrome-launcher": "^0.15.1",
+    "jasmine": "^4.2.1",
+    "lighthouse": "^9.6.3"
   }
 }
