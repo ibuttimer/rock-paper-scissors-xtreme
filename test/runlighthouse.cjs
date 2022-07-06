@@ -1,11 +1,12 @@
 /**
  * Node.js script to run lighthouse tests on project artifacts.
  * 
- * Usage: node runlighthouse.cjs <site root url> <generated content folder> <report folder> <report>
+ * Usage: node runlighthouse.cjs <site root url> <test folder> <generated content folder> <report folder> <report>
  *      <site root url> - url of site
+ *      <test folder> - test folder relative to the root of the project
  *      <generated content folder> - folder url relative to root url containing generated content
  *      <report folder> - folder to store results in
- *      <report> - report to run, possible options are [all, landing, main, param, play, result, win, rules]
+ *      <report> - report to run, possible options are [all, landing, menu, param, play, result, win, rules]
  * 
  * Based on
  *  https://joshuatz.com/posts/2021/using-lighthouse-cli-nodejs/ 
@@ -46,6 +47,7 @@ const accessibilityBPCfg = [
 ];
 
 const defaultUrl = 'https://ibuttimer.github.io/rock-paper-scissors-xtreme/'
+const defaultTestPath = 'test';
 const defaultGeneratedPath = 'test/generated';
 const defaultReportPath = 'lighthouse';
 
@@ -61,7 +63,7 @@ const viewCfg = (name, category, root, path) => {
     return { name: name, category: category, root: root, path: path };
 };
 const landingRpt = 'landing';
-const mainRpt = 'main';
+const menuRpt = 'menu';
 const paramRpt = 'param';
 const playRpt = 'play';
 const resultRpt = 'result';
@@ -70,8 +72,8 @@ const rulesRpt = 'rules';
 const allRpt = 'all';
 /** List of all reports */
 const views = [
-    viewCfg(landingRpt, allCategoryCfg, true, '/'),
-    viewCfg(mainRpt, allCategoryCfg, true, '/'),
+    viewCfg(landingRpt, allCategoryCfg, false, 'landing/landing.html'),
+    viewCfg(menuRpt, allCategoryCfg, false, 'menu/menu.html'),
     viewCfg(paramRpt, accessibilityBPCfg, false, 'param/basic-param.html'),
     viewCfg(paramRpt, accessibilityBPCfg, false, 'param/bigbang-param.html'),
     viewCfg(paramRpt, accessibilityBPCfg, false, 'param/xtreme-param.html'),
@@ -89,32 +91,38 @@ const views = [
 
 /** Root url for site */
 let rootUrl;
+/** Test folder relative to project root */
+let testPath;
 /** Relative path to generated content folder from root url for site */
 let generatedPath;
 /** Folder to save reports */
 let reportPath;
 /** Reports to run; one of 
- *  'all', 'landing', 'main', 'param', 'play', 'result', 'win' or 'rules'
+ *  'all', 'landing', 'menu', 'param', 'play', 'result', 'win' or 'rules'
  * i.e. one of xxxRpt e.g. {@link landingRpt}
  */
 let reports;
 
 // https://nodejs.dev/learn/nodejs-accept-arguments-from-the-command-line
-if (process.argv.length < 6) {
+if (process.argv.length < 7) {
     // get arguments via user input
     readline.question(`Site url [press enter for default]: `, name => {
         rootUrl = name.length === 0 ? defaultUrl : name;
 
-        readline.question(`Generated content folder [press enter for default]: `, name => {
-            generatedPath = name.length === 0 ? defaultGeneratedPath : name;
+        readline.question(`Test folder [press enter for default]: `, name => {
+            testPath = name.length === 0 ? defaultTestPath : name;
     
-            readline.question(`Report folder [press enter for default]: `, name => {
-                reportPath = name.length === 0 ? defaultReportPath : name;
-
-                readline.question(`Report to run [press enter for all]: `, name => {
-                    reports = name.length === 0 ? allRpt : name;
-
-                    runIt();
+            readline.question(`Generated content folder [press enter for default]: `, name => {
+                generatedPath = name.length === 0 ? defaultGeneratedPath : name;
+        
+                readline.question(`Report folder [press enter for default]: `, name => {
+                    reportPath = name.length === 0 ? defaultReportPath : name;
+    
+                    readline.question(`Report to run [press enter for all]: `, name => {
+                        reports = name.length === 0 ? allRpt : name;
+    
+                        runIt();
+                    });
                 });
             });
         });
@@ -124,9 +132,10 @@ if (process.argv.length < 6) {
     const args = process.argv.slice(2);
 
     rootUrl = args[0];
-    generatedPath = args[1];
-    reportPath = args[2];
-    reports = args[3];
+    testPath = args[1]
+    generatedPath = args[2];
+    reportPath = args[3];
+    reports = args[4];
 
     runIt();
 }
@@ -135,7 +144,14 @@ if (process.argv.length < 6) {
  * Check report selection and run
  */
 function runIt() {
-    const runList = views.filter(entry => entry.name === reports);
+    let runList;
+
+    reports = reports.toLowerCase();
+    if (reports === allRpt) {
+        runList = views;
+    } else {
+        runList = views.filter(entry => entry.name === reports);
+    }
 
     if (runList.length) {
         runTests(runList);
@@ -274,7 +290,7 @@ function shieldsIo(runnerResult, categoryCfg, name, formFactor, reportFile) {
         markdown += ` ${link} |`
     });
 
-    const url = new URL(reportFile, rootUrl);
+    const url = new URL(path.join(testPath, reportFile), rootUrl);
 
     return `${markdown} [${`${name}-${formFactor}`}](${url}) |`;
 }
