@@ -73,8 +73,6 @@ function processFile() {
     try {
         html = fs.readFileSync(source, 'utf8');
 
-        html = "<!DOCTYPE html>\n" + html;
-
         // config override
         html = html.replace('type="module" src="assets/js/script.js"', 
             'src="' + config + '"></script>\n<script type="module" src="assets/js/script.js"');
