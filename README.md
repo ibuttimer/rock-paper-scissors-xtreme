@@ -1,12 +1,20 @@
 # Rock, Paper, Scissors Xtreme
 
 Rock, Paper, Scissors Xtreme allows users to play three different variants of the the well known game Rock, Paper, Scissors.
-The variants have an increasing level of difficulty, the simplest being `Basic` with three possible selections. `Big Bang` provides five possible selections and `Xtreme` is the most difficult with nine possible selections. Up to nine players may play, together with up to three robots whose choices are determined by random by the computer.
+The variants have an increasing level of difficulty, with the simplest being `Basic` which has three possible selections. `Big Bang` provides five possible selections, and `Xtreme` is the most difficult with nine possible selections. Up to nine players may play, together with up to three robots whose choices are determined by random by the computer.
 
 The site is aimed at game enthusiasts and procrastinators.
 
 ###### Fig 1: Responsive Mockup
 ![Responsive Mockup](media/responsive.png)
+
+Section links
+- [Features](#features)
+- [Design](#design)
+- [Development](#development)
+- [Testing](#testing)
+- [Deployment](#deployment)
+- [Credits](#credits)
 
 ## Features 
 
@@ -90,7 +98,7 @@ The site is aimed at game enthusiasts and procrastinators.
 #### Game Play Page
 
   - The `Game Play` page is fully responsive, and allows each player to make a selection for each round. The available selection options is determined by the game variant being played.
-  - The player may make their selection by clicking on the selection tile or entering the appropriate key. Please see the `Using the keyboard`, `Basic variant`, `Big Bang variant` and `Xtreme variant` section on the Rules Page for details of the keys.
+  - The player may make their selection by clicking on the selection tile or entering the appropriate key. Please see the [Using the keyboard](https://ibuttimer.github.io/rock-paper-scissors-xtreme/test/generated/rules/rules.html#using-keyboard-info), [Basic variant](https://ibuttimer.github.io/rock-paper-scissors-xtreme/test/generated/rules/rules.html#basic-game-info), [Big Bang variant](https://ibuttimer.github.io/rock-paper-scissors-xtreme/test/generated/rules/rules.html#bigbang-game-info) and [Xtreme variant](https://ibuttimer.github.io/rock-paper-scissors-xtreme/test/generated/rules/rules.html#xtreme-game-info) sections on the [Rules Page](https://ibuttimer.github.io/rock-paper-scissors-xtreme/test/generated/rules/rules.html) for details of the keys.
   - The JavaScript to generate the HTML code is contained in [game-play.js](assets/js/views/game-play.js), and the CSS is in [styles-play.css](assets/css/styles-play.css).
 
 ###### Fig 7: Game Play Page
@@ -123,13 +131,13 @@ The `Game Progress` widget, displays the current state with respect to the maxim
       No players were eliminated, all players proceed to the next round.
     - Eliminations
 
-      There multiple winning players, losing players were eliminated. Only winning players proceed to the next round.
+      There are multiple winning players, losing players were eliminated. Only winning players proceed to the next round.
     - Winner
 
       The game is over, there was one winning player. The match will proceed to the next game with all players active again.
     - Match Over
 
-      The match is over as the single winning player has won the required number of games.
+      The match is over as a single winning player has won the required number of games.
 
   - The JavaScript to generate the HTML code is contained in [round-result.js](assets/js/views/round-result.js), and the CSS is in [styles-result.css](assets/css/styles-result.css).
 
@@ -211,7 +219,7 @@ The following configuration values may be changed:
 - `ASSETS_BASE_URL`: the relative url to the assets folder
 - `ENABLE_LOG`: enable console logging flag; set '0' to disable and '1' to enable
 
-See [main.html](test/generated/main/main.html) and [test-main-config.js](test/generated/main/test-main-config.js).
+E.g. see [menu.html](test/generated/menu/menu.html) and [test-menu-config.js](test/generated/menu/test-menu-config.js).
 
 ###### Demonstration
 Together with `ASSETS_BASE_URL` and `ENABLE_LOG`, the following values may be used to create a specific game status:
@@ -229,7 +237,7 @@ Together with `ASSETS_BASE_URL` and `ENABLE_LOG`, the following values may be us
   - modifier keys, `esc`, `alt`, `ctrl`, `meta`, `shift`
   - modified alphabetic characters i.e. '{modifier}+{char} e.g. 'ctrl+n'
 
-See [main.html](test/generated/win/basic-win.html) and [test-main-config.js](test/generated/win/test-win-config.js).
+E.g. see [basic-win](test/generated/win/basic-win.html) and [test-win-config.js](test/generated/win/test-basic-win-config.js).
 
 > __Note:__ This functionality is presently limited to displaying the game parameters, game play and game result views. 
 > It is also limited to one round.
@@ -267,6 +275,7 @@ The application structure is based on [React Architecture: How to Structure and 
 │     └─ views          - views JavaScript
 ├─ spec                 - Jasmine test scripts
 └─ test                 - test results
+   ├─ generated         - Generated pages for test purposes
    └─ lighthouse        - Lighthouse test results
 ```
 
